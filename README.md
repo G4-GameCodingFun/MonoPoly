@@ -1,117 +1,132 @@
-**Vietnamese Monopoly Game | Cờ Tỷ Phú Việt Nam**
-**Overview | Tổng quan**
-English:A 2D Monopoly-style board game developed in Unity, featuring iconic Vietnamese landmarks as properties. Players buy, trade, and develop locations while competing to become the wealthiest tycoon.
-Tiếng Việt:Trò chơi cờ tỷ phú phong cách 2D được phát triển bằng Unity, sử dụng các địa danh nổi tiếng của Việt Nam làm tài sản. Người chơi mua, trao đổi và phát triển các địa điểm, cạnh tranh để trở thành tỷ phú giàu nhất.
 
+# Vietnamese Monopoly Game | Cờ Tỷ Phú Việt Nam
 
-**Features | Tính năng**
+## 🗺️ Overview
 
-Vietnamese Landmarks: Includes famous locations like Hanoi's Hoan Kiem Lake, Ho Chi Minh City's Ben Thanh Market, and Ha Long Bay.  
+A vibrant 2D Monopoly-style board game made in Unity, themed around famous Vietnamese landmarks. Compete with others to build an empire, collect rent, and dominate the board.
 
-Classic Monopoly Gameplay: Buy properties, build houses/hotels, and collect rent.  
+## ✨ Features
 
-Multiplayer Support: Play with friends locally or against AI.  
+- **Iconic Landmarks**: Hoan Kiem Lake, Ben Thanh Market, Ha Long Bay, and more.
+- **Classic Monopoly Mechanics**: Purchase, upgrade, and trade properties; build houses and hotels.
+- **Bot and Multiplayer Support**: Play locally, online with friends, or challenge smart AI bots.
+- **Cultural 2D Art**: Handcrafted visuals celebrating Vietnamese heritage.
+- **Create Private Rooms**: Set up games with invited players.
+- **Bilingual Interface**: Supports both English and Vietnamese.
+- **Cross-Platform**: Playable on Windows and WebGL (via [itch.io](https://itch.io)).
 
-2D Art Style: Vibrant, hand-crafted visuals inspired by Vietnamese culture.  
+## 🛠 Requirements
 
-Play with online server or with bot
+- Unity Version: `6.0.0.0.50f1` or newer
+- Platforms: Windows, WebGL
 
-Create private room
+## 🚀 Installation
 
-Language Support: English and Vietnamese.
+```bash
+git clone <repository-url>
+```
 
-----------------------
+1. Open the project using Unity Hub.
+2. Build and run the game from the Unity Editor.
 
-Địa danh Việt Nam: Bao gồm các địa điểm nổi tiếng như Hồ Hoàn Kiếm (Hà Nội), Chợ Bến Thành (TP.HCM) và Vịnh Hạ Long.  
+## 🎮 How to Play
 
-Lối chơi Monopoly cổ điển: Mua tài sản, xây nhà/khách sạn và thu tiền thuê.  
+- Roll dice to move across the board.
+- Buy unowned properties or pay rent if another player owns the property.
+- Build houses or hotels to increase rental income.
+- Trade properties with other players.
+- The last player remaining wins the game!
 
-Hỗ trợ đa người chơi: Chơi cùng bạn bè hoặc đấu với AI.  
+## 🗂 Project Structure
 
-Phong cách nghệ thuật 2D: Hình ảnh sống động, lấy cảm hứng từ văn hóa Việt Nam.  
+```
+Assets/
+├── Animations/          # UI and character animations
+├── Prefabs/             # Reusable game objects
+├── Scenes/              # Main Menu, Game Board scenes
+├── Scripts/             # Game logic: Player, Property, GameManager
+└── Sprites/             # Characters, buildings, and UI art
+```
 
-Hỗ trợ ngôn ngữ: Tiếng Anh và Tiếng Việt.
+## 🤝 Contributing
 
-Có thể chơi online hoặc chơi với bot
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature-branch`
+3. Commit your changes: `git commit -m "Add feature"`
+4. Push to GitHub: `git push origin feature-branch`
+5. Open a Pull Request.
 
-Chức năng tạo phòng
+## 📄 License
 
+Licensed under the MIT License. See `LICENSE` for more details.
 
-**Prerequisites | Yêu cầu**
+## 📬 Contact
 
-Unity 6.0.0.0.50f1 or later
-Unity 6.0.0.0.50f1 hoặc mới hơn
+Questions or feedback? Reach out via [trinmse183033@fpt.edu.vn](mailto:trinmse183033@fpt.edu.vn) or open a GitHub issue.
 
+---
 
-Compatible with Windows, webGL
-Tương thích với Windows, webGL
+## 🇻🇳 Cờ Tỷ Phú Việt Nam
 
-Can play via itch.io
-Có thể chơi trên nền tảng itch.io
+### 🗺️ Tổng Quan
 
-**Installation | Cài đặt**
+Trò chơi cờ tỷ phú phong cách 2D được phát triển bằng Unity, lấy cảm hứng từ các địa danh nổi tiếng của Việt Nam. Người chơi cạnh tranh để mua bán, xây dựng và trở thành tỷ phú cuối cùng.
 
-Steps | Các bước:  
-Clone the repository: git clone <repository-url>  
-Open the project in Unity Hub.  
-Build and run the game from the Unity Editor.
+### ✨ Tính Năng
 
+- **Địa danh nổi bật**: Hồ Hoàn Kiếm, Chợ Bến Thành, Vịnh Hạ Long và nhiều địa điểm khác.
+- **Lối chơi cổ điển**: Mua bán tài sản, xây nhà và khách sạn, thu tiền thuê.
+- **Hỗ trợ chơi với bot & nhiều người**: Chơi online hoặc offline cùng bạn bè, hoặc đấu với AI thông minh.
+- **Hình ảnh 2D đậm chất Việt Nam**: Nghệ thuật vẽ tay sống động.
+- **Tạo phòng riêng**: Mời bạn bè tham gia dễ dàng.
+- **Song ngữ**: Giao diện hỗ trợ cả tiếng Anh và tiếng Việt.
+- **Chạy đa nền tảng**: Hỗ trợ Windows và WebGL (qua [itch.io](https://itch.io)).
 
+### 🛠 Yêu Cầu
 
-**How to Play | Cách chơi**
+- Phiên bản Unity: `6.0.0.0.50f1` hoặc mới hơn
+- Nền tảng: Windows, WebGL
 
-Roll the dice to move around the board.  
+### 🚀 Cài Đặt
 
-Purchase unowned properties or pay rent if you land on owned ones.  
+```bash
+git clone <repository-url>
+```
 
-Build houses and hotels to increase rent.  
+1. Mở dự án bằng Unity Hub.
+2. Dùng Unity Editor để build và chạy trò chơi.
 
-Trade properties with other players.  
+### 🎮 Cách Chơi
 
-----------------------------------------------
+- Tung xúc xắc để di chuyển.
+- Mua tài sản chưa có chủ, hoặc trả tiền thuê nếu dừng ở tài sản của người khác.
+- Xây nhà hoặc khách sạn để tăng tiền thuê.
+- Trao đổi tài sản với người chơi khác.
+- Người chơi cuối cùng còn lại sẽ giành chiến thắng.
 
-Be the last player standing to win!
+### 🗂 Cấu Trúc Dự Án
 
-Tung xúc xắc để di chuyển trên bàn cờ.  
+```
+Assets/
+├── Animations/          # Hoạt ảnh nhân vật và giao diện
+├── Prefabs/             # Đối tượng game tái sử dụng
+├── Scenes/              # Màn hình chính, bàn cờ
+├── Scripts/             # Logic game: Player, Property, GameManager
+└── Sprites/             # Nhân vật, công trình, giao diện
+```
 
-Mua tài sản chưa có chủ hoặc trả tiền thuê nếu dừng ở tài sản của người khác.  
+### 🤝 Đóng Góp
 
-Xây nhà và khách sạn để tăng tiền thuê.  
+1. Fork kho lưu trữ.
+2. Tạo nhánh mới: `git checkout -b feature-branch`
+3. Commit thay đổi: `git commit -m "Thêm tính năng"`
+4. Push lên GitHub: `git push origin feature-branch`
+5. Mở Pull Request.
 
-Trao đổi tài sản với người chơi khác.  
+### 📄 Giấy Phép
 
-Trở thành người chơi cuối cùng còn lại để chiến thắng!
+Dự án được cấp phép theo MIT License. Xem tệp `LICENSE` để biết thêm thông tin.
 
+### 📬 Liên Hệ
 
-**Project Structure | Cấu trúc dự án**
-
-Assets/Scenes: Game scenes (Main Menu, Game Board).  
-Assets/Scripts: Core gameplay scripts (Player, Property, Game Manager).  
-Assets/Sprites: 2D assets for characters, properties, and UI.  
-Assets/Prefabs: Reusable game objects.  
-Assets/Animations: Animations for UI and characters.
-
-**Contributing | Đóng góp**
-We welcome contributions! To contribute:  
-
-Fork the repository.  
-Create a new branch (git checkout -b feature-branch).  
-Commit your changes (git commit -m "Add feature").  
-Push to the branch (git push origin feature-branch).  
-Open a Pull Request.
---------------------------------
-Chúng tôi hoan nghênh mọi đóng góp! Để tham gia:  
-
-Fork kho lưu trữ.  
-Tạo nhánh mới (git checkout -b feature-branch).  
-Commit thay đổi (git commit -m "Thêm tính năng").  
-Push lên nhánh (git push origin feature-branch).  
-Mở Pull Request.
-
-**License | Giấy phép**
-This project is licensed under the MIT License. See the LICENSE file for details.
-Dự án này được cấp phép theo Giấy phép MIT. Xem chi tiết trong tệp LICENSE.
-
-**Contact | Liên hệ**
-For questions or feedback, reach out via trinmse183033@fpt.edu.vn or open an issue on GitHub.
-Để đặt câu hỏi hoặc gửi phản hồi, liên hệ qua trinmse183033@fpt.edu.vn hoặc mở issue trên GitHub.
+Mọi góp ý, câu hỏi xin liên hệ [trinmse183033@fpt.edu.vn](mailto:trinmse183033@fpt.edu.vn) hoặc tạo issue trên GitHub.
