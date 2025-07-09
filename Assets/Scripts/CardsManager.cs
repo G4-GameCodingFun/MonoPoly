@@ -14,12 +14,14 @@ public class CardManager : MonoBehaviour
     public GameObject drawCoHoiButton;
     public GameObject drawKhiVanButton;
 
-    public Animator cardAnimator;     // Animator gắn vào CardDisplay
+    public Animator cardsBackAnimator;     // Animator gắn trên CardsBackPanel
+    public GameObject cardsBackPanel;      // Panel chứa 5 thẻ úp
+
     private bool isFlipping = false;
-    private bool hasFlippedOnce = false;
+
     void Start()
     {
-        LoadCards();  // Lúc bắt đầu game → load asset
+        LoadCards();
     }
 
     void LoadCards()
@@ -37,43 +39,17 @@ public class CardManager : MonoBehaviour
 
     public void DrawCoHoiCard()
     {
-        if (coHoiCards.Count == 0) return;
-        StartCoroutine(PlayFlipAndShowCard(coHoiCards));
+        if (coHoiCards.Count == 0 || isFlipping) return;
+        StartCoroutine(PlayShuffleAndShowCard(coHoiCards));
     }
 
     public void DrawKhiVanCard()
     {
-        if (khiVanCards.Count == 0) return;
-        StartCoroutine(PlayFlipAndShowCard(khiVanCards));
+        if (khiVanCards.Count == 0 || isFlipping) return;
+        StartCoroutine(PlayShuffleAndShowCard(khiVanCards));
     }
 
-
-    //IEnumerator PlayFlipAndShowCard(List<Sprite> cards)
-    //{
-    //    if (isFlipping) yield break;
-    //    isFlipping = true;
-
-    //    drawCoHoiButton.SetActive(false);
-    //    drawKhiVanButton.SetActive(false);
-
-    //    cardPanel.SetActive(true);
-
-    //    // ✅ Random NGAY & gán sprite mới
-    //    int index = Random.Range(0, cards.Count);
-    //    Sprite pickedCard = cards[index];
-    //    cardDisplay.sprite = pickedCard;
-
-    //    // ✅ Sau đó mới chạy animation lật
-    //    cardAnimator.SetTrigger("Flip");
-
-    //    // ✅ Đợi animation chạy xong (0.5s)
-    //    yield return new WaitForSeconds(0.5f);
-
-    //    isFlipping = false;
-    //}
-
-
-    IEnumerator PlayFlipAndShowCard(List<Sprite> cards)
+    IEnumerator PlayShuffleAndShowCard(List<Sprite> cards)
     {
         if (isFlipping) yield break;
         isFlipping = true;
@@ -81,29 +57,30 @@ public class CardManager : MonoBehaviour
         drawCoHoiButton.SetActive(false);
         drawKhiVanButton.SetActive(false);
 
-        cardPanel.SetActive(true);
+        // Hiện 5 thẻ lưng
+        cardsBackPanel.SetActive(true);
 
-        // Random thẻ NGAY
+        // Chạy animation shuffle
+        cardsBackAnimator.SetTrigger("Shuffle");
+
+        // Đợi shuffle chạy xong (ví dụ 1s)
+        yield return new WaitForSeconds(1f);
+
+        // Tắt 5 thẻ
+        cardsBackPanel.SetActive(false);
+
+        // ✨ Thêm nhịp chờ 0.3–0.5s tạo “khoảng lặng” trước khi mở
+        yield return new WaitForSeconds(0.5f);
+
+        // Random & gán thẻ
         int index = Random.Range(0, cards.Count);
-        Sprite pickedCard = cards[index];
-        cardDisplay.sprite = pickedCard;
+        cardDisplay.sprite = cards[index];
 
-        if (!hasFlippedOnce)
-        {
-            // ✅ Chỉ lật lần đầu
-            cardAnimator.SetTrigger("Flip");
-            yield return new WaitForSeconds(0.5f); // Đợi animation
-            hasFlippedOnce = true;
-        }
-        else
-        {
-            // ✅ Những lần sau: không cần đợi animation
-            yield return null;
-        }
+        // Hiện panel thẻ
+        cardPanel.SetActive(true);
 
         isFlipping = false;
     }
-
 
     public void CloseCardPanel()
     {
