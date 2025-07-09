@@ -1,80 +1,114 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
 {
-    public List<Sprite> coHoiCards;   // Load tự động
-    public List<Sprite> khiVanCards;  // Load tự động
+    public List<Sprite> coHoiCards;
+    public List<Sprite> khiVanCards;
 
     public Image cardDisplay;         // UI Image để hiện thẻ
-    public GameObject cardPanel;      // UI Panel chứa card
+    public GameObject cardPanel;      // Panel chứa thẻ
 
-    public GameObject drawCoHoiButton;    // Nút Bốc Cơ Hội
-    public GameObject drawKhiVanButton;   // Nút Bốc Khí Vận
+    public GameObject drawCoHoiButton;
+    public GameObject drawKhiVanButton;
 
+    public Animator cardAnimator;     // Animator gắn vào CardDisplay
+    private bool isFlipping = false;
+    private bool hasFlippedOnce = false;
     void Start()
     {
-        LoadCards();
+        LoadCards();  // Lúc bắt đầu game → load asset
     }
 
     void LoadCards()
     {
+        // Load tự động các thẻ từ folder Resources/Sprites/...
         Sprite[] coHoi = Resources.LoadAll<Sprite>("Sprites/CoHoiCard");
-        if (coHoi.Length == 0) Debug.LogWarning("Không load được thẻ Cơ Hội!");
         coHoiCards = new List<Sprite>(coHoi);
 
         Sprite[] khiVan = Resources.LoadAll<Sprite>("Sprites/KhiVanCard");
-        if (khiVan.Length == 0) Debug.LogWarning("Không load được thẻ Khí Vận!");
         khiVanCards = new List<Sprite>(khiVan);
 
         Debug.Log("Đã load " + coHoiCards.Count + " thẻ Cơ Hội.");
         Debug.Log("Đã load " + khiVanCards.Count + " thẻ Khí Vận.");
     }
 
-    // Hàm random 1 thẻ Cơ Hội
     public void DrawCoHoiCard()
     {
-        if (coHoiCards.Count == 0)
-        {
-            Debug.LogWarning("Chưa có thẻ Cơ Hội!");
-            return;
-        }
-
-        int randomIndex = Random.Range(0, coHoiCards.Count);
-        Sprite pickedCard = coHoiCards[randomIndex];
-        ShowCard(pickedCard);
+        if (coHoiCards.Count == 0) return;
+        StartCoroutine(PlayFlipAndShowCard(coHoiCards));
     }
 
-    // Hàm random 1 thẻ Khí Vận
     public void DrawKhiVanCard()
     {
-        if (khiVanCards.Count == 0)
-        {
-            Debug.LogWarning("Chưa có thẻ Khí Vận!");
-            return;
-        }
-
-        int randomIndex = Random.Range(0, khiVanCards.Count);
-        Sprite pickedCard = khiVanCards[randomIndex];
-        ShowCard(pickedCard);
+        if (khiVanCards.Count == 0) return;
+        StartCoroutine(PlayFlipAndShowCard(khiVanCards));
     }
 
-    void ShowCard(Sprite card)
-    {
-        cardDisplay.sprite = card;
-        cardPanel.SetActive(true);
 
-        // Ẩn 2 nút khi hiện thẻ
+    //IEnumerator PlayFlipAndShowCard(List<Sprite> cards)
+    //{
+    //    if (isFlipping) yield break;
+    //    isFlipping = true;
+
+    //    drawCoHoiButton.SetActive(false);
+    //    drawKhiVanButton.SetActive(false);
+
+    //    cardPanel.SetActive(true);
+
+    //    // ✅ Random NGAY & gán sprite mới
+    //    int index = Random.Range(0, cards.Count);
+    //    Sprite pickedCard = cards[index];
+    //    cardDisplay.sprite = pickedCard;
+
+    //    // ✅ Sau đó mới chạy animation lật
+    //    cardAnimator.SetTrigger("Flip");
+
+    //    // ✅ Đợi animation chạy xong (0.5s)
+    //    yield return new WaitForSeconds(0.5f);
+
+    //    isFlipping = false;
+    //}
+
+
+    IEnumerator PlayFlipAndShowCard(List<Sprite> cards)
+    {
+        if (isFlipping) yield break;
+        isFlipping = true;
+
         drawCoHoiButton.SetActive(false);
         drawKhiVanButton.SetActive(false);
+
+        cardPanel.SetActive(true);
+
+        // Random thẻ NGAY
+        int index = Random.Range(0, cards.Count);
+        Sprite pickedCard = cards[index];
+        cardDisplay.sprite = pickedCard;
+
+        if (!hasFlippedOnce)
+        {
+            // ✅ Chỉ lật lần đầu
+            cardAnimator.SetTrigger("Flip");
+            yield return new WaitForSeconds(0.5f); // Đợi animation
+            hasFlippedOnce = true;
+        }
+        else
+        {
+            // ✅ Những lần sau: không cần đợi animation
+            yield return null;
+        }
+
+        isFlipping = false;
     }
+
 
     public void CloseCardPanel()
     {
+        // Tắt panel và hiện lại 2 nút
         cardPanel.SetActive(false);
-
-        // Hiện lại 2 nút
         drawCoHoiButton.SetActive(true);
         drawKhiVanButton.SetActive(true);
     }
