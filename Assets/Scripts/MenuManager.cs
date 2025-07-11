@@ -20,6 +20,9 @@ public class MenuManager : MonoBehaviour
     public Toggle MusicToggle;
     public Toggle SoundToggle;
 
+    [Header("Sliders")]
+    public Slider MusicSlider;
+
     void Start()
     {
         // Gán các sự kiện OnClick
@@ -33,6 +36,7 @@ public class MenuManager : MonoBehaviour
         // Gán sự kiện Toggle và Slider
         MusicToggle.onValueChanged.AddListener(delegate { ToggleMusic(); });
         SoundToggle.onValueChanged.AddListener(delegate { ToggleSound(); });
+        MusicSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
 
         // Ẩn panel ban đầu
         TutorialsPanel.SetActive(false);
@@ -41,6 +45,7 @@ public class MenuManager : MonoBehaviour
         // Khởi tạo trạng thái Toggle và Slider từ AudioManager (nếu có)
         if (AudioManager.Instance != null)
         {
+            MusicSlider.value = AudioManager.Instance.bgmSource.volume;
             MusicToggle.isOn = !AudioManager.Instance.bgmSource.mute;
         }
     }
@@ -93,11 +98,8 @@ public class MenuManager : MonoBehaviour
 
     public void ToggleSound()
     {
-        bool enabled = SoundToggle.isOn;
-        Debug.Log("Sound is " + (enabled ? "ON" : "OFF"));
-
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.SetSFXEnabled(enabled);
+        Debug.Log("Sound is " + (SoundToggle.isOn ? "ON" : "OFF"));
+        // Thêm xử lý SFX sau nếu bạn có hệ thống SFX
     }
 
     public void ExitGame()
