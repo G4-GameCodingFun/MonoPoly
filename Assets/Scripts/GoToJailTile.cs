@@ -6,9 +6,22 @@ public class GoToJailTile : Tile
 
     public override void OnPlayerLanded(PlayerController player)
     {
-        if (player == null || jailPosition == null) return;
+        if (player == null)
+        {
+            Debug.LogWarning("❌ Player null tại ô GoToJailTile");
+            return;
+        }
 
-        player.GoToJail(jailPosition);
-        Debug.Log($"{player.playerName} đã bị đưa vào tù!");
+        if (jailPosition == null)
+        {
+            Debug.LogWarning("❌ jailPosition chưa được gán trên GoToJailTile");
+            return;
+        }
+
+        player.GoToJail();
+        player.currentTileIndex = GameManager.Instance.mapTiles.IndexOf(jailPosition);
+        GameManager.Instance.currentTileIndexes[GameManager.Instance.players.IndexOf(player.gameObject)] = player.currentTileIndex;
+
+        Debug.Log($"🚨 {player.playerName} đã bị đưa vào tù!");
     }
 }

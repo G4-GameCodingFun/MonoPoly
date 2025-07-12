@@ -17,6 +17,7 @@ public class CardManager : MonoBehaviour
     public GameObject cardsBackPanel;
 
     private bool isFlipping = false;
+    private PlayerController currentCardPlayer; 
 
     void Start()
     {
@@ -29,7 +30,7 @@ public class CardManager : MonoBehaviour
         khiVanCards = new List<CardData>();
 
         // CƠ HỘI (18)
-        AddCoHoiCard("DICHUYEN1", CardEffectType.TROLAI_XUATPHAT, 200);
+        AddCoHoiCard("DICHUYEN1", CardEffectType.TROLAI_XUATPHAT, 0);
         AddCoHoiCard("DICHUYEN2", CardEffectType.DI_LUI_3_BUOC, 0);
         AddCoHoiCard("DICHUYEN3", CardEffectType.TOI_O_NHA_CAO_NHAT, 0);
         AddCoHoiCard("MATTIEN1", CardEffectType.BI_LUA_DAO, -80);
@@ -38,23 +39,23 @@ public class CardManager : MonoBehaviour
         AddCoHoiCard("SPEC1", CardEffectType.GAP_SUCO_BO1LUOT, 0);
         AddCoHoiCard("SPEC2", CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE, 0);
         AddCoHoiCard("SPEC3", CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM, 0);
-        AddCoHoiCard("TRAPHI1", CardEffectType.TRA_MOI_NGUOI, -50);
+        AddCoHoiCard("TRAPHI1", CardEffectType.TRA_MOI_NGUOI, 0);
         AddCoHoiCard("TRAPHI2", CardEffectType.TO_CHUC_TIEC, -150);
         AddCoHoiCard("TRAPHI3", CardEffectType.MUA_QUA_LUU_NIEM, -50);
         AddCoHoiCard("TU1", CardEffectType.NOP_PHAT_GIAOTHONG, -100);
         AddCoHoiCard("TU2", CardEffectType.THE_RA_TU_MIENPHI, 0);
         AddCoHoiCard("TU3", CardEffectType.BI_BAT_GIU_DOT_XUAT, 0);
         AddCoHoiCard("NHANTHUONG1", CardEffectType.DAUTU_THANHCONG, 150);
-        AddCoHoiCard("NHANTHUONG2", CardEffectType.TRUNG_XOSO, 120);
-        AddCoHoiCard("NHANTHUONG3", CardEffectType.HOANTHUE_CUOINAM, 150);
+        AddCoHoiCard("NHANTHUONG2", CardEffectType.TRUNG_XOSO, 150);
+        AddCoHoiCard("NHANTHUONG3", CardEffectType.HOANTHUE_CUOINAM, 90);
 
         // KHÍ VẬN (18)
-        AddKhiVanCard("DICHUYEN1", CardEffectType.TROLAI_XUATPHAT, 200);
+        AddKhiVanCard("DICHUYEN1", CardEffectType.TROLAI_XUATPHAT, 0);
         AddKhiVanCard("DICHUYEN2", CardEffectType.TOI_BENXE_GANNHAT, 0);
         AddKhiVanCard("DICHUYEN3", CardEffectType.TOI_CONGTY_GANNHAT, 0);
         AddKhiVanCard("TU1", CardEffectType.VAO_TU, 0);
         AddKhiVanCard("TU2", CardEffectType.THE_RA_TU_MIENPHI, 0);
-        AddKhiVanCard("TU3", CardEffectType.VE_BAO_LANH_RA_TU, -150);
+        AddKhiVanCard("TU3", CardEffectType.VE_BAO_LANH_RA_TU, 0);
         AddKhiVanCard("NHANTHUONG1", CardEffectType.THANG_GIAI_TOAN_TU_DUY, 200);
         AddKhiVanCard("NHANTHUONG2", CardEffectType.NHAN_TIEN_TIETKIEM, 100);
         AddKhiVanCard("NHANTHUONG3", CardEffectType.NHAN_HOCBONG, 250);
@@ -80,6 +81,7 @@ public class CardManager : MonoBehaviour
             Debug.LogWarning($"❌ Không tìm thấy sprite: CoHoiCard/{spriteName}");
     }
 
+    // Hàm thêm thẻ Khí Vận
     void AddKhiVanCard(string spriteName, CardEffectType effect, int money)
     {
         var sprite = LoadSprite($"KhiVanCard/{spriteName}");
@@ -89,41 +91,44 @@ public class CardManager : MonoBehaviour
             Debug.LogWarning($"❌ Không tìm thấy sprite: KhiVanCard/{spriteName}");
     }
 
+    // Load sprite từ thư mục Resources/Sprites
     Sprite LoadSprite(string path)
     {
         return Resources.Load<Sprite>("Sprites/" + path);
     }
 
-    public void DrawCoHoiCard()
+    // Gọi khi người chơi bấm nút rút thẻ Cơ Hội
+    public void DrawCoHoiCard(PlayerController player)
     {
         if (coHoiCards.Count == 0 || isFlipping) return;
+        currentCardPlayer = player;
         StartCoroutine(PlayShuffleAndShowCard(coHoiCards, "Cơ Hội"));
     }
 
-    public void DrawKhiVanCard()
+    public void DrawKhiVanCard(PlayerController player)
     {
         if (khiVanCards.Count == 0 || isFlipping) return;
+        currentCardPlayer = player;
         StartCoroutine(PlayShuffleAndShowCard(khiVanCards, "Khí Vận"));
     }
 
+    // Coroutine xử lý animation lật thẻ, chọn thẻ ngẫu nhiên, và áp dụng hiệu ứng
     IEnumerator PlayShuffleAndShowCard(List<CardData> cards, string cardType)
     {
         isFlipping = true;
 
         drawCoHoiButton.SetActive(false);
         drawKhiVanButton.SetActive(false);
-
         cardsBackPanel.SetActive(true);
         cardsBackAnimator.SetTrigger("Shuffle");
 
         yield return new WaitForSeconds(1f);
-        cardsBackPanel.SetActive(false);
 
-        yield return new WaitForSeconds(0.5f);
+        cardsBackPanel.SetActive(false);
+        yield return new WaitForSeconds(0.5f); 
 
         int index = Random.Range(0, cards.Count);
         CardData pickedCard = cards[index];
-
         cardDisplay.sprite = pickedCard.sprite;
         cardPanel.SetActive(true);
 
@@ -136,61 +141,97 @@ public class CardManager : MonoBehaviour
 
     void ApplyCardEffect(CardData card)
     {
+        PlayerController player = currentCardPlayer;
+
+        // Chỉ xử lý tiền ở đây nếu card.moneyAmount khác 0
         if (card.moneyAmount != 0)
         {
             if (card.moneyAmount > 0)
-                Debug.Log($"💰 Nhận {card.moneyAmount} tiền");
-            else
-                Debug.Log($"💸 Mất {-card.moneyAmount} tiền");
-        }
-        else
-        {
-            switch (card.effect)
             {
-                case CardEffectType.TROLAI_XUATPHAT:
-                    Debug.Log("🔁 Về ô xuất phát!");
-                    break;
-                case CardEffectType.DI_LUI_3_BUOC:
-                    Debug.Log("🔙 Lùi 3 bước!");
-                    break;
-                case CardEffectType.TOI_CONGTY_GANNHAT:
-                    Debug.Log("🏢 Đến công ty gần nhất!");
-                    break;
-                case CardEffectType.TOI_BENXE_GANNHAT:
-                    Debug.Log("🚌 Đến bến xe gần nhất!");
-                    break;
-                case CardEffectType.TOI_O_NHA_CAO_NHAT:
-                    Debug.Log("🏠 Đến ô nhà cao nhất!");
-                    break;
-                case CardEffectType.VAO_TU:
-                    Debug.Log("🚓 Vào tù!");
-                    break;
-                case CardEffectType.THE_RA_TU_MIENPHI:
-                    Debug.Log("🆓 Có thẻ ra tù miễn phí!");
-                    break;
-                case CardEffectType.GAP_SUCO_BO1LUOT:
-                    Debug.Log("⚠️ Gặp sự cố - bỏ lượt tiếp theo!");
-                    break;
-                case CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE:
-                    Debug.Log("📄 Mất giấy - không được mua đất lượt kế!");
-                    break;
-                case CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM:
-                    Debug.Log("🏷 Được chọn 1 lô đất giảm 50% giá!");
-                    break;
-                case CardEffectType.BI_BAT_GIU_DOT_XUAT:
-                    Debug.Log("👮 Bị bắt giữ đột xuất!");
-                    break;
-                default:
-                    Debug.Log("✨ Hiệu ứng đặc biệt khác.");
-                    break;
+                player.money += card.moneyAmount;
+                Debug.Log($"💰 Nhận {card.moneyAmount}$ từ thẻ {card.name}");
+            }
+            else
+            {
+                bool success = player.TryPay(-card.moneyAmount);
+                if (success)
+                    Debug.Log($"💸 Mất {-card.moneyAmount}$ từ thẻ {card.name}");
+                else
+                    Debug.Log($"❌ Không đủ tiền để thanh toán {-card.moneyAmount}$");
             }
         }
-    }
 
+        // Áp dụng hiệu ứng đặc biệt
+        switch (card.effect)
+        {
+            case CardEffectType.TROLAI_XUATPHAT:
+                GameManager.Instance.MovePlayerToTile(player, 0);
+                break;
+
+            case CardEffectType.DI_LUI_3_BUOC:
+                GameManager.Instance.MovePlayerBySteps(player, -3);
+                break;
+
+            case CardEffectType.TOI_CONGTY_GANNHAT:
+                GameManager.Instance.MovePlayerToNearestTileWithTag(player, "Company");
+                break;
+
+            case CardEffectType.TOI_BENXE_GANNHAT:
+                GameManager.Instance.MovePlayerToNearestTileWithTag(player, "Station");
+                break;
+
+            case CardEffectType.TOI_O_NHA_CAO_NHAT:
+                GameManager.Instance.MovePlayerToMostExpensiveProperty(player);
+                break;
+
+            case CardEffectType.VAO_TU:
+            case CardEffectType.BI_BAT_GIU_DOT_XUAT:
+                GameManager.Instance.MovePlayerToTile(player, GameManager.Instance.jailPosition.GetSiblingIndex());
+                player.inJail = true;
+                player.jailTurns = 3;
+                break;
+
+            case CardEffectType.THE_RA_TU_MIENPHI:
+                player.hasGetOutOfJailFreeCard = true;
+                break;
+
+            case CardEffectType.VE_BAO_LANH_RA_TU:
+                if (player.TryPay(150))
+                {
+                    player.GetOutOfJail();
+                }
+                else
+                {
+                    Debug.Log($"❌ {player.playerName} không đủ tiền để bảo lãnh ra tù");
+                }
+                break;
+
+            case CardEffectType.TRA_MOI_NGUOI:
+                GameManager.Instance.PayEveryone(player, 50);
+                break;
+
+            case CardEffectType.GAP_SUCO_BO1LUOT:
+                player.skipNextTurn = true;
+                break;
+
+            case CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE:
+                player.cannotBuyNextTurn = true;
+                break;
+
+            case CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM:
+                player.canBuyDiscountProperty = true;
+                break;
+
+            default:
+                Debug.Log($"✨ Hiệu ứng {card.effect} không có logic đặc biệt hoặc đã được xử lý qua tiền.");
+                break;
+        }
+    }
     public void CloseCardPanel()
     {
         cardPanel.SetActive(false);
         drawCoHoiButton.SetActive(true);
         drawKhiVanButton.SetActive(true);
+        currentCardPlayer = null;
     }
 }

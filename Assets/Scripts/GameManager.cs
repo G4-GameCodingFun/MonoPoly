@@ -7,42 +7,56 @@ public class GameManager : MonoBehaviour
 {
     public List<Transform> mapTiles;
     public List<GameObject> players;
-
-    private int[] currentTileIndexes;
-    private int currentPlayerIndex = 0;
-    private bool isMoving = false;
-    public float moveSpeed = 5f;
-
+    public static GameManager Instance;
+    public float moveSpeed = 15f;
+    public CardManager cardManager;
     public Transform jailPosition;
 
-    void Start()
+    public int[] currentTileIndexes;
+    private int currentPlayerIndex = 0;
+    private bool isMoving = false;
+    public PlayerController currentPlayer;
+
+    private void Awake()
     {
-        if (players == null || players.Count == 0)
-        {
-            Debug.LogError("Chưa có người chơi nào được gán!");
-            return;
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
+    private void Start()
+    {
         currentTileIndexes = new int[players.Count];
-
         for (int i = 0; i < players.Count; i++)
         {
             currentTileIndexes[i] = 0;
-            players[i].transform.position = mapTiles[0].position;
         }
+    }
+
+    public int CurrentPlayerIndex => currentPlayerIndex;
+
+    public PlayerController GetCurrentPlayer()
+    {
+        return players[currentPlayerIndex].GetComponent<PlayerController>();
     }
 
     public void RollDiceAndMove()
     {
         if (isMoving) return;
 
-        PlayerController currentPlayer = players[currentPlayerIndex].GetComponent<PlayerController>();
+        currentPlayer = GetCurrentPlayer();
 
-        // Nếu đang ở tù
+        // ✅ Check skip turn
+        if (currentPlayer.skipNextTurn)
+        {
+            currentPlayer.skipNextTurn = false;
+            Debug.Log($"{currentPlayer.playerName} bị mất lượt!");
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+            return;
+        }
+
         if (currentPlayer.inJail)
         {
             currentPlayer.jailTurns--;
-
             if (currentPlayer.jailTurns > 0)
             {
                 Debug.Log($"{currentPlayer.playerName} đang ở tù. Còn {currentPlayer.jailTurns} lượt.");
@@ -51,23 +65,26 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log($"{currentPlayer.playerName} đã ra tù sau 3 lượt.");
+                Debug.Log($"{currentPlayer.playerName} đã ra tù.");
                 currentPlayer.inJail = false;
             }
         }
 
-        int diceResult = RollDice();
-        Debug.Log($"Player {currentPlayerIndex + 1} rolled: {diceResult}");
+        int dice = RollDice();
+        Debug.Log($"{currentPlayer.playerName} rolled: {dice}");
 
-        StartCoroutine(MovePlayer(currentPlayerIndex, diceResult));
+        StartCoroutine(MovePlayer(currentPlayerIndex, dice));
     }
 
+    private int RollDice()
+    {
+        return Random.Range(1, 7) + Random.Range(1, 7);
+    }
 
     private IEnumerator MovePlayer(int playerIndex, int steps)
     {
         isMoving = true;
-
-        PlayerController playerCtrl = players[playerIndex].GetComponent<PlayerController>();
+        PlayerController player = players[playerIndex].GetComponent<PlayerController>();
 
         for (int i = 0; i < steps; i++)
         {
@@ -80,52 +97,119 @@ public class GameManager : MonoBehaviour
                 passedGo = true;
             }
 
-            Vector3 nextPos = mapTiles[currentTileIndexes[playerIndex]].position;
-
-            while (Vector3.Distance(players[playerIndex].transform.position, nextPos) > 0.01f)
+            Vector3 target = mapTiles[currentTileIndexes[playerIndex]].position;
+            while (Vector3.Distance(player.transform.position, target) > 0.01f)
             {
-                players[playerIndex].transform.position = Vector3.MoveTowards(
-                    players[playerIndex].transform.position,
-                    nextPos,
-                    moveSpeed * Time.deltaTime
-                );
+                player.transform.position = Vector3.MoveTowards(player.transform.position, target, moveSpeed * Time.deltaTime);
                 yield return null;
             }
 
             yield return new WaitForSeconds(0.2f);
 
-            // Tặng tiền khi qua "GO"
             if (passedGo)
             {
-                playerCtrl.money += 200;
-                Debug.Log($"{playerCtrl.playerName} đi qua ô GO và nhận 200$");
+                player.money += 200;
+                Debug.Log($"💰 {player.playerName} đi qua Xuất Phát và nhận 200$");
             }
         }
 
-        // ✅ Khi đã di chuyển đến ô cuối cùng
-        GameObject tileObject = mapTiles[currentTileIndexes[playerIndex]].gameObject;
-        Tile landedTile = tileObject.GetComponent<Tile>();
+        player.currentTileIndex = currentTileIndexes[playerIndex];
 
+        Tile landedTile = mapTiles[player.currentTileIndex].GetComponent<Tile>();
         if (landedTile != null)
-        {
-            landedTile.OnPlayerLanded(playerCtrl); // Xử lý chung cho tất cả loại ô
-        }
+            landedTile.OnPlayerLanded(player);
         else
-        {
-            Debug.LogWarning($"Tile tại index {currentTileIndexes[playerIndex]} không có component Tile.");
-        }
+            Debug.LogWarning($"⚠️ Ô {player.currentTileIndex} không có component Tile.");
 
-        yield return new WaitForSeconds(1f); // Chờ 1s rồi mới tới lượt người kế tiếp
+        yield return new WaitForSeconds(1f);
 
         currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
-        Debug.Log($"Now it's Player {currentPlayerIndex + 1}'s turn!");
+        Debug.Log($"👉 Tới lượt: {players[currentPlayerIndex].GetComponent<PlayerController>().playerName}");
 
         isMoving = false;
     }
 
-    private int RollDice()
+    public void MovePlayerToTile(PlayerController player, int tileIndex)
     {
-        return Random.Range(1, 7) + Random.Range(1, 7); // 2 xúc xắc
+        player.transform.position = mapTiles[tileIndex].position;
+        player.currentTileIndex = tileIndex;
+        currentTileIndexes[players.IndexOf(player.gameObject)] = tileIndex;
+
+        Tile tile = mapTiles[tileIndex].GetComponent<Tile>();
+        if (tile != null) tile.OnPlayerLanded(player);
     }
-    public int CurrentPlayerIndex => currentPlayerIndex;
+
+    public void MovePlayerBySteps(PlayerController player, int steps)
+    {
+        int newIndex = (player.currentTileIndex + steps + mapTiles.Count) % mapTiles.Count;
+        MovePlayerToTile(player, newIndex);
+    }
+
+    public void MovePlayerToMostExpensiveProperty(PlayerController player)
+    {
+        int maxPrice = -1;
+        int targetIndex = -1;
+
+        for (int i = 0; i < mapTiles.Count; i++)
+        {
+            var prop = mapTiles[i].GetComponent<PropertyTile>();
+            if (prop != null && prop.GetPrice() > maxPrice)
+            {
+                maxPrice = prop.GetPrice();
+                targetIndex = i;
+            }
+        }
+
+        if (targetIndex != -1)
+        {
+            MovePlayerToTile(player, targetIndex);
+        }
+        else
+        {
+            Debug.LogWarning("❌ Không tìm thấy ô tài sản nào.");
+        }
+    }
+
+    public void MovePlayerToNearestTileWithTag(PlayerController player, string tag)
+    {
+        int start = player.currentTileIndex;
+        for (int offset = 1; offset < mapTiles.Count; offset++)
+        {
+            int index = (start + offset) % mapTiles.Count;
+            if (mapTiles[index].CompareTag(tag))
+            {
+                MovePlayerToTile(player, index);
+                return;
+            }
+        }
+
+        Debug.LogWarning($"❌ Không tìm thấy ô có tag: {tag}");
+    }
+
+    public void PayEveryone(PlayerController payer, int amountEach)
+    {
+        foreach (PlayerController other in FindObjectsOfType<PlayerController>())
+        {
+            if (other != payer)
+            {
+                if (payer.TryPay(amountEach))
+                {
+                    other.money += amountEach;
+                    Debug.Log($"💸 {payer.playerName} trả {amountEach}$ cho {other.playerName}");
+                }
+                else
+                {
+                    Debug.Log($"❌ {payer.playerName} không đủ tiền để trả {amountEach}$ cho {other.playerName}");
+                }
+            }
+        }
+    }
+
+    public void DrawChanceCard() => cardManager.DrawCoHoiCard(GetCurrentPlayer());
+    public void DrawKhiVanCard() => cardManager.DrawKhiVanCard(GetCurrentPlayer());
+    public void NextTurn()
+    {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+        Debug.Log($"Tới lượt: {players[currentPlayerIndex].GetComponent<PlayerController>().playerName}");
+    }
 }

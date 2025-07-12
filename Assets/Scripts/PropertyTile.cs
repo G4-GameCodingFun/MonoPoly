@@ -19,7 +19,7 @@ public class PropertyTile : Tile
 
     public int GetHouseCost() => data?.houseCost ?? 0;
     public int GetHotelCost() => data?.hotelCost ?? 0;
-    public int GetMortgageValue() => data?.mortgageValue ?? 0;
+    public override int GetMortgageValue() => data?.mortgageValue ?? 0;
 
     public override void OnPlayerLanded(PlayerController player)
     {

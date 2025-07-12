@@ -9,6 +9,7 @@ public enum TileType
     Jail,
     Go,
     GoToJail,
+    Airport,
 }
 
 public enum TileSubType

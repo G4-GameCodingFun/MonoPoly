@@ -204,6 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 138727678}
   - component: {fileID: 138727679}
+  - component: {fileID: 138727680}
   m_Layer: 0
   m_Name: COHOI_0
   m_TagString: Untagged
@@ -281,6 +282,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &138727680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138727677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ece6c37815958f40bd140c3b748a537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "C\u01A1 H\u1ED9i"
+  type: 2
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &151569642
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,6 +309,7 @@ GameObject:
   m_Component:
   - component: {fileID: 151569643}
   - component: {fileID: 151569644}
+  - component: {fileID: 151569645}
   m_Layer: 0
   m_Name: COHOI_0
   m_TagString: Untagged
@@ -368,6 +387,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &151569645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151569642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ece6c37815958f40bd140c3b748a537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "C\u01A1 H\u1ED9i"
+  type: 2
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &189862358
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,7 +656,7 @@ GameObject:
   - component: {fileID: 210802750}
   m_Layer: 0
   m_Name: BENXEDANANG_0
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1901,7 +1937,7 @@ GameObject:
   - component: {fileID: 591765242}
   m_Layer: 0
   m_Name: BENXECANTHO_0
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2418,8 +2454,11 @@ MonoBehaviour:
   - {fileID: 6205625210242279419}
   - {fileID: 1019136361627812610}
   - {fileID: 5250229375776384380}
-  moveSpeed: 5
+  moveSpeed: 15
+  cardManager: {fileID: 675776308}
   jailPosition: {fileID: 1148944262}
+  currentTileIndexes: 
+  currentPlayer: {fileID: 0}
 --- !u!1 &727273288
 GameObject:
   m_ObjectHideFlags: 0
@@ -2508,7 +2547,7 @@ GameObject:
   - component: {fileID: 822486980}
   m_Layer: 0
   m_Name: BENXEMYDINH_0
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3423,6 +3462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1148944262}
   - component: {fileID: 1148944263}
+  - component: {fileID: 1148944264}
   m_Layer: 0
   m_Name: THAMTU_0
   m_TagString: Untagged
@@ -3500,6 +3540,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1148944264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148944261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad3f812eff94afa4cb9a9f64d2487087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "T\xF9"
+  type: 4
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
+  data: {fileID: 0}
+  houseCount: 0
+  hasHotel: 0
 --- !u!1 &1232984459
 GameObject:
   m_ObjectHideFlags: 0
@@ -3942,6 +4002,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1305146179}
   - component: {fileID: 1305146180}
+  - component: {fileID: 1305146181}
   m_Layer: 0
   m_Name: COHOI_0 (1)
   m_TagString: Untagged
@@ -4019,6 +4080,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1305146181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305146178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ece6c37815958f40bd140c3b748a537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "C\u01A1 H\u1ED9i"
+  type: 2
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &1362463333
 GameObject:
   m_ObjectHideFlags: 0
@@ -4029,6 +4107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1362463334}
   - component: {fileID: 1362463335}
+  - component: {fileID: 1362463336}
   m_Layer: 0
   m_Name: KHIVAN_0 (1)
   m_TagString: Untagged
@@ -4106,6 +4185,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1362463336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362463333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 909a94df0359a6744a6f1ee4fd8d4ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "Kh\xED V\u1EADn"
+  type: 3
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &1443990178
 GameObject:
   m_ObjectHideFlags: 0
@@ -4224,6 +4320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1445566346}
   - component: {fileID: 1445566347}
+  - component: {fileID: 1445566348}
   m_Layer: 0
   m_Name: KHIVAN_0
   m_TagString: Untagged
@@ -4301,6 +4398,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1445566348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445566345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 909a94df0359a6744a6f1ee4fd8d4ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "Kh\xED V\u1EADn"
+  type: 3
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &1557901845
 GameObject:
   m_ObjectHideFlags: 0
@@ -4422,6 +4536,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1631369040}
   - component: {fileID: 1631369041}
+  - component: {fileID: 1631369042}
   m_Layer: 0
   m_Name: SANBAY_0
   m_TagString: Untagged
@@ -4499,6 +4614,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1631369042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631369039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c62142b59bc97438f9300e94774b0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "S\xE2n Bay"
+  type: 7
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &1635342371
 GameObject:
   m_ObjectHideFlags: 0
@@ -4942,7 +5074,7 @@ GameObject:
   - component: {fileID: 1734980265}
   m_Layer: 0
   m_Name: CONTYDIENLUC_0
-  m_TagString: Untagged
+  m_TagString: Company
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5048,7 +5180,7 @@ GameObject:
   - component: {fileID: 1760401310}
   m_Layer: 0
   m_Name: CONTYTHUYLUC_0
-  m_TagString: Untagged
+  m_TagString: Company
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5151,6 +5283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1849999675}
   - component: {fileID: 1849999676}
+  - component: {fileID: 1849999677}
   m_Layer: 0
   m_Name: KHIVAN_0
   m_TagString: Untagged
@@ -5228,6 +5361,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1849999677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849999674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 909a94df0359a6744a6f1ee4fd8d4ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileName: "Kh\xED V\u1EADn"
+  type: 3
+  subType: 0
+  isMortgaged: 0
+  owner: {fileID: 0}
 --- !u!1 &1865461552
 GameObject:
   m_ObjectHideFlags: 0
@@ -5661,7 +5811,7 @@ GameObject:
   - component: {fileID: 2033207107}
   m_Layer: 0
   m_Name: BENXEMIENDONG_0
-  m_TagString: Untagged
+  m_TagString: Station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5880,10 +6030,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: 1
-  money: 10
-  ownedTiles: []
+  money: 2000
+  currentTileIndex: 0
   inJail: 0
   jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  ownedTiles: []
 --- !u!1 &2110210350
 GameObject:
   m_ObjectHideFlags: 0
@@ -6622,9 +6777,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: 3
   money: 2000
-  ownedTiles: []
+  currentTileIndex: 0
   inJail: 0
   jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  ownedTiles: []
 --- !u!95 &2612003126433100421
 Animator:
   serializedVersion: 7
@@ -6798,9 +6958,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: 2
   money: 2000
-  ownedTiles: []
+  currentTileIndex: 0
   inJail: 0
   jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  ownedTiles: []
 --- !u!212 &9126133703451110256
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6882,9 +7047,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: 4
   money: 2000
-  ownedTiles: []
+  currentTileIndex: 0
   inJail: 0
   jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  ownedTiles: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
