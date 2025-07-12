@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6429493399158520243, guid: 15d5367e7a50f7f4a94931cd753fec49, type: 3}
+  m_Sprite: {fileID: 128889091407729587, guid: 8cdefbc685fb933489884073fbd5e438, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -985,7 +985,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4987337320017983735, guid: 17c3c8cf967c7c0499b57c2e52bba2b8, type: 3}
+  m_Sprite: {fileID: -606033477821260893, guid: 4adb9018ae144ad4783d9bb2d53ae1b2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2477,7 +2477,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8671463612928085241, guid: 6bc5c586bf662514b99afbd3c7d407d9, type: 3}
+  m_Sprite: {fileID: 1646720447909147354, guid: b2cff8e86507506428db2677594a5940, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3179,7 +3179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6358040702757662528, guid: beede4ffb7c936441852b432f5baefdf, type: 3}
+  m_Sprite: {fileID: -7057060395142453220, guid: b22e590369817b84ea95e46752f14d69, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4358,7 +4358,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6286595657586805340, guid: dbba66eea68660540ab1184cd7a8f794, type: 3}
+  m_Sprite: {fileID: 3685002520340290964, guid: 2896ee4d14918554d94d452c427497ac, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6608,9 +6608,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54bbd0c5fc07bf45814812aaca2d687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  money: 2000
-  ownedTiles: []
-  inJail: 0
 --- !u!114 &2546056503308570292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6787,9 +6784,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54bbd0c5fc07bf45814812aaca2d687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  money: 2000
-  ownedTiles: []
-  inJail: 0
 --- !u!114 &8300976579772090978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6874,9 +6868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54bbd0c5fc07bf45814812aaca2d687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  money: 2000
-  ownedTiles: []
-  inJail: 0
 --- !u!114 &9126133703451110258
 MonoBehaviour:
   m_ObjectHideFlags: 0
