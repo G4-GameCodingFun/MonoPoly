@@ -28,43 +28,45 @@ public class CardManager : MonoBehaviour
         coHoiCards = new List<CardData>();
         khiVanCards = new List<CardData>();
 
+        // CƠ HỘI (18)
         AddCoHoiCard("DICHUYEN1", CardEffectType.TROLAI_XUATPHAT, 200);
         AddCoHoiCard("DICHUYEN2", CardEffectType.DI_LUI_3_BUOC, 0);
-        AddCoHoiCard("DICHUYEN3", CardEffectType.TOI_CONGTY_GANNHAT, 0);
-        AddCoHoiCard("TU1", CardEffectType.VAO_TU, 0);
+        AddCoHoiCard("DICHUYEN3", CardEffectType.TOI_O_NHA_CAO_NHAT, 0);
+        AddCoHoiCard("MATTIEN1", CardEffectType.BI_LUA_DAO, -80);
+        AddCoHoiCard("MATTIEN2", CardEffectType.THUA_KIEN, -100);
+        AddCoHoiCard("MATTIEN3", CardEffectType.SUA_XE, -150);
+        AddCoHoiCard("SPEC1", CardEffectType.GAP_SUCO_BO1LUOT, 0);
+        AddCoHoiCard("SPEC2", CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE, 0);
+        AddCoHoiCard("SPEC3", CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM, 0);
+        AddCoHoiCard("TRAPHI1", CardEffectType.TRA_MOI_NGUOI, -50);
+        AddCoHoiCard("TRAPHI2", CardEffectType.TO_CHUC_TIEC, -150);
+        AddCoHoiCard("TRAPHI3", CardEffectType.MUA_QUA_LUU_NIEM, -50);
+        AddCoHoiCard("TU1", CardEffectType.NOP_PHAT_GIAOTHONG, -100);
         AddCoHoiCard("TU2", CardEffectType.THE_RA_TU_MIENPHI, 0);
-        AddCoHoiCard("NHANTHUONG1", CardEffectType.THANG_GIAI_TOANTUAN, 200);
-        AddCoHoiCard("NHANTHUONG2", CardEffectType.NHAN_TIEN_TIETKIEM, 100);
-        AddCoHoiCard("NHANTHUONG3", CardEffectType.NHAN_HOCBONG, 250);
-        AddCoHoiCard("SPEC1", CardEffectType.TANG_CA, 70);
-        AddCoHoiCard("SPEC2", CardEffectType.NHA_BI_CUOP, -50);
-        AddCoHoiCard("SPEC3", CardEffectType.BONG_DUNG_TRUNG_SO, -100);
-        AddCoHoiCard("TRAPHI1", CardEffectType.TRA_TIEN_HOCPHI, -200);
-        AddCoHoiCard("TRAPHI2", CardEffectType.DAN_BAN_GAI_DI_CHOI, -250);
-        AddCoHoiCard("TRAPHI3", CardEffectType.CHO_CON_DI_HOC, -150);
-        AddCoHoiCard("TU3", CardEffectType.VE_BAO_LANH_RA_TU, -150);
-        AddCoHoiCard("XH-GD1", CardEffectType.NHAN_TU_THIEN, 200);
-        AddCoHoiCard("XH-GD2", CardEffectType.DONG_TIEN_TU_THIEN, -150);
-        AddCoHoiCard("XH-GD3", CardEffectType.DI_DAM_CUOI, -200);
+        AddCoHoiCard("TU3", CardEffectType.BI_BAT_GIU_DOT_XUAT, 0);
+        AddCoHoiCard("NHANTHUONG1", CardEffectType.DAUTU_THANHCONG, 150);
+        AddCoHoiCard("NHANTHUONG2", CardEffectType.TRUNG_XOSO, 120);
+        AddCoHoiCard("NHANTHUONG3", CardEffectType.HOANTHUE_CUOINAM, 150);
 
+        // KHÍ VẬN (18)
         AddKhiVanCard("DICHUYEN1", CardEffectType.TROLAI_XUATPHAT, 200);
-        AddKhiVanCard("DICHUYEN2", CardEffectType.DI_LUI_3_BUOC, 0);
-        AddKhiVanCard("DICHUYEN3", CardEffectType.TOI_BENXE_GANNHAT, 0);
-        AddKhiVanCard("NHANTHUONG1", CardEffectType.TRUNG_XOSO, 150);
-        AddKhiVanCard("NHANTHUONG2", CardEffectType.HOANTHU_CUOINAM, 120);
-        AddKhiVanCard("NHANTHUONG3", CardEffectType.DAUTU_THANHCONG, 150);
-        AddKhiVanCard("SPEC1", CardEffectType.GAP_SUCO_BO1LUOT, 0);
-        AddKhiVanCard("SPEC2", CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE, 0);
-        AddKhiVanCard("SPEC3", CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM, 0);
-        AddKhiVanCard("TRAPHI1", CardEffectType.TRA_MOI_NGUOI, -50);
-        AddKhiVanCard("TRAPHI2", CardEffectType.TO_CHUC_TIEC, -150);
-        AddKhiVanCard("TRAPHI3", CardEffectType.MUA_QUA_LUU_NIEM, -50);
-        AddKhiVanCard("TU1", CardEffectType.NOP_PHAT_GIAOTHONG, -100);
+        AddKhiVanCard("DICHUYEN2", CardEffectType.TOI_BENXE_GANNHAT, 0);
+        AddKhiVanCard("DICHUYEN3", CardEffectType.TOI_CONGTY_GANNHAT, 0);
+        AddKhiVanCard("TU1", CardEffectType.VAO_TU, 0);
         AddKhiVanCard("TU2", CardEffectType.THE_RA_TU_MIENPHI, 0);
-        AddKhiVanCard("TU3", CardEffectType.BI_LUA_DAO, -80);
-        AddKhiVanCard("MATTIEN1", CardEffectType.THUA_KIEN, -100);
-        AddKhiVanCard("MATTIEN2", CardEffectType.SUA_XE, -150);
-        AddKhiVanCard("MATTIEN3", CardEffectType.DI_DAM_CUOI, -200);
+        AddKhiVanCard("TU3", CardEffectType.VE_BAO_LANH_RA_TU, -150);
+        AddKhiVanCard("NHANTHUONG1", CardEffectType.THANG_GIAI_TOAN_TU_DUY, 200);
+        AddKhiVanCard("NHANTHUONG2", CardEffectType.NHAN_TIEN_TIETKIEM, 100);
+        AddKhiVanCard("NHANTHUONG3", CardEffectType.NHAN_HOCBONG, 250);
+        AddKhiVanCard("SPEC1", CardEffectType.TANG_CA, 70);
+        AddKhiVanCard("SPEC2", CardEffectType.NHA_BI_CUOP, -50);
+        AddKhiVanCard("SPEC3", CardEffectType.BONG_DUNG_TRUNG_SO, -100);
+        AddKhiVanCard("TRAPHI1", CardEffectType.TRA_TIEN_HOCPHI, -200);
+        AddKhiVanCard("TRAPHI2", CardEffectType.DAN_BAN_GAI_DI_CHOI, -250);
+        AddKhiVanCard("TRAPHI3", CardEffectType.CHO_CON_DI_HOC, -150);
+        AddKhiVanCard("XH-GD1", CardEffectType.NHAN_TU_THIEN, 200);
+        AddKhiVanCard("XH-GD2", CardEffectType.DONG_TIEN_TU_THIEN, -150);
+        AddKhiVanCard("XH-GD3", CardEffectType.DI_DAM_CUOI, -200);
 
         Debug.Log($"✅ Loaded {coHoiCards.Count} Cơ Hội cards & {khiVanCards.Count} Khí Vận cards");
     }
@@ -75,7 +77,7 @@ public class CardManager : MonoBehaviour
         if (sprite != null)
             coHoiCards.Add(new CardData { name = spriteName, sprite = sprite, effect = effect, moneyAmount = money });
         else
-            Debug.LogWarning($"Không tìm thấy sprite: CoHoiCard/{spriteName}");
+            Debug.LogWarning($"❌ Không tìm thấy sprite: CoHoiCard/{spriteName}");
     }
 
     void AddKhiVanCard(string spriteName, CardEffectType effect, int money)
@@ -84,7 +86,7 @@ public class CardManager : MonoBehaviour
         if (sprite != null)
             khiVanCards.Add(new CardData { name = spriteName, sprite = sprite, effect = effect, moneyAmount = money });
         else
-            Debug.LogWarning($"Không tìm thấy sprite: KhiVanCard/{spriteName}");
+            Debug.LogWarning($"❌ Không tìm thấy sprite: KhiVanCard/{spriteName}");
     }
 
     Sprite LoadSprite(string path)
@@ -157,6 +159,9 @@ public class CardManager : MonoBehaviour
                 case CardEffectType.TOI_BENXE_GANNHAT:
                     Debug.Log("🚌 Đến bến xe gần nhất!");
                     break;
+                case CardEffectType.TOI_O_NHA_CAO_NHAT:
+                    Debug.Log("🏠 Đến ô nhà cao nhất!");
+                    break;
                 case CardEffectType.VAO_TU:
                     Debug.Log("🚓 Vào tù!");
                     break;
@@ -172,8 +177,11 @@ public class CardManager : MonoBehaviour
                 case CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM:
                     Debug.Log("🏷 Được chọn 1 lô đất giảm 50% giá!");
                     break;
+                case CardEffectType.BI_BAT_GIU_DOT_XUAT:
+                    Debug.Log("👮 Bị bắt giữ đột xuất!");
+                    break;
                 default:
-                    Debug.Log("✨ Hiệu ứng chưa được xử lý rõ.");
+                    Debug.Log("✨ Hiệu ứng đặc biệt khác.");
                     break;
             }
         }
