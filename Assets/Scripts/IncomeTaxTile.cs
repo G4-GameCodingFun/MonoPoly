@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 public class IncomeTaxTile : Tile
 {
@@ -11,14 +12,14 @@ public class IncomeTaxTile : Tile
 
         if (player.CanPay(taxAmount))
         {
-            player.money -= taxAmount;
+            player.TryPayServerRpc(taxAmount); // Sử dụng ServerRpc để giảm tiền
             Debug.Log($"{player.playerName} nộp thuế thu nhập: {taxAmount}$ (10% tài sản)");
         }
         else
         {
             Debug.Log($"{player.playerName} không đủ tiền nộp thuế thu nhập ({taxAmount}$)");
             Debug.Log($"{player.playerName} phá sản vì không thể nộp {taxAmount}$ thuế thu nhập.");
-            player.IsBankrupt();
+            player.IsBankruptServerRpc(); // Sử dụng ServerRpc để phá sản
         }
     }
 }

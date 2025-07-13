@@ -596,8 +596,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Final Project
-  metroPackageVersion: 
+  metroPackageName: FinalProject
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -605,7 +605,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Final Project
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Final Project
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -674,11 +674,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 98c1d2b6-34ce-499a-af5e-db422b645ae6
+  cloudProjectId: 5beb538e-72fd-4d83-9fa5-980415bda4ae
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Final Project
-  organizationId: chegiahuy0640
+  organizationId: minhtri10504
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

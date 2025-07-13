@@ -18,9 +18,10 @@ public class GoToJailTile : Tile
             return;
         }
 
-        player.GoToJail();
-        player.currentTileIndex = GameManager.Instance.mapTiles.IndexOf(jailPosition);
-        GameManager.Instance.currentTileIndexes[GameManager.Instance.players.IndexOf(player.gameObject)] = player.currentTileIndex;
+        player.GoToJailServerRpc();
+        player.currentTileIndex.Value = GameManager.Instance.mapTiles.IndexOf(jailPosition);
+        int playerIndex = GameManager.Instance.players.IndexOf(player.NetworkObject);
+        GameManager.Instance.currentTileIndexes[playerIndex].Value = player.currentTileIndex.Value;
 
         Debug.Log($"🚨 {player.playerName} đã bị đưa vào tù!");
     }

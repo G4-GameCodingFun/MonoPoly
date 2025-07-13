@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 public class UtilityTile : Tile
 {
@@ -15,7 +16,7 @@ public class UtilityTile : Tile
             int price = GetPrice();
             if (player.CanPay(price))
             {
-                player.Buy(this);
+                player.BuyServerRpc(this.NetworkObject);
                 Debug.Log($"{player.playerName} đã mua {tileName} với giá {price}$");
             }
             else
@@ -40,14 +41,14 @@ public class UtilityTile : Tile
 
             if (player.CanPay(rent))
             {
-                player.Pay(owner, rent);
+                player.PayServerRpc(owner.NetworkObject, rent);
                 Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
             }
             else
             {
                 Debug.Log($"{player.playerName} không thể trả {rent}$ tiền thuê, kể cả sau khi thế chấp.");
                 Debug.Log($"{player.playerName} phá sản và bị loại khỏi trò chơi.");
-                player.IsBankrupt();
+                player.IsBankruptServerRpc(owner.NetworkObject);
             }
         }
         else

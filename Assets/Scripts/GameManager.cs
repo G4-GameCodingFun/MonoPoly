@@ -1,21 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
-    public List<Transform> mapTiles;
-    public List<GameObject> players;
+    public List<Transform> mapTiles; // Giả sử mapTiles là shared, không cần sync
+    public List<NetworkObject> players; // Sử dụng NetworkObject cho players
     public static GameManager Instance;
     public float moveSpeed = 15f;
     public CardManager cardManager;
     public Transform jailPosition;
 
-    public int[] currentTileIndexes;
-    private int currentPlayerIndex = 0;
+    public NetworkVariable<int>[] currentTileIndexes; // Sync array cho từng player
+    public NetworkVariable<int> currentPlayerIndex = new NetworkVariable<int>(0);
     private bool isMoving = false;
     public PlayerController currentPlayer;
+
+    public Dice dice1;
+    public Dice dice2;
+    public List<int> dieRolls = new List<int>();
+    public NetworkVariable<int> DiceTotal = new NetworkVariable<int>(0);
+
+    public TextMeshProUGUI statusText; // UI cần sync nếu multiplayer, nhưng giả sử local UI
 
     private void Awake()
     {
@@ -23,193 +31,331 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        currentTileIndexes = new int[players.Count];
-        for (int i = 0; i < players.Count; i++)
+        base.OnNetworkSpawn();
+        if (IsServer)
         {
-            currentTileIndexes[i] = 0;
+            currentTileIndexes = new NetworkVariable<int>[players.Count];
+            for (int i = 0; i < players.Count; i++)
+            {
+                currentTileIndexes[i] = new NetworkVariable<int>(0);
+            }
+        }
+
+        // Hide dice initially (local)
+        if (dice1 != null) dice1.gameObject.SetActive(false);
+        if (dice2 != null) dice2.gameObject.SetActive(false);
+
+        if (statusText == null)
+        {
+            Debug.LogWarning("StatusText not assigned! Please assign in Inspector.");
         }
     }
 
-    public int CurrentPlayerIndex => currentPlayerIndex;
+    public int CurrentPlayerIndex => currentPlayerIndex.Value;
 
     public PlayerController GetCurrentPlayer()
     {
-        return players[currentPlayerIndex].GetComponent<PlayerController>();
+        return players[currentPlayerIndex.Value].GetComponent<PlayerController>();
     }
 
-    public void RollDiceAndMove()
+    public void AddDiceRoll(int value)
+    {
+        DiceTotal.Value += value;
+        dieRolls.Add(value);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RollDiceAndMoveServerRpc()
     {
         if (isMoving) return;
 
         currentPlayer = GetCurrentPlayer();
 
-        // ✅ Check skip turn
-        if (currentPlayer.skipNextTurn)
+        // Check skip turn
+        if (currentPlayer.skipNextTurn.Value)
         {
-            currentPlayer.skipNextTurn = false;
-            Debug.Log($"{currentPlayer.playerName} bị mất lượt!");
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+            currentPlayer.skipNextTurn.Value = false;
+            ShowStatusClientRpc($"{currentPlayer.playerName} bị mất lượt!");
+            currentPlayerIndex.Value = (currentPlayerIndex.Value + 1) % players.Count;
             return;
         }
 
-        if (currentPlayer.inJail)
+        if (currentPlayer.inJail.Value)
         {
-            currentPlayer.jailTurns--;
-            if (currentPlayer.jailTurns > 0)
+            currentPlayer.jailTurns.Value--;
+            if (currentPlayer.jailTurns.Value > 0)
             {
-                Debug.Log($"{currentPlayer.playerName} đang ở tù. Còn {currentPlayer.jailTurns} lượt.");
-                currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+                ShowStatusClientRpc($"{currentPlayer.playerName} đang ở tù. Còn {currentPlayer.jailTurns.Value} lượt.");
+                currentPlayerIndex.Value = (currentPlayerIndex.Value + 1) % players.Count;
                 return;
             }
             else
             {
-                Debug.Log($"{currentPlayer.playerName} đã ra tù.");
-                currentPlayer.inJail = false;
+                ShowStatusClientRpc($"{currentPlayer.playerName} đã ra tù.");
+                currentPlayer.inJail.Value = false;
             }
         }
 
-        int dice = RollDice();
-        Debug.Log($"{currentPlayer.playerName} rolled: {dice}");
-
-        StartCoroutine(MovePlayer(currentPlayerIndex, dice));
+        StartCoroutine(HandleRollAndMove());
     }
 
-    private int RollDice()
-    {
-        return Random.Range(1, 7) + Random.Range(1, 7);
-    }
-
-    private IEnumerator MovePlayer(int playerIndex, int steps)
+    private IEnumerator HandleRollAndMove()
     {
         isMoving = true;
-        PlayerController player = players[playerIndex].GetComponent<PlayerController>();
 
-        for (int i = 0; i < steps; i++)
+        // Reset for new roll
+        DiceTotal.Value = 0;
+        dieRolls.Clear();
+
+        // Show dice (gửi RPC để client show)
+        ShowDiceClientRpc(true);
+
+        // Roll dice (giả sử dice roll trên server)
+        if (dice1 != null) dice1.RollDie();
+        if (dice2 != null) dice2.RollDie();
+
+        while (dieRolls.Count < 2)
         {
-            currentTileIndexes[playerIndex]++;
-            bool passedGo = false;
-
-            if (currentTileIndexes[playerIndex] >= mapTiles.Count)
-            {
-                currentTileIndexes[playerIndex] = 0;
-                passedGo = true;
-            }
-
-            Vector3 target = mapTiles[currentTileIndexes[playerIndex]].position;
-            while (Vector3.Distance(player.transform.position, target) > 0.01f)
-            {
-                player.transform.position = Vector3.MoveTowards(player.transform.position, target, moveSpeed * Time.deltaTime);
-                yield return null;
-            }
-
-            yield return new WaitForSeconds(0.2f);
-
-            if (passedGo)
-            {
-                player.money += 200;
-                Debug.Log($"💰 {player.playerName} đi qua Xuất Phát và nhận 200$");
-            }
+            yield return null;
         }
 
-        player.currentTileIndex = currentTileIndexes[playerIndex];
+        yield return new WaitForSeconds(1.5f);
 
-        Tile landedTile = mapTiles[player.currentTileIndex].GetComponent<Tile>();
-        if (landedTile != null)
-            landedTile.OnPlayerLanded(player);
-        else
-            Debug.LogWarning($"⚠️ Ô {player.currentTileIndex} không có component Tile.");
+        ShowStatusClientRpc($"{currentPlayer.playerName} rolled: {DiceTotal.Value} ({dieRolls[0]} + {dieRolls[1]})");
 
         yield return new WaitForSeconds(1f);
 
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
-        Debug.Log($"👉 Tới lượt: {players[currentPlayerIndex].GetComponent<PlayerController>().playerName}");
+        ShowDiceClientRpc(false);
+
+        yield return StartCoroutine(MovePlayer(currentPlayerIndex.Value, DiceTotal.Value));
 
         isMoving = false;
     }
 
-    public void MovePlayerToTile(PlayerController player, int tileIndex)
+    private IEnumerator MovePlayer(int playerIndex, int steps)
     {
-        player.transform.position = mapTiles[tileIndex].position;
-        player.currentTileIndex = tileIndex;
-        currentTileIndexes[players.IndexOf(player.gameObject)] = tileIndex;
+        PlayerController player = players[playerIndex].GetComponent<PlayerController>();
 
-        Tile tile = mapTiles[tileIndex].GetComponent<Tile>();
-        if (tile != null) tile.OnPlayerLanded(player);
-    }
-
-    public void MovePlayerBySteps(PlayerController player, int steps)
-    {
-        int newIndex = (player.currentTileIndex + steps + mapTiles.Count) % mapTiles.Count;
-        MovePlayerToTile(player, newIndex);
-    }
-
-    public void MovePlayerToMostExpensiveProperty(PlayerController player)
-    {
-        int maxPrice = -1;
-        int targetIndex = -1;
-
-        for (int i = 0; i < mapTiles.Count; i++)
+        for (int i = 0; i < steps; i++)
         {
-            var prop = mapTiles[i].GetComponent<PropertyTile>();
-            if (prop != null && prop.GetPrice() > maxPrice)
+            currentTileIndexes[playerIndex].Value++;
+            bool passedGo = false;
+
+            if (currentTileIndexes[playerIndex].Value >= mapTiles.Count)
             {
-                maxPrice = prop.GetPrice();
-                targetIndex = i;
+                currentTileIndexes[playerIndex].Value = 0;
+                passedGo = true;
+            }
+
+            Vector3 target = mapTiles[currentTileIndexes[playerIndex].Value].position;
+            MovePlayerPositionClientRpc(player.NetworkObject, target);
+
+            yield return new WaitForSeconds(0.3f);
+
+            if (passedGo)
+            {
+                player.money.Value += 200;
+                ShowStatusClientRpc($"{player.playerName} đi qua Xuất Phát và nhận 200$");
+                yield return new WaitForSeconds(1f);
             }
         }
 
-        if (targetIndex != -1)
+        player.currentTileIndex.Value = currentTileIndexes[playerIndex].Value;
+
+        Tile landedTile = mapTiles[player.currentTileIndex.Value].GetComponent<Tile>();
+        if (landedTile != null)
         {
-            MovePlayerToTile(player, targetIndex);
+            PropertyTile prop = landedTile as PropertyTile;
+            if (prop != null && prop.owner != null)
+            {
+                ShowStatusClientRpc($"Nhà đã có chủ: {prop.owner.playerName}");
+                yield return new WaitForSeconds(1f);
+            }
+            landedTile.OnPlayerLanded(player); // Giả sử OnPlayerLanded sync nếu cần
         }
         else
         {
-            Debug.LogWarning("❌ Không tìm thấy ô tài sản nào.");
-        }
-    }
-
-    public void MovePlayerToNearestTileWithTag(PlayerController player, string tag)
-    {
-        int start = player.currentTileIndex;
-        for (int offset = 1; offset < mapTiles.Count; offset++)
-        {
-            int index = (start + offset) % mapTiles.Count;
-            if (mapTiles[index].CompareTag(tag))
-            {
-                MovePlayerToTile(player, index);
-                return;
-            }
+            ShowStatusClientRpc($"Ô {player.currentTileIndex.Value} không có component Tile.");
+            yield return new WaitForSeconds(1f);
         }
 
-        Debug.LogWarning($"❌ Không tìm thấy ô có tag: {tag}");
+        yield return new WaitForSeconds(1.5f);
+
+        currentPlayerIndex.Value = (currentPlayerIndex.Value + 1) % players.Count;
+        ShowStatusClientRpc($"Tới lượt: {players[currentPlayerIndex.Value].GetComponent<PlayerController>().playerName}");
     }
 
-    public void PayEveryone(PlayerController payer, int amountEach)
+    [ServerRpc(RequireOwnership = false)]
+    public void MovePlayerToTileServerRpc(NetworkObjectReference playerRef, int tileIndex)
     {
-        foreach (PlayerController other in FindObjectsOfType<PlayerController>())
+        if (playerRef.TryGet(out NetworkObject playerObj))
         {
-            if (other != payer)
+            PlayerController player = playerObj.GetComponent<PlayerController>();
+            Vector3 position = mapTiles[tileIndex].position;
+            MovePlayerPositionClientRpc(playerObj, position);
+            player.currentTileIndex.Value = tileIndex;
+            int playerIndex = players.IndexOf(playerObj);
+            currentTileIndexes[playerIndex].Value = tileIndex;
+
+            Tile tile = mapTiles[tileIndex].GetComponent<Tile>();
+            if (tile != null)
             {
-                if (payer.TryPay(amountEach))
+                PropertyTile prop = tile as PropertyTile;
+                if (prop != null && prop.owner != null)
                 {
-                    other.money += amountEach;
-                    Debug.Log($"💸 {payer.playerName} trả {amountEach}$ cho {other.playerName}");
+                    ShowStatusClientRpc($"Nhà đã có chủ: {prop.owner.playerName}");
                 }
-                else
-                {
-                    Debug.Log($"❌ {payer.playerName} không đủ tiền để trả {amountEach}$ cho {other.playerName}");
-                }
+                tile.OnPlayerLanded(player);
             }
         }
     }
 
-    public void DrawChanceCard() => cardManager.DrawCoHoiCard(GetCurrentPlayer());
+    [ServerRpc(RequireOwnership = false)]
+    public void MovePlayerByStepsServerRpc(NetworkObjectReference playerRef, int steps)
+    {
+        if (playerRef.TryGet(out NetworkObject playerObj))
+        {
+            PlayerController player = playerObj.GetComponent<PlayerController>();
+            int newIndex = (player.currentTileIndex.Value + steps + mapTiles.Count) % mapTiles.Count;
+            ShowStatusClientRpc($"{player.playerName} di chuyển {steps} bước đến ô {newIndex}");
+            MovePlayerToTileServerRpc(playerRef, newIndex);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MovePlayerToMostExpensivePropertyServerRpc(NetworkObjectReference playerRef)
+    {
+        if (playerRef.TryGet(out NetworkObject playerObj))
+        {
+            PlayerController player = playerObj.GetComponent<PlayerController>();
+            int maxPrice = -1;
+            int targetIndex = -1;
+
+            for (int i = 0; i < mapTiles.Count; i++)
+            {
+                var prop = mapTiles[i].GetComponent<PropertyTile>();
+                if (prop != null && prop.GetPrice() > maxPrice)
+                {
+                    maxPrice = prop.GetPrice();
+                    targetIndex = i;
+                }
+            }
+
+            if (targetIndex != -1)
+            {
+                ShowStatusClientRpc($"{player.playerName} di chuyển đến tài sản đắt nhất (ô {targetIndex})");
+                MovePlayerToTileServerRpc(playerRef, targetIndex);
+            }
+            else
+            {
+                ShowStatusClientRpc("Không tìm thấy ô tài sản nào.");
+            }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MovePlayerToNearestTileWithTagServerRpc(NetworkObjectReference playerRef, string tag)
+    {
+        if (playerRef.TryGet(out NetworkObject playerObj))
+        {
+            PlayerController player = playerObj.GetComponent<PlayerController>();
+            int start = player.currentTileIndex.Value;
+            for (int offset = 1; offset < mapTiles.Count; offset++)
+            {
+                int index = (start + offset) % mapTiles.Count;
+                if (mapTiles[index].CompareTag(tag))
+                {
+                    ShowStatusClientRpc($"{player.playerName} di chuyển đến ô gần nhất với tag {tag} (ô {index})");
+                    MovePlayerToTileServerRpc(playerRef, index);
+                    return;
+                }
+            }
+
+            ShowStatusClientRpc($"Không tìm thấy ô có tag: {tag}");
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PayEveryoneServerRpc(NetworkObjectReference payerRef, int amountEach)
+    {
+        if (payerRef.TryGet(out NetworkObject payerObj))
+        {
+            PlayerController payer = payerObj.GetComponent<PlayerController>();
+            var others = Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+            foreach (PlayerController other in others)
+            {
+                if (other != payer)
+                {
+                    if (payer.money.Value >= amountEach)
+                    {
+                        payer.money.Value -= amountEach;
+                        other.money.Value += amountEach;
+                        ShowStatusClientRpc($"{payer.playerName} trả {amountEach}$ cho {other.playerName}");
+                    }
+                    else
+                    {
+                        ShowStatusClientRpc($"{payer.playerName} không đủ tiền để trả {amountEach}$ cho {other.playerName}");
+                    }
+                }
+            }
+        }
+    }
+
+    public void DrawChanceCard() => cardManager.DrawCoHoiCard(GetCurrentPlayer()); // Giả sử cardManager sync
     public void DrawKhiVanCard() => cardManager.DrawKhiVanCard(GetCurrentPlayer());
-    public void NextTurn()
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NextTurnServerRpc()
     {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
-        Debug.Log($"Tới lượt: {players[currentPlayerIndex].GetComponent<PlayerController>().playerName}");
+        currentPlayerIndex.Value = (currentPlayerIndex.Value + 1) % players.Count;
+        ShowStatusClientRpc($"Tới lượt: {players[currentPlayerIndex.Value].GetComponent<PlayerController>().playerName}");
+    }
+
+    [ClientRpc]
+    private void ShowStatusClientRpc(string message)
+    {
+        if (statusText != null)
+        {
+            statusText.text = message;
+            StartCoroutine(ClearStatusAfterDelay(4f));
+        }
+        Debug.Log(message);
+    }
+
+    private IEnumerator ClearStatusAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (statusText != null)
+        {
+            statusText.text = "";
+        }
+    }
+
+    [ClientRpc]
+    private void ShowDiceClientRpc(bool show)
+    {
+        if (dice1 != null) dice1.gameObject.SetActive(show);
+        if (dice2 != null) dice2.gameObject.SetActive(show);
+    }
+
+    [ClientRpc]
+    private void MovePlayerPositionClientRpc(NetworkObjectReference playerRef, Vector3 target)
+    {
+        if (playerRef.TryGet(out NetworkObject playerObj))
+        {
+            PlayerController player = playerObj.GetComponent<PlayerController>();
+            StartCoroutine(MoveToPosition(player.transform, target));
+        }
+    }
+
+    private IEnumerator MoveToPosition(Transform transform, Vector3 target)
+    {
+        while (Vector3.Distance(transform.position, target) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
     }
 }

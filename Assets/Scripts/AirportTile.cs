@@ -15,6 +15,6 @@ public class AirportTile : Tile
         int randomTileIndex = Random.Range(0, GameManager.Instance.mapTiles.Count);
         Debug.Log($"🛬 {player.playerName} bay đến ô {randomTileIndex} - {GameManager.Instance.mapTiles[randomTileIndex].name}");
 
-        GameManager.Instance.MovePlayerToTile(player, randomTileIndex);
+        GameManager.Instance.MovePlayerToTileServerRpc(player.NetworkObject, randomTileIndex);
     }
 }

@@ -53,7 +53,9 @@ public class MenuManager : MonoBehaviour
     public void PlayGame()
     {
         Debug.Log("Play Game Clicked");
-        SceneManager.LoadScene("GamePlay"); // Đổi tên thành scene thực tế
+        //SceneManager.LoadScene("GamePlay");
+        SceneManager.LoadScene("CreateAccountScene");
+
     }
 
     public void ShowTutorials()

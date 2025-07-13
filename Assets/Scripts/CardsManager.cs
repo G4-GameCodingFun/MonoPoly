@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardManager : MonoBehaviour
+public class CardManager : NetworkBehaviour
 {
     public List<CardData> coHoiCards;
     public List<CardData> khiVanCards;
@@ -17,7 +18,7 @@ public class CardManager : MonoBehaviour
     public GameObject cardsBackPanel;
 
     private bool isFlipping = false;
-    private PlayerController currentCardPlayer; 
+    private PlayerController currentCardPlayer;
 
     void Start()
     {
@@ -125,7 +126,7 @@ public class CardManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         cardsBackPanel.SetActive(false);
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(0.5f);
 
         int index = Random.Range(0, cards.Count);
         CardData pickedCard = cards[index];
@@ -148,16 +149,13 @@ public class CardManager : MonoBehaviour
         {
             if (card.moneyAmount > 0)
             {
-                player.money += card.moneyAmount;
+                player.money.Value += card.moneyAmount;
                 Debug.Log($"💰 Nhận {card.moneyAmount}$ từ thẻ {card.name}");
             }
             else
             {
-                bool success = player.TryPay(-card.moneyAmount);
-                if (success)
-                    Debug.Log($"💸 Mất {-card.moneyAmount}$ từ thẻ {card.name}");
-                else
-                    Debug.Log($"❌ Không đủ tiền để thanh toán {-card.moneyAmount}$");
+                player.TryPayServerRpc(-card.moneyAmount);
+                Debug.Log($"💸 Mất {-card.moneyAmount}$ từ thẻ {card.name}");
             }
         }
 
@@ -165,61 +163,55 @@ public class CardManager : MonoBehaviour
         switch (card.effect)
         {
             case CardEffectType.TROLAI_XUATPHAT:
-                GameManager.Instance.MovePlayerToTile(player, 0);
+                GameManager.Instance.MovePlayerToTileServerRpc(player.NetworkObject, 0);
                 break;
 
             case CardEffectType.DI_LUI_3_BUOC:
-                GameManager.Instance.MovePlayerBySteps(player, -3);
+                GameManager.Instance.MovePlayerByStepsServerRpc(player.NetworkObject, -3);
                 break;
 
             case CardEffectType.TOI_CONGTY_GANNHAT:
-                GameManager.Instance.MovePlayerToNearestTileWithTag(player, "Company");
+                GameManager.Instance.MovePlayerToNearestTileWithTagServerRpc(player.NetworkObject, "Company");
                 break;
 
             case CardEffectType.TOI_BENXE_GANNHAT:
-                GameManager.Instance.MovePlayerToNearestTileWithTag(player, "Station");
+                GameManager.Instance.MovePlayerToNearestTileWithTagServerRpc(player.NetworkObject, "Station");
                 break;
 
             case CardEffectType.TOI_O_NHA_CAO_NHAT:
-                GameManager.Instance.MovePlayerToMostExpensiveProperty(player);
+                GameManager.Instance.MovePlayerToMostExpensivePropertyServerRpc(player.NetworkObject);
                 break;
 
             case CardEffectType.VAO_TU:
             case CardEffectType.BI_BAT_GIU_DOT_XUAT:
-                GameManager.Instance.MovePlayerToTile(player, GameManager.Instance.jailPosition.GetSiblingIndex());
-                player.inJail = true;
-                player.jailTurns = 3;
+                GameManager.Instance.MovePlayerToTileServerRpc(player.NetworkObject, GameManager.Instance.jailPosition.GetSiblingIndex());
+                player.inJail.Value = true;
+                player.jailTurns.Value = 3;
                 break;
 
             case CardEffectType.THE_RA_TU_MIENPHI:
-                player.hasGetOutOfJailFreeCard = true;
+                player.hasGetOutOfJailFreeCard.Value = true;
                 break;
 
             case CardEffectType.VE_BAO_LANH_RA_TU:
-                if (player.TryPay(150))
-                {
-                    player.GetOutOfJail();
-                }
-                else
-                {
-                    Debug.Log($"❌ {player.playerName} không đủ tiền để bảo lãnh ra tù");
-                }
+                player.TryPayServerRpc(150);
+                player.GetOutOfJailServerRpc();
                 break;
 
             case CardEffectType.TRA_MOI_NGUOI:
-                GameManager.Instance.PayEveryone(player, 50);
+                GameManager.Instance.PayEveryoneServerRpc(player.NetworkObject, 50);
                 break;
 
             case CardEffectType.GAP_SUCO_BO1LUOT:
-                player.skipNextTurn = true;
+                player.skipNextTurn.Value = true;
                 break;
 
             case CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE:
-                player.cannotBuyNextTurn = true;
+                player.cannotBuyNextTurn.Value = true;
                 break;
 
             case CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM:
-                player.canBuyDiscountProperty = true;
+                player.canBuyDiscountProperty.Value = true;
                 break;
 
             default:
