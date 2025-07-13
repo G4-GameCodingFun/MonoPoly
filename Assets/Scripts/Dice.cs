@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿// File: Dice.cs
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,36 +12,15 @@ public class Dice : MonoBehaviour
     public Sprite Side5;
     public Sprite Side6;
 
-    private int RolledValue = 0;
-    public GameManager GameManager;
-
     void Start()
     {
         GetComponent<Image>().sprite = Side6;
-        GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    public void RollDie()
-    {
-        StartCoroutine(DieRolling());
-    }
-
-    public IEnumerator DieRolling()
-    {
-        Debug.Log("Rolling");
-        for (int i = 0; i <= 20; i++)
-        {
-            RolledValue = Random.Range(1, 7);
-            DisplayDice(RolledValue);
-            yield return new WaitForSeconds(0.05f);
-        }
-        GameManager.AddDiceRoll(RolledValue);
-    }
-
-    private void DisplayDice(int RolledValue)
+    public void DisplayDice(int rolledValue)
     {
         Image diceImage = GetComponent<Image>();
-        switch (RolledValue)
+        switch (rolledValue)
         {
             case 1:
                 diceImage.sprite = Side1;
@@ -61,7 +41,7 @@ public class Dice : MonoBehaviour
                 diceImage.sprite = Side6;
                 break;
             default:
-                Debug.LogWarning("Invalid dice value: " + RolledValue);
+                Debug.LogWarning("Invalid dice value: " + rolledValue);
                 break;
         }
     }

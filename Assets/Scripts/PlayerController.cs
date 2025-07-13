@@ -5,26 +5,25 @@ using UnityEngine;
 public class PlayerController : NetworkBehaviour
 {
     public string playerName;
-    public NetworkVariable<int> money = new NetworkVariable<int>(2000); // Sync tiền, bắt đầu với 2000
-    public NetworkVariable<int> currentTileIndex = new NetworkVariable<int>(0); // Sync vị trí
+    public NetworkVariable<int> money = new NetworkVariable<int>(2000);
+    public NetworkVariable<int> currentTileIndex = new NetworkVariable<int>(0);
     public NetworkVariable<bool> inJail = new NetworkVariable<bool>(false);
     public NetworkVariable<int> jailTurns = new NetworkVariable<int>(0);
     public NetworkVariable<bool> skipNextTurn = new NetworkVariable<bool>(false);
     public NetworkVariable<bool> cannotBuyNextTurn = new NetworkVariable<bool>(false);
     public NetworkVariable<bool> canBuyDiscountProperty = new NetworkVariable<bool>(false);
     public NetworkVariable<bool> hasGetOutOfJailFreeCard = new NetworkVariable<bool>(false);
+    public bool isBot;
 
-    // Danh sách ownedTiles cần sync riêng, có thể dùng NetworkList nếu hỗ trợ, hoặc sync khi cần
     public List<Tile> ownedTiles = new List<Tile>();
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        // Nếu là owner, có thể set initial values
     }
 
-    [ServerRpc(RequireOwnership = false)] // Cho phép client gọi, nhưng server xử lý
-    public void TryPayServerRpc(int amount, ServerRpcParams rpcParams = default)
+    [ServerRpc(RequireOwnership = false)]
+    public void TryPayServerRpc(int amount)
     {
         if (money.Value >= amount)
         {
@@ -62,7 +61,7 @@ public class PlayerController : NetworkBehaviour
             if (cannotBuyNextTurn.Value)
             {
                 Debug.LogWarning($"{playerName} không được phép mua ô này trong lượt này!");
-                cannotBuyNextTurn.Value = false; // chỉ 1 lần
+                cannotBuyNextTurn.Value = false;
                 return;
             }
 
@@ -71,7 +70,7 @@ public class PlayerController : NetworkBehaviour
             if (canBuyDiscountProperty.Value)
             {
                 price /= 2;
-                canBuyDiscountProperty.Value = false; // chỉ áp dụng 1 lần
+                canBuyDiscountProperty.Value = false;
                 Debug.Log($"{playerName} được mua {tile.tileName} với giá giảm 50%");
             }
 
@@ -106,18 +105,32 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    public void MoveToStart() => GameManager.Instance.MovePlayerToTileServerRpc(NetworkObject, 0);
-    public void MoveSteps(int steps) => GameManager.Instance.MovePlayerByStepsServerRpc(NetworkObject, steps);
-    public void MoveToMostExpensiveProperty() => GameManager.Instance.MovePlayerToMostExpensivePropertyServerRpc(NetworkObject);
-    public void MoveToNearest(string tag) => GameManager.Instance.MovePlayerToNearestTileWithTagServerRpc(NetworkObject, tag);
+    public void MoveToStart()
+    {
+        GameManager.Instance.MovePlayerToTileServerRpc(new NetworkObjectReference(NetworkObject), 0);
+    }
+
+    public void MoveSteps(int steps)
+    {
+        GameManager.Instance.MovePlayerByStepsServerRpc(new NetworkObjectReference(NetworkObject), steps);
+    }
+
+    public void MoveToMostExpensiveProperty()
+    {
+        GameManager.Instance.MovePlayerToMostExpensivePropertyServerRpc(new NetworkObjectReference(NetworkObject));
+    }
+
+    public void MoveToNearest(string tag)
+    {
+        GameManager.Instance.MovePlayerToNearestTileWithTagServerRpc(new NetworkObjectReference(NetworkObject), tag);
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void GoToJailServerRpc()
     {
-        Transform jailTile = GameManager.Instance.jailPosition;
-        if (jailTile != null)
+        if (GameManager.Instance.jailPosition != null)
         {
-            GameManager.Instance.MovePlayerToTileServerRpc(NetworkObject, jailTile.GetSiblingIndex());
+            GameManager.Instance.MovePlayerToTileServerRpc(new NetworkObjectReference(NetworkObject), GameManager.Instance.jailPosition.GetSiblingIndex());
             inJail.Value = true;
             jailTurns.Value = 3;
             Debug.Log($"{playerName} vào tù 3 lượt");
