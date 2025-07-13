@@ -1,5 +1,4 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum TileType
 {
@@ -21,35 +20,64 @@ public enum TileSubType
     Railroad
 }
 
-[System.Serializable]
-public class Tile : NetworkBehaviour
+public abstract class Tile : MonoBehaviour
 {
-    [Header("General Info")]
     public string tileName;
-    public TileType type = TileType.Property;
-    public TileSubType subType = TileSubType.None;
-    public NetworkVariable<bool> isMortgaged = new NetworkVariable<bool>(false); // Sử dụng NetworkVariable để sync
-
-    [Header("Ownership")]
     public PlayerController owner;
+    public SpriteRenderer spriteRenderer;
 
-    // Virtual methods to be overridden by subclasses
-    public virtual int GetPrice() => 0;
-    public virtual int GetRent() => 0;
-    public virtual void OnPlayerLanded(PlayerController player) { }
-    public virtual int GetMortgageValue() => 0;
+    public abstract int GetPrice();
+    public abstract int GetRent();
+    public abstract int GetMortgageValue();
 
-    [ServerRpc(RequireOwnership = false)]
-    public void MortgageServerRpc()
+    public virtual void OnPlayerLanded(PlayerController player)
     {
-        if (!isMortgaged.Value)
+        Debug.Log($"{player.playerName} đã đứng trên {tileName}");
+    }
+
+    public void SetOwner(PlayerController newOwner)
+    {
+        owner = newOwner;
+        if (spriteRenderer != null)
         {
-            isMortgaged.Value = true;
-            if (owner != null)
+            // Thay đổi màu sắc để thể hiện chủ sở hữu
+            if (newOwner != null)
             {
-                owner.money.Value += GetMortgageValue(); // Sync tiền qua NetworkVariable
-                Debug.Log($"{owner.playerName} đã thế chấp {tileName} và nhận {GetMortgageValue()}$");
+                // Có thể thêm logic thay đổi màu theo player
+                spriteRenderer.color = Color.green;
             }
+            else
+            {
+                spriteRenderer.color = Color.white;
+            }
+        }
+    }
+
+    public bool CanBeMortgaged()
+    {
+        return owner != null && !IsMortgaged();
+    }
+
+    public virtual bool IsMortgaged()
+    {
+        return false; // Override trong các class con nếu cần
+    }
+
+    public virtual void Mortgage()
+    {
+        if (CanBeMortgaged())
+        {
+            owner.money += GetMortgageValue();
+            Debug.Log($"{owner.playerName} đã thế chấp {tileName} và nhận {GetMortgageValue()}$");
+        }
+    }
+
+    public virtual void Unmortgage()
+    {
+        if (IsMortgaged() && owner.money >= GetMortgageValue() * 1.1f)
+        {
+            owner.money -= Mathf.RoundToInt(GetMortgageValue() * 1.1f);
+            Debug.Log($"{owner.playerName} đã chuộc {tileName} với giá {Mathf.RoundToInt(GetMortgageValue() * 1.1f)}$");
         }
     }
 }

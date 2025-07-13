@@ -2,19 +2,21 @@
 
 public class AirportTile : Tile
 {
+    public int targetTileIndex = 10; // Ô đích mặc định
+
+    public override int GetPrice() => 0; // Airport không mua được
+    public override int GetRent() => 0; // Airport không thuê được
+    public override int GetMortgageValue() => 0; // Airport không thế chấp được
+
     public override void OnPlayerLanded(PlayerController player)
     {
-        Debug.Log($"✈️ {player.playerName} đã đến sân bay. Đang chọn ô bất kỳ để bay tới...");
-        GameManager.Instance.StartCoroutine(FlyToRandomTile(player));
-    }
-
-    private System.Collections.IEnumerator FlyToRandomTile(PlayerController player)
-    {
-        yield return new WaitForSeconds(1f); // delay để tạo cảm giác
-
-        int randomTileIndex = Random.Range(0, GameManager.Instance.mapTiles.Count);
-        Debug.Log($"🛬 {player.playerName} bay đến ô {randomTileIndex} - {GameManager.Instance.mapTiles[randomTileIndex].name}");
-
-        GameManager.Instance.MovePlayerToTileServerRpc(player.NetworkObject, randomTileIndex);
+        if (player == null) return;
+        
+        // Di chuyển player đến ô đích (offline mode)
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.MovePlayerToTile(player, targetTileIndex);
+            Debug.Log($"{player.playerName} đã bay đến ô {targetTileIndex}!");
+        }
     }
 }

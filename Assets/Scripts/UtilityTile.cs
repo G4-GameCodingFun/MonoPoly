@@ -1,59 +1,72 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UtilityTile : Tile
 {
-    public PropertyData data;
-    public override int GetPrice() => data?.purchasePrice ?? 0;
+    public int purchasePrice = 150;
+    public int mortgageValue = 75;
+
+    public override int GetPrice() => purchasePrice;
+    public override int GetRent()
+    {
+        if (owner == null) return 0;
+        
+        // Đếm số utility tiles mà owner sở hữu
+        int utilityCount = 0;
+        foreach (var tile in owner.ownedTiles)
+        {
+            if (tile is UtilityTile) utilityCount++;
+        }
+        
+        // Tính thuê dựa trên số utility tiles
+        if (utilityCount == 1) return 4; // 4x dice roll
+        if (utilityCount == 2) return 10; // 10x dice roll
+        return 0;
+    }
+    public override int GetMortgageValue() => mortgageValue;
 
     public override void OnPlayerLanded(PlayerController player)
     {
-        if (data == null || player == null) return;
+        if (player == null) return;
 
         // Nếu chưa có chủ sở hữu
         if (owner == null)
         {
-            int price = GetPrice();
-            if (player.CanPay(price))
+            if (player.CanPay(purchasePrice))
             {
-                player.BuyServerRpc(this.NetworkObject);
-                Debug.Log($"{player.playerName} đã mua {tileName} với giá {price}$");
+                player.BuyProperty(this);
+                Debug.Log($"{player.playerName} đã mua {tileName} với giá {purchasePrice}$");
             }
             else
             {
-                Debug.Log($"{player.playerName} không đủ tiền mua {tileName}");
+                Debug.Log($"{player.playerName} không đủ tiền mua {tileName} (giá {purchasePrice}$)");
             }
-            return;
         }
-
-        // Nếu đã có chủ (khác người chơi)
-        if (owner != player)
+        // Nếu đã có chủ khác
+        else if (owner != player)
         {
-            int diceRoll = Random.Range(1, 7) + Random.Range(1, 7); // 2 xúc xắc
-
-            // Đếm số lượng công ty (Utility) mà chủ sở hữu đang có
-            int ownedUtilities = owner.ownedTiles.FindAll(t => t.subType == TileSubType.Utility).Count;
-
-            int multiplier = (ownedUtilities == 2) ? 10 : 4;
-            int rent = diceRoll * multiplier;
-
-            Debug.Log($"Xúc xắc: {diceRoll} → Tiền thuê: {rent} (sở hữu {ownedUtilities} công ty)");
-
-            if (player.CanPay(rent))
+            int rent = GetRent();
+            if (rent > 0)
             {
-                player.PayServerRpc(owner.NetworkObject, rent);
-                Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
-            }
-            else
-            {
-                Debug.Log($"{player.playerName} không thể trả {rent}$ tiền thuê, kể cả sau khi thế chấp.");
-                Debug.Log($"{player.playerName} phá sản và bị loại khỏi trò chơi.");
-                player.IsBankruptServerRpc(owner.NetworkObject);
+                // Tính thuê dựa trên xúc xắc (giả sử dice roll = 6)
+                int diceRoll = 6; // Có thể lấy từ GameManager
+                int actualRent = rent * diceRoll;
+                
+                if (player.CanPay(actualRent))
+                {
+                    player.PayRent(owner, actualRent);
+                    Debug.Log($"{player.playerName} trả {actualRent}$ tiền thuê cho {owner.playerName} (dice: {diceRoll})");
+                }
+                else
+                {
+                    Debug.Log($"{player.playerName} không đủ tiền trả {actualRent}$ tiền thuê cho {owner.playerName}");
+                    player.GoBankrupt(owner);
+                }
             }
         }
+        // Nếu là chủ sở hữu
         else
         {
-            Debug.Log($"{player.playerName} đứng trên công ty của mình: {tileName}");
+            Debug.Log($"{player.playerName} đang đứng trên utility của mình: {tileName}");
         }
     }
 }

@@ -36,15 +36,30 @@ public class DetailsManager : MonoBehaviour
         if (tile == null) return;
 
         currentTile = tile;
-        currentPlayer = GameManager.Instance.GetCurrentPlayer(); // Lấy player hiện tại
+        currentPlayer = GameManager.Instance.players[GameManager.Instance.currentPlayerIndex]; // Lấy player hiện tại
 
         nameText.text = "Tên: " + tile.tileName;
-        priceText.text = "Giá mua: " + tile.GetPrice() + "$";
+        // Kiểm tra xem có thể mua không
+        buyButton.gameObject.SetActive(tile.owner == null && 
+            GameManager.Instance.mapTiles.IndexOf(tile.transform) == GameManager.Instance.currentPlayerIndex);
+
+        // Hiển thị thông tin giá
+        if (tile is PropertyTile propertyTile)
+        {
+            priceText.text = "Giá: " + propertyTile.GetPrice() + "$";
+            buyButton.onClick.RemoveAllListeners();
+            buyButton.onClick.AddListener(() => {
+                if (currentPlayer.money >= propertyTile.GetPrice())
+                {
+                    currentPlayer.BuyProperty(propertyTile);
+                    UpdateUI();
+                }
+            });
+        }
         rentText.text = "Giá thuê: " + tile.GetRent() + "$";
         ownerText.text = "Chủ sở hữu: " + (tile.owner != null ? tile.owner.playerName : "Chưa có");
 
         // Enable/Disable buttons
-        buyButton.gameObject.SetActive(tile.owner == null && currentPlayer.currentTileIndex.Value == GameManager.Instance.mapTiles.IndexOf(tile.transform)); // Chỉ enable nếu chưa chủ và player ở ô đó
         sellButton.gameObject.SetActive(tile.owner == currentPlayer); // Enable nếu player là chủ
 
         detailsPanel.SetActive(true); // Hiện panel
@@ -54,7 +69,7 @@ public class DetailsManager : MonoBehaviour
     {
         if (currentTile != null)
         {
-            currentPlayer.BuyServerRpc(currentTile.NetworkObject); // Gọi RPC mua
+            currentPlayer.BuyProperty(currentTile as PropertyTile); // Gọi RPC mua
             CloseDetails(); // Đóng panel sau mua
         }
     }
@@ -64,7 +79,7 @@ public class DetailsManager : MonoBehaviour
         if (currentTile != null)
         {
             // Giả sử thêm SellServerRpc trong PlayerController
-            currentPlayer.SellServerRpc(currentTile.NetworkObject); // Gọi RPC bán (cần thêm code)
+            currentPlayer.SellProperty(currentTile as PropertyTile); // Gọi RPC bán (cần thêm code)
             CloseDetails(); // Đóng panel sau bán
         }
     }
@@ -73,5 +88,14 @@ public class DetailsManager : MonoBehaviour
     {
         detailsPanel.SetActive(false);
         currentTile = null;
+    }
+
+    void UpdateUI()
+    {
+        // Cập nhật giao diện sau khi mua/bán
+        if (currentTile != null)
+        {
+            ShowDetails(currentTile);
+        }
     }
 }

@@ -1,12 +1,11 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PropertyTile : Tile
 {
     public PropertyData data; // Gán bằng tay trong Unity
 
-    public NetworkVariable<int> houseCount = new NetworkVariable<int>(0);
-    public NetworkVariable<bool> hasHotel = new NetworkVariable<bool>(false);
+    public int houseCount = 0;
+    public bool hasHotel = false;
 
     public override int GetPrice() => data != null ? data.purchasePrice : 0;
     public override int GetRent()
@@ -14,8 +13,8 @@ public class PropertyTile : Tile
         if (data == null || data.rentByHouse == null)
             return 0;
 
-        if (hasHotel.Value) return data.rentByHouse[5];
-        return data.rentByHouse[Mathf.Clamp(houseCount.Value, 0, 4)];
+        if (hasHotel) return data.rentByHouse[5];
+        return data.rentByHouse[Mathf.Clamp(houseCount, 0, 4)];
     }
 
     public int GetHouseCost() => data?.houseCost ?? 0;
@@ -32,7 +31,7 @@ public class PropertyTile : Tile
             int price = GetPrice();
             if (player.CanPay(price))
             {
-                player.BuyServerRpc(this.NetworkObject);
+                player.BuyProperty(this);
                 Debug.Log($"{player.playerName} đã mua {tileName} với giá {price}$");
             }
             else
@@ -46,13 +45,13 @@ public class PropertyTile : Tile
             int rent = GetRent();
             if (player.CanPay(rent))
             {
-                player.PayServerRpc(owner.NetworkObject, rent);
+                player.PayRent(owner, rent);
                 Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
             }
             else
             {
                 Debug.Log($"{player.playerName} không đủ tiền trả {rent}$ tiền thuê cho {owner.playerName}");
-                player.IsBankruptServerRpc(owner.NetworkObject);
+                player.GoBankrupt(owner);
             }
         }
         // Nếu là chủ sở hữu
@@ -61,17 +60,17 @@ public class PropertyTile : Tile
             Debug.Log($"{player.playerName} đang đứng trên đất của mình: {tileName}");
 
             // Gợi ý xây nhà nếu có thể
-            if (houseCount.Value < 4 && player.CanPay(GetHouseCost()))
+            if (houseCount < 4 && player.CanPay(GetHouseCost()))
             {
-                houseCount.Value++;
-                player.money.Value -= GetHouseCost();
-                Debug.Log($"{player.playerName} xây thêm nhà. Tổng số nhà: {houseCount.Value}");
+                houseCount++;
+                player.money -= GetHouseCost();
+                Debug.Log($"{player.playerName} xây thêm nhà. Tổng số nhà: {houseCount}");
             }
-            else if (houseCount.Value == 4 && !hasHotel.Value && player.CanPay(GetHotelCost()))
+            else if (houseCount == 4 && !hasHotel && player.CanPay(GetHotelCost()))
             {
-                hasHotel.Value = true;
-                houseCount.Value = 0;
-                player.money.Value -= GetHotelCost();
+                hasHotel = true;
+                houseCount = 0;
+                player.money -= GetHotelCost();
                 Debug.Log($"{player.playerName} đã xây khách sạn tại {tileName}");
             }
             else

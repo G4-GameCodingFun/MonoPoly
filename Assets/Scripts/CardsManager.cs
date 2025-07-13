@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardManager : NetworkBehaviour
+public class CardManager : MonoBehaviour
 {
     public List<CardData> coHoiCards;
     public List<CardData> khiVanCards;
@@ -149,12 +148,12 @@ public class CardManager : NetworkBehaviour
         {
             if (card.moneyAmount > 0)
             {
-                player.money.Value += card.moneyAmount;
+                player.money += card.moneyAmount;
                 Debug.Log($"💰 Nhận {card.moneyAmount}$ từ thẻ {card.name}");
             }
             else
             {
-                player.TryPayServerRpc(-card.moneyAmount);
+                player.TryPay(-card.moneyAmount);
                 Debug.Log($"💸 Mất {-card.moneyAmount}$ từ thẻ {card.name}");
             }
         }
@@ -163,55 +162,49 @@ public class CardManager : NetworkBehaviour
         switch (card.effect)
         {
             case CardEffectType.TROLAI_XUATPHAT:
-                GameManager.Instance.MovePlayerToTileServerRpc(player.NetworkObject, 0);
+                player.MoveToStart();
                 break;
 
             case CardEffectType.DI_LUI_3_BUOC:
-                GameManager.Instance.MovePlayerByStepsServerRpc(player.NetworkObject, -3);
+                player.MoveSteps(-3);
                 break;
 
             case CardEffectType.TOI_CONGTY_GANNHAT:
-                GameManager.Instance.MovePlayerToNearestTileWithTagServerRpc(player.NetworkObject, "Company");
+                player.MoveToNearest("Company");
                 break;
 
             case CardEffectType.TOI_BENXE_GANNHAT:
-                GameManager.Instance.MovePlayerToNearestTileWithTagServerRpc(player.NetworkObject, "Station");
+                player.MoveToNearest("Station");
                 break;
 
             case CardEffectType.TOI_O_NHA_CAO_NHAT:
-                GameManager.Instance.MovePlayerToMostExpensivePropertyServerRpc(player.NetworkObject);
+                player.MoveToMostExpensiveProperty();
                 break;
 
             case CardEffectType.VAO_TU:
             case CardEffectType.BI_BAT_GIU_DOT_XUAT:
-                GameManager.Instance.MovePlayerToTileServerRpc(player.NetworkObject, GameManager.Instance.jailPosition.GetSiblingIndex());
-                player.inJail.Value = true;
-                player.jailTurns.Value = 3;
+                player.GoToJail();
                 break;
 
             case CardEffectType.THE_RA_TU_MIENPHI:
-                player.hasGetOutOfJailFreeCard.Value = true;
+                player.hasGetOutOfJailFreeCard = true;
                 break;
 
             case CardEffectType.VE_BAO_LANH_RA_TU:
-                player.TryPayServerRpc(150);
-                player.GetOutOfJailServerRpc();
-                break;
-
-            case CardEffectType.TRA_MOI_NGUOI:
-                GameManager.Instance.PayEveryoneServerRpc(player.NetworkObject, 50);
+                player.TryPay(150);
+                player.GetOutOfJail();
                 break;
 
             case CardEffectType.GAP_SUCO_BO1LUOT:
-                player.skipNextTurn.Value = true;
+                player.skipNextTurn = true;
                 break;
 
             case CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE:
-                player.cannotBuyNextTurn.Value = true;
+                player.cannotBuyNextTurn = true;
                 break;
 
             case CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM:
-                player.canBuyDiscountProperty.Value = true;
+                player.canBuyDiscountProperty = true;
                 break;
 
             default:

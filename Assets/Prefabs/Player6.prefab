@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4846507589584805571}
   - component: {fileID: 7319732075947354882}
   - component: {fileID: 5497546906401923908}
+  - component: {fileID: -7224880710605218980}
   m_Layer: 0
   m_Name: Player6
   m_TagString: Player
@@ -110,3 +111,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-7224880710605218980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5054629440305202567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88636fd416b2c7b43a0dffb8e5c79972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: 
+  money: 2000
+  currentTileIndex: 0
+  inJail: 0
+  jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  isBot: 0
+  ownedTiles: []
