@@ -21,6 +21,14 @@ public class PropertyTile : Tile
     public int GetHotelCost() => data?.hotelCost ?? 0;
     public override int GetMortgageValue() => data?.mortgageValue ?? 0;
 
+    /// <summary>
+    /// Trả về PropertyData của ô này
+    /// </summary>
+    public PropertyData GetData()
+    {
+        return data;
+    }
+
     public override void OnPlayerLanded(PlayerController player)
     {
         if (data == null || player == null) return;

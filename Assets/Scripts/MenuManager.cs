@@ -18,6 +18,7 @@ public class MenuManager : MonoBehaviour
     public Button ExitButton;
     public Button CloseTutorialsButton;
     public Button CloseSettingsButton;
+    public Button PlayGameButton;
 
     [Header("Toggles")]
     public Toggle MusicToggle;
@@ -31,6 +32,7 @@ public class MenuManager : MonoBehaviour
         if (SettingsButton != null) SettingsButton.onClick.AddListener(ShowSettings);
         if (CloseSettingsButton != null) CloseSettingsButton.onClick.AddListener(CloseSettings);
         if (ExitButton != null) ExitButton.onClick.AddListener(ExitGame);
+        if (PlayGameButton != null) PlayGameButton.onClick.AddListener(PlayGame);
 
         // Gán sự kiện Toggle - kiểm tra null trước khi gán
         if (MusicToggle != null) MusicToggle.onValueChanged.AddListener(delegate { ToggleMusic(); });
@@ -52,21 +54,32 @@ public class MenuManager : MonoBehaviour
     public void ShowTutorials()
     {
         TutorialsPanel.SetActive(true);
+        if (SettingsPanel != null) SettingsPanel.SetActive(false);
+        if (ExitButton != null) ExitButton.gameObject.SetActive(false);
+        if (SettingsButton != null) SettingsButton.gameObject.SetActive(false);
     }
 
     public void CloseTutorials()
     {
         TutorialsPanel.SetActive(false);
+        if (SettingsButton != null) SettingsButton.gameObject.SetActive(true);
+        // Hiện lại ExitButton nếu không có panel nào khác đang mở
+        if ((SettingsPanel == null || !SettingsPanel.activeSelf) && ExitButton != null)
+            ExitButton.gameObject.SetActive(true);
     }
 
     public void ShowSettings()
     {
         SettingsPanel.SetActive(true);
+        if (ExitButton != null) ExitButton.gameObject.SetActive(false);
     }
 
     public void CloseSettings()
     {
         SettingsPanel.SetActive(false);
+        // Hiện lại ExitButton nếu không có panel nào khác đang mở
+        if ((TutorialsPanel == null || !TutorialsPanel.activeSelf) && ExitButton != null)
+            ExitButton.gameObject.SetActive(true);
     }
 
     public void ToggleMusic()
@@ -87,5 +100,11 @@ public class MenuManager : MonoBehaviour
     {
         Debug.Log("Exit Game Clicked");
         Application.Quit();
+    }
+
+    public void PlayGame()
+    {
+        Debug.Log("Play Game Clicked");
+        SceneManager.LoadScene("CreateAccountScene");
     }
 }

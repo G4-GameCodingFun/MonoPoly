@@ -492,15 +492,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TutorialsPanel: {fileID: 943375514}
   SettingsPanel: {fileID: 983595138}
-  PlayButton: {fileID: 253861868}
+  MultiplayerPanel: {fileID: 0}
   TutorialsButton: {fileID: 781148988}
   SettingsButton: {fileID: 2064657593}
   ExitButton: {fileID: 1114318340}
   CloseTutorialsButton: {fileID: 1315743397}
   CloseSettingsButton: {fileID: 213895319}
+  PlayGameButton: {fileID: 253861868}
   MusicToggle: {fileID: 1387272790}
   SoundToggle: {fileID: 1754316159}
-  MusicSlider: {fileID: 0}
 --- !u!4 &258784789
 Transform:
   m_ObjectHideFlags: 0

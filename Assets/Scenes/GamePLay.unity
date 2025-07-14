@@ -677,8 +677,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25, y: 365}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 25.0001, y: 365}
+  m_SizeDelta: {x: 270.8862, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &201052534
 MonoBehaviour:
@@ -702,8 +702,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
+  m_sharedMaterial: {fileID: 5240418327856684374, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -734,8 +734,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1002,7 +1002,7 @@ GameObject:
   - component: {fileID: 291915609}
   - component: {fileID: 291915608}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2521,13 +2521,14 @@ GameObject:
   - component: {fileID: 593587780}
   - component: {fileID: 593587782}
   - component: {fileID: 593587781}
+  - component: {fileID: 593587783}
   m_Layer: 5
   m_Name: DetailsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &593587780
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2591,6 +2592,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593587779}
   m_CullTransparentMesh: 1
+--- !u!114 &593587783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593587779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa7a3370e4414440a0c14a6c6403a6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 593587779}
+  nameText: {fileID: 201052534}
+  priceText: {fileID: 884364747}
+  rentText: {fileID: 918031492}
+  buyButton: {fileID: 432997550}
+  gameManager: {fileID: 675776310}
+  quitButton: {fileID: 291915608}
 --- !u!1 &608585835
 GameObject:
   m_ObjectHideFlags: 0
@@ -3021,6 +3041,7 @@ MonoBehaviour:
   currentPlayerIndex: 0
   isMoving: 0
   diceTotal: 0
+  isWaitingForPlayerAction: 0
   dice1: {fileID: 1716729032}
   dice2: {fileID: 1035318924}
   dieRolls: 
@@ -3028,6 +3049,7 @@ MonoBehaviour:
   rollButton: {fileID: 200055477}
   botPrefab: {fileID: 1351702903955371576, guid: 01f12ea31de36854e9c271d1f0467869, type: 3}
   playerPrefab: {fileID: 5054629440305202567, guid: 2f508320bddf06f40ac3f2688a24aa26, type: 3}
+  detailsPanelController: {fileID: 1224538229}
 --- !u!114 &675776311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3404,8 +3426,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -124, y: 179}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -72.10126, y: 179}
+  m_SizeDelta: {x: 303.7974, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &884364747
 MonoBehaviour:
@@ -3429,8 +3451,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Gi\xE1 mua: "
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
+  m_sharedMaterial: {fileID: 5240418327856684374, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3627,8 +3649,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -125, y: 126}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -72.601, y: 126}
+  m_SizeDelta: {x: 304.8, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &918031492
 MonoBehaviour:
@@ -3652,8 +3674,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Gi\xE1 thu\xEA:"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
+  m_sharedMaterial: {fileID: 5240418327856684374, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3894,8 +3916,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Mua
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
+  m_sharedMaterial: {fileID: 5240418327856684374, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4136,8 +4158,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Thu\xEA"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
+  m_sharedMaterial: {fileID: 5240418327856684374, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4921,8 +4943,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1224538228}
+  - component: {fileID: 1224538229}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: DetailsPanelController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4943,6 +4966,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1224538229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224538227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa7a3370e4414440a0c14a6c6403a6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 593587779}
+  nameText: {fileID: 201052534}
+  priceText: {fileID: 884364747}
+  rentText: {fileID: 918031492}
+  buyButton: {fileID: 432997550}
+  gameManager: {fileID: 675776310}
+  quitButton: {fileID: 291915608}
 --- !u!1 &1232984459
 GameObject:
   m_ObjectHideFlags: 0
@@ -8009,10 +8051,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "B\xE1n"
+  m_text: "Tho\xE1t"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
+  m_sharedMaterial: {fileID: 5240418327856684374, guid: f474c074e3a2ad34f9e6f6445d6fd276, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

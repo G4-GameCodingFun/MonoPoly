@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     public int currentPlayerIndex = 0;
     public bool isMoving = false;
     public int diceTotal = 0;
+    public bool isWaitingForPlayerAction = false;
 
     public Dice dice1;
     public Dice dice2;
@@ -54,6 +55,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject botPrefab;
     public GameObject playerPrefab;
+
+    // Thêm tham chiếu DetailsPanelController
+    public DetailsPanelController detailsPanelController;
 
     private string savePath;
 
@@ -298,6 +302,15 @@ public class GameManager : MonoBehaviour
             }
 
             landedTile.OnPlayerLanded(player);
+
+            // Hiện DetailsPanel nếu là người chơi thật và là PropertyTile chưa có chủ
+            if (prop != null && detailsPanelController != null)
+            {
+                Debug.Log("Gọi Show DetailsPanel từ GameManager cho: " + prop.data.provinceName);
+                isWaitingForPlayerAction = true;
+                detailsPanelController.Show(prop, player);
+                yield return new WaitUntil(() => !isWaitingForPlayerAction);
+            }
 
             if (player.isBot && prop != null && prop.owner == null && player.CanPay(prop.GetPrice()))
             {
