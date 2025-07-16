@@ -105,6 +105,6 @@ public class MenuManager : MonoBehaviour
     public void PlayGame()
     {
         Debug.Log("Play Game Clicked");
-        SceneManager.LoadScene("CreateAccountScene");
+        SceneManager.LoadScene("GamePLay");
     }
 }

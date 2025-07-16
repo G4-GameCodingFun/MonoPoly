@@ -48,7 +48,8 @@ public class PropertyTile : Tile
         if (owner == null)
         {
             int price = GetPrice();
-            if (player.CanPay(price))
+            // Chỉ bot mới tự động mua khi đi qua
+            if (player.isBot && player.CanPay(price))
             {
                 player.BuyProperty(this);
                 Debug.Log($"{player.playerName} đã mua {tileName} với giá {price}$");
@@ -56,7 +57,7 @@ public class PropertyTile : Tile
             }
             else
             {
-                Debug.Log($"{player.playerName} không đủ tiền mua {tileName} (giá {price}$)");
+                Debug.Log($"{player.playerName} chưa mua {tileName} (giá {price}$), chỉ hiện panel nếu là người chơi thường");
             }
         }
         // Nếu đã có chủ khác
@@ -104,6 +105,14 @@ public class PropertyTile : Tile
         if (shouldUpdateVisuals)
         {
             UpdateVisuals();
+        }
+    }
+
+    private void Awake()
+    {
+        if (GetComponent<BoxCollider2D>() == null)
+        {
+            gameObject.AddComponent<BoxCollider2D>();
         }
     }
 
@@ -169,6 +178,17 @@ public class PropertyTile : Tile
         {
             string digits = System.Text.RegularExpressions.Regex.Match(owner.playerName, @"\d+$").Value;
             text.text = string.IsNullOrEmpty(digits) ? "B" : digits;
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        // Chỉ cho phép click nếu không bị che bởi UI
+        var detailsPanel = FindObjectOfType<DetailsPanelController>();
+        if (detailsPanel != null && GameManager.Instance != null && GameManager.Instance.players.Count > 0)
+        {
+            var player = GameManager.Instance.players[GameManager.Instance.currentPlayerIndex];
+            detailsPanel.Show(this, player);
         }
     }
 }

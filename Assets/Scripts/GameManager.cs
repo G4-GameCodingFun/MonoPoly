@@ -454,7 +454,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(HandleRollAndMove(players[currentPlayerIndex]));
     }
 
-    private void ShowStatus(string message)
+    public void ShowStatus(string message)
     {
         if (statusText != null)
         {
