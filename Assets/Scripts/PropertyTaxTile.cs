@@ -33,6 +33,10 @@ public class PropertyTaxTile : Tile
             {
                 BankruptcyManager.Instance.CheckBankruptcy(player);
             }
+            else
+            {
+                Debug.LogWarning($"⚠️ BankruptcyManager.Instance là null! {player.playerName} có thể bị phá sản mà không được xử lý.");
+            }
         }
     }
 

@@ -9,11 +9,15 @@ public class KhiVanTile : Tile
     public override void OnPlayerLanded(PlayerController player)
     {
         if (player == null) return;
-        // Gọi trực tiếp CardManager để rút thẻ khi vận
-        var cardManager = GameObject.FindAnyObjectByType<CardManager>();
-        if (cardManager != null)
+        
+        // Gọi thông qua GameManager để đảm bảo logic nhất quán
+        if (GameManager.Instance != null)
         {
-            cardManager.DrawKhiVanCard(player);
+            GameManager.Instance.HandleCommunityChestTile(player);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager không được tìm thấy!");
         }
     }
 }

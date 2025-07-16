@@ -144,6 +144,12 @@ public class CardManager : MonoBehaviour
     void ApplyCardEffect(CardData card)
     {
         PlayerController player = currentCardPlayer;
+        
+        if (player == null)
+        {
+            Debug.LogError("❌ Lỗi: currentCardPlayer là null!");
+            return;
+        }
 
         // Chỉ xử lý tiền ở đây nếu card.moneyAmount khác 0
         if (card.moneyAmount != 0)
@@ -151,12 +157,12 @@ public class CardManager : MonoBehaviour
             if (card.moneyAmount > 0)
             {
                 player.money += card.moneyAmount;
-                Debug.Log($"💰 Nhận {card.moneyAmount}$ từ thẻ {card.name}");
+                Debug.Log($"💰 {player.playerName} nhận {card.moneyAmount}$ từ thẻ {card.name}");
             }
             else
             {
                 player.TryPay(-card.moneyAmount);
-                Debug.Log($"💸 Mất {-card.moneyAmount}$ từ thẻ {card.name}");
+                Debug.Log($"💸 {player.playerName} mất {-card.moneyAmount}$ từ thẻ {card.name}");
             }
         }
 
@@ -165,48 +171,87 @@ public class CardManager : MonoBehaviour
         {
             case CardEffectType.TROLAI_XUATPHAT:
                 player.MoveToStart();
+                Debug.Log($"🏠 {player.playerName} trở về vạch xuất phát");
                 break;
 
             case CardEffectType.DI_LUI_3_BUOC:
                 player.MoveSteps(-3);
+                Debug.Log($"⬅️ {player.playerName} đi lùi 3 bước");
                 break;
 
             case CardEffectType.TOI_CONGTY_GANNHAT:
                 player.MoveToNearest("Company");
+                Debug.Log($"🏢 {player.playerName} di chuyển đến công ty gần nhất");
                 break;
 
             case CardEffectType.TOI_BENXE_GANNHAT:
                 player.MoveToNearest("Station");
+                Debug.Log($"🚉 {player.playerName} di chuyển đến bến xe gần nhất");
                 break;
 
             case CardEffectType.TOI_O_NHA_CAO_NHAT:
                 player.MoveToMostExpensiveProperty();
+                Debug.Log($"🏰 {player.playerName} di chuyển đến nhà đắt nhất");
                 break;
 
             case CardEffectType.VAO_TU:
             case CardEffectType.BI_BAT_GIU_DOT_XUAT:
                 player.GoToJail();
+                Debug.Log($"🚔 {player.playerName} vào tù");
                 break;
 
             case CardEffectType.THE_RA_TU_MIENPHI:
                 player.hasGetOutOfJailFreeCard = true;
+                Debug.Log($"🎫 {player.playerName} nhận được thẻ ra tù miễn phí");
                 break;
 
             case CardEffectType.VE_BAO_LANH_RA_TU:
-                player.TryPay(150);
-                player.GetOutOfJail();
+                if (player.CanPay(150))
+                {
+                    player.TryPay(150);
+                    player.GetOutOfJail();
+                    Debug.Log($"💳 {player.playerName} đã trả 150$ để ra tù");
+                }
+                else
+                {
+                    Debug.LogWarning($"❌ {player.playerName} không đủ tiền để ra tù (cần 150$)");
+                }
                 break;
 
             case CardEffectType.GAP_SUCO_BO1LUOT:
                 player.skipNextTurn = true;
+                Debug.Log($"⏭️ {player.playerName} sẽ bị skip lượt tiếp theo");
                 break;
 
             case CardEffectType.MATGIAY_KO_MUA_DAT_LUOTKE:
                 player.cannotBuyNextTurn = true;
+                Debug.Log($"🚫 {player.playerName} không thể mua đất trong lượt tiếp theo");
                 break;
 
             case CardEffectType.CHON_MUA_O_DAT_GIAM50PHANTRAM:
                 player.canBuyDiscountProperty = true;
+                Debug.Log($"🏷️ {player.playerName} có thể mua đất giảm 50% trong lượt tiếp theo");
+                break;
+
+            case CardEffectType.TRA_MOI_NGUOI:
+                // Trả tiền cho tất cả người chơi khác
+                if (GameManager.Instance != null)
+                {
+                    int amountPerPlayer = 50; // Số tiền trả cho mỗi người
+                    int totalCost = 0;
+                    
+                    foreach (var otherPlayer in GameManager.Instance.players)
+                    {
+                        if (otherPlayer != player)
+                        {
+                            otherPlayer.money += amountPerPlayer;
+                            totalCost += amountPerPlayer;
+                        }
+                    }
+                    
+                    player.TryPay(totalCost);
+                    Debug.Log($"💸 {player.playerName} trả {totalCost}$ cho tất cả người chơi khác");
+                }
                 break;
 
             default:

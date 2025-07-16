@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public string playerName;
-    public int money = 2000;
+    public int money = 200;
     public int currentTileIndex = 0;
     public bool inJail = false;
     public int jailTurns = 0;
@@ -65,6 +65,10 @@ public class PlayerController : MonoBehaviour
             {
                 BankruptcyManager.Instance.CheckBankruptcy(this);
             }
+            else
+            {
+                Debug.LogWarning($"⚠️ BankruptcyManager.Instance là null! {playerName} có thể bị phá sản mà không được xử lý.");
+            }
         }
     }
 
@@ -124,8 +128,24 @@ public class PlayerController : MonoBehaviour
 
     public void MoveSteps(int steps)
     {
-        currentTileIndex = (currentTileIndex + steps) % GameManager.Instance.mapTiles.Count;
+        int newIndex = currentTileIndex + steps;
+        
+        // Xử lý trường hợp di chuyển lùi (steps < 0)
+        if (newIndex < 0)
+        {
+            newIndex = GameManager.Instance.mapTiles.Count + newIndex;
+        }
+        
+        currentTileIndex = newIndex % GameManager.Instance.mapTiles.Count;
         transform.position = GameManager.Instance.mapTiles[currentTileIndex].position;
+        
+        // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
+        if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
+        {
+            int idx = GameManager.Instance.players.IndexOf(this);
+            if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+                GameManager.Instance.currentTileIndexes[idx] = currentTileIndex;
+        }
     }
 
     public void MoveToMostExpensiveProperty()
@@ -145,6 +165,14 @@ public class PlayerController : MonoBehaviour
         {
             currentTileIndex = targetIndex;
             transform.position = GameManager.Instance.mapTiles[targetIndex].position;
+            
+            // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
+            if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
+            {
+                int idx = GameManager.Instance.players.IndexOf(this);
+                if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+                    GameManager.Instance.currentTileIndexes[idx] = targetIndex;
+            }
         }
     }
 
@@ -158,6 +186,14 @@ public class PlayerController : MonoBehaviour
             {
                 currentTileIndex = index;
                 transform.position = GameManager.Instance.mapTiles[index].position;
+                
+                // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
+                if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
+                {
+                    int idx = GameManager.Instance.players.IndexOf(this);
+                    if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+                        GameManager.Instance.currentTileIndexes[idx] = index;
+                }
                 return;
             }
         }
@@ -174,6 +210,14 @@ public class PlayerController : MonoBehaviour
                 transform.position = GameManager.Instance.jailPosition.position;
                 inJail = true;
                 jailTurns = 3;
+
+                // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
+                if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
+                {
+                    int idx = GameManager.Instance.players.IndexOf(this);
+                    if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+                        GameManager.Instance.currentTileIndexes[idx] = jailIndex;
+                }
 
                 Debug.Log($"{playerName} vào tù 3 lượt");
             }
@@ -215,6 +259,10 @@ public class PlayerController : MonoBehaviour
             if (BankruptcyManager.Instance != null)
             {
                 BankruptcyManager.Instance.CheckBankruptcy(this);
+            }
+            else
+            {
+                Debug.LogWarning($"⚠️ BankruptcyManager.Instance là null! {playerName} có thể bị phá sản mà không được xử lý.");
             }
         }
     }

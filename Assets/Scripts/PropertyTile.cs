@@ -167,20 +167,11 @@ public class PropertyTile : Tile
         else if (owner != player)
         {
             int rent = GetRent();
-            if (player.CanPay(rent))
-            {
-                player.PayRent(owner, rent);
-                Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
-                if (GameManager.Instance != null)
-                    GameManager.Instance.ShowInfoHud($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
-            }
-            else
-            {
-                Debug.Log($"{player.playerName} không đủ tiền trả {rent}$ tiền thuê cho {owner.playerName}");
-                if (GameManager.Instance != null)
-                    GameManager.Instance.ShowInfoHud($"{player.playerName} không đủ tiền trả {rent}$ tiền thuê cho {owner.playerName}");
-                player.GoBankrupt(owner);
-            }
+            // Luôn gọi PayRent, nó sẽ tự động xử lý phá sản nếu cần
+            player.PayRent(owner, rent);
+            Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
+            if (GameManager.Instance != null)
+                GameManager.Instance.ShowInfoHud($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
         }
         // Nếu là chủ sở hữu
         else
