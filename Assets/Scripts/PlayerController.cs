@@ -14,11 +14,34 @@ public class PlayerController : MonoBehaviour
     public bool hasGetOutOfJailFreeCard = false;
     public bool isBot;
 
+    public GameObject arrowPrefab;
+    private GameObject arrowInstance;
+
     public List<Tile> ownedTiles = new List<Tile>();
 
     public bool CanPay(int amount) => money >= amount;
 
     private Animator animator;
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+
+        if (arrowPrefab != null)
+        {
+            arrowInstance = Instantiate(arrowPrefab);
+            arrowInstance.transform.SetParent(transform);
+
+            SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            float spriteHeight = spriteRenderer != null ? spriteRenderer.bounds.size.y : 1.0f;
+
+            float offsetY = spriteHeight + 5f;
+
+            arrowInstance.transform.position = transform.position + new Vector3(0f, offsetY, 0f);
+        }
+    }
+
+
+
 
     private void Awake()
     {
@@ -209,6 +232,20 @@ public class PlayerController : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("isRunning", walking);
+        }
+    }
+    public void SetArrowVisible(bool visible)
+    {
+        if (arrowInstance != null)
+            arrowInstance.SetActive(visible);
+    }
+    private void LateUpdate()
+    {
+        if (arrowInstance != null)
+        {
+            SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+            float offsetY = sr != null ? sr.bounds.size.y + 1.5f : 1.0f;
+            arrowInstance.transform.position = transform.position + new Vector3(0f, offsetY, 0f);
         }
     }
 }

@@ -15,7 +15,7 @@ public class PlayWithBotController : MonoBehaviour
     {
         // Tạo session cho bot (ví dụ: lưu vào PlayerPrefs)
         PlayerPrefs.SetString("GameMode", "Bot");
-        PlayerPrefs.SetString("PlayerName", "BotPlayer");
+        PlayerPrefs.SetString("PlayerName", "You");
         PlayerPrefs.Save();
         Debug.Log("Button clicked");
 

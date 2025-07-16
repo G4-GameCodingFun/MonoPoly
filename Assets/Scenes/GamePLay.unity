@@ -1499,6 +1499,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 4bbad1ed914523a42927310296dbb915, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 0}
+  botHousePrefab: {fileID: 0}
+  playerHotelPrefab: {fileID: 0}
+  botHotelPrefab: {fileID: 0}
 --- !u!1 &265247514
 GameObject:
   m_ObjectHideFlags: 0
@@ -2108,6 +2112,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 73787e3302c3f0a4d8ebb6bcb3fbd1af, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &402121400
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,6 +2418,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 816a0f8fd6392174399b6db2aad6b670, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2792,6 +2804,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 410b288215258444db585f733b25b991, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &551010196
 GameObject:
   m_ObjectHideFlags: 0
@@ -2898,6 +2914,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 952358c14d2a1094fa68ca66f77f765a, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &552132525
 GameObject:
   m_ObjectHideFlags: 0
@@ -3004,6 +3024,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 3f72cb47b9fbf1446a1a82439edd67f3, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &569126821
 GameObject:
   m_ObjectHideFlags: 0
@@ -3438,6 +3462,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: ffb0b4e19fcaee14a96928a3bded8a07, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 0}
+  botHousePrefab: {fileID: 0}
+  playerHotelPrefab: {fileID: 0}
+  botHotelPrefab: {fileID: 0}
 --- !u!1 &593587779
 GameObject:
   m_ObjectHideFlags: 0
@@ -3613,6 +3641,62 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -19.1, y: 26.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &613184702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 613184704}
+  - component: {fileID: 613184703}
+  m_Layer: 0
+  m_Name: Player5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &613184703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613184702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88636fd416b2c7b43a0dffb8e5c79972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: Player5
+  money: 9999
+  currentTileIndex: 0
+  inJail: 0
+  jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  isBot: 1
+  arrowPrefab: {fileID: 0}
+  ownedTiles: []
+--- !u!4 &613184704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613184702}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4619,6 +4703,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: acd7b60c73072494f9c8f27edc365f0f, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 0}
+  botHousePrefab: {fileID: 0}
+  playerHotelPrefab: {fileID: 0}
+  botHotelPrefab: {fileID: 0}
 --- !u!1 &855644975
 GameObject:
   m_ObjectHideFlags: 0
@@ -5163,6 +5251,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 1d08cf4606a82c14b9dd2d47f4ef19ec, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &962658832
 GameObject:
   m_ObjectHideFlags: 0
@@ -5273,6 +5365,7 @@ MonoBehaviour:
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
   isBot: 0
+  arrowPrefab: {fileID: 0}
   ownedTiles: []
 --- !u!1 &973595083
 GameObject:
@@ -5652,6 +5745,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 04450485cd365474c9db74992667b746, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1019376452
 GameObject:
   m_ObjectHideFlags: 0
@@ -6067,6 +6164,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: b60cee2bddcbcbd40bb9c63bf3ea34ca, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1056157090
 GameObject:
   m_ObjectHideFlags: 0
@@ -6173,6 +6274,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 937fb5846340e994c8c1134804f00a28, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1071433501
 GameObject:
   m_ObjectHideFlags: 0
@@ -6354,6 +6459,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 1ac19c146a3316046bcc56bb6cf1cf0d, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1092604131
 GameObject:
   m_ObjectHideFlags: 0
@@ -6539,6 +6648,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: ba56267d1817b0c4b94a92da1f86be48, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1148944261
 GameObject:
   m_ObjectHideFlags: 0
@@ -6645,6 +6758,10 @@ MonoBehaviour:
   data: {fileID: 0}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 0}
+  botHousePrefab: {fileID: 0}
+  playerHotelPrefab: {fileID: 0}
+  botHotelPrefab: {fileID: 0}
 --- !u!1 &1154941454
 GameObject:
   m_ObjectHideFlags: 0
@@ -7059,6 +7176,66 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 53e1f11ea498da64c95a62a30cafdd4d, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
+--- !u!1 &1256529411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1256529413}
+  - component: {fileID: 1256529412}
+  m_Layer: 0
+  m_Name: Player4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1256529412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256529411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88636fd416b2c7b43a0dffb8e5c79972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: Player4
+  money: 9999
+  currentTileIndex: 0
+  inJail: 0
+  jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  isBot: 1
+  arrowPrefab: {fileID: 0}
+  ownedTiles: []
+--- !u!4 &1256529413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256529411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1266622635
 GameObject:
   m_ObjectHideFlags: 0
@@ -7165,6 +7342,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 1d6aede722399bb428425b8f54f2b857, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1295841969
 GameObject:
   m_ObjectHideFlags: 0
@@ -7271,6 +7452,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 20a1b5adfd322dc48a6e4db4203eb799, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1299839882
 GameObject:
   m_ObjectHideFlags: 0
@@ -7377,6 +7562,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 744c68e466511c441ba42bdbe0afa8b2, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1305146178
 GameObject:
   m_ObjectHideFlags: 0
@@ -7629,6 +7818,7 @@ MonoBehaviour:
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
   isBot: 0
+  arrowPrefab: {fileID: 0}
   ownedTiles: []
 --- !u!1 &1323591981
 GameObject:
@@ -8070,11 +8260,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileName: "L\xE0o Cai"
-  owner: {fileID: 0}
+  owner: {fileID: 613184703}
   spriteRenderer: {fileID: 0}
   data: {fileID: 11400000, guid: 9136987b66b91ea49a981ce842957122, type: 2}
-  houseCount: 0
-  hasHotel: 0
+  houseCount: 3
+  hasHotel: 1
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1445566345
 GameObject:
   m_ObjectHideFlags: 0
@@ -8750,6 +8944,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 172230930623abc488b4c234218e4394, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1670650941
 GameObject:
   m_ObjectHideFlags: 0
@@ -8856,6 +9054,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 77408deb35536ac45ace492b0b9b01e0, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1672199808
 GameObject:
   m_ObjectHideFlags: 0
@@ -8962,6 +9164,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: e43805626884e6940a3cf2bf2313507c, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1716729028
 GameObject:
   m_ObjectHideFlags: 0
@@ -9370,6 +9576,62 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   purchasePrice: 150
   mortgageValue: 75
+--- !u!1 &1787043247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1787043249}
+  - component: {fileID: 1787043248}
+  m_Layer: 0
+  m_Name: Player3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1787043248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787043247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88636fd416b2c7b43a0dffb8e5c79972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: Player3
+  money: 9999
+  currentTileIndex: 0
+  inJail: 0
+  jailTurns: 0
+  skipNextTurn: 0
+  cannotBuyNextTurn: 0
+  canBuyDiscountProperty: 0
+  hasGetOutOfJailFreeCard: 0
+  isBot: 1
+  arrowPrefab: {fileID: 0}
+  ownedTiles: []
+--- !u!4 &1787043249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787043247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1800916890
 GameObject:
   m_ObjectHideFlags: 0
@@ -9658,6 +9920,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d2d6a7ebe8a15474db2f1b2f04e2e2fe, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1894120135
 GameObject:
   m_ObjectHideFlags: 0
@@ -9768,6 +10034,7 @@ MonoBehaviour:
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
   isBot: 0
+  arrowPrefab: {fileID: 0}
   ownedTiles: []
 --- !u!1 &1904954734
 GameObject:
@@ -9875,6 +10142,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: f9fef967fbc00cf4989d35a1f0b0a5eb, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &1928688268
 GameObject:
   m_ObjectHideFlags: 0
@@ -10305,6 +10576,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 9dd038f4223df5c41a2243cd1af25ce5, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 0}
+  botHousePrefab: {fileID: 0}
+  playerHotelPrefab: {fileID: 0}
+  botHotelPrefab: {fileID: 0}
 --- !u!1 &2035805800
 GameObject:
   m_ObjectHideFlags: 0
@@ -10415,6 +10690,7 @@ MonoBehaviour:
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
   isBot: 0
+  arrowPrefab: {fileID: 0}
   ownedTiles: []
 --- !u!1 &2110210350
 GameObject:
@@ -10658,6 +10934,10 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: aefb0f27eeb1c50468c158d2c3d2c714, type: 2}
   houseCount: 0
   hasHotel: 0
+  playerHousePrefab: {fileID: 8968187674378139765, guid: 49ab337720494af4a99c4a6f6732ff42, type: 3}
+  botHousePrefab: {fileID: 7314290035117935203, guid: 8705fbe9e3d311141a506edf0cfb7c0a, type: 3}
+  playerHotelPrefab: {fileID: 1370852238190805162, guid: a58c5093978d7d249b8c02aa929fa6f7, type: 3}
+  botHotelPrefab: {fileID: 4883648715015964175, guid: b006122cbfa9960419d5b8265777d739, type: 3}
 --- !u!1 &2114974168
 GameObject:
   m_ObjectHideFlags: 0
@@ -11140,3 +11420,6 @@ SceneRoots:
   - {fileID: 675776309}
   - {fileID: 1224538228}
   - {fileID: 889767957}
+  - {fileID: 1787043249}
+  - {fileID: 1256529413}
+  - {fileID: 613184704}

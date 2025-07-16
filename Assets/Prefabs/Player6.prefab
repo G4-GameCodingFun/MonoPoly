@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88636fd416b2c7b43a0dffb8e5c79972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: 
+  playerName: You
   money: 2000
   currentTileIndex: 0
   inJail: 0
@@ -133,4 +133,5 @@ MonoBehaviour:
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
   isBot: 0
+  arrowPrefab: {fileID: 6200523649892917322, guid: 2a5f25ffcfccbfb44becfa71285ceacb, type: 3}
   ownedTiles: []

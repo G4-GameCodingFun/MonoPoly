@@ -133,4 +133,5 @@ MonoBehaviour:
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
   isBot: 1
+  arrowPrefab: {fileID: 2800485179299994595, guid: 6e6042b4790d3aa41b2bc990fcde5298, type: 3}
   ownedTiles: []

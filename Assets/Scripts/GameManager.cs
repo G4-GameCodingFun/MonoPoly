@@ -427,9 +427,19 @@ public class GameManager : MonoBehaviour
     private void NextTurn()
     {
         currentTurnTime = turnTimeLimit;
+
+        foreach (var player in players)
+        {
+            player.SetArrowVisible(false);
+        }
+
         currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+
         PlayerController nextPlayer = players[currentPlayerIndex];
         string playerType = nextPlayer.isBot ? "(Bot)" : "(Người chơi)";
+
+        nextPlayer.SetArrowVisible(true);
+
         ShowStatus($"Tới lượt: {nextPlayer.playerName} {playerType}");
 
         if (nextPlayer.isBot)
