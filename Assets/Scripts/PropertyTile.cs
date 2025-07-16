@@ -47,17 +47,34 @@ public class PropertyTile : Tile
         // Nếu chưa có chủ sở hữu
         if (owner == null)
         {
-            int price = GetPrice();
-            // Chỉ bot mới tự động mua khi đi qua
-            if (player.isBot && player.CanPay(price))
+            int houseCost = GetHouseCost();
+            if (player.isBot)
             {
-                player.BuyProperty(this);
-                Debug.Log($"{player.playerName} đã mua {tileName} với giá {price}$");
-                shouldUpdateVisuals = true;
+                // Bot tự động mua nhà nếu đủ tiền
+                if (player.CanPay(houseCost))
+                {
+                    player.money -= houseCost;
+                    owner = player;
+                    player.ownedTiles.Add(this);
+                    SetOwner(player);
+                    houseCount = 1;
+                    Debug.Log($"{player.playerName} (Bot) đã mua {tileName} với giá xây 1 nhà: {houseCost}$");
+                    shouldUpdateVisuals = true;
+                }
+                else
+                {
+                    Debug.Log($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
+                }
             }
             else
             {
-                Debug.Log($"{player.playerName} chưa mua {tileName} (giá {price}$), chỉ hiện panel nếu là người chơi thường");
+                // Người chơi thường chỉ hiện panel, không auto mua
+                var detailsPanel = FindObjectOfType<DetailsPanelController>();
+                if (detailsPanel != null)
+                {
+                    detailsPanel.Show(this, player);
+                }
+                Debug.Log($"{player.playerName} (Người chơi) đến ô {tileName}, chỉ hiện panel, không auto mua.");
             }
         }
         // Nếu đã có chủ khác
@@ -79,27 +96,7 @@ public class PropertyTile : Tile
         else
         {
             Debug.Log($"{player.playerName} đang đứng trên đất của mình: {tileName}");
-
-            // Gợi ý xây nhà nếu có thể
-            if (houseCount < 4 && player.CanPay(GetHouseCost()))
-            {
-                houseCount++;
-                player.money -= GetHouseCost();
-                Debug.Log($"{player.playerName} xây thêm nhà. Tổng số nhà: {houseCount}");
-                shouldUpdateVisuals = true;
-            }
-            else if (houseCount == 4 && !hasHotel && player.CanPay(GetHotelCost()))
-            {
-                hasHotel = true;
-                houseCount = 0;
-                player.money -= GetHotelCost();
-                Debug.Log($"{player.playerName} đã xây khách sạn tại {tileName}");
-                shouldUpdateVisuals = true;
-            }
-            else
-            {
-                Debug.Log($"Không thể xây thêm nhà hoặc khách sạn tại {tileName}");
-            }
+            // Không tự động xây thêm nhà nữa khi đã sở hữu
         }
 
         if (shouldUpdateVisuals)
@@ -116,7 +113,7 @@ public class PropertyTile : Tile
         }
     }
 
-    private void UpdateVisuals()
+    public void UpdateVisuals()
     {
         foreach (var obj in spawnedHouses)
             Destroy(obj);

@@ -110,16 +110,22 @@ public class DetailsPanelController : MonoBehaviour
     void BuyProperty()
     {
         Debug.Log("Đã bấm nút Mua");
-        if (currentPlayer != null && currentTile != null && currentPlayer.CanPay(currentTile.GetPrice()))
+        if (currentPlayer != null && currentTile != null && currentPlayer.CanPay(currentTile.GetHouseCost()))
         {
-            currentPlayer.BuyProperty(currentTile);
-            Debug.Log("Đã mua đất: " + currentTile.data.provinceName);
-            Hide();
-            if (gameManager != null) gameManager.isWaitingForPlayerAction = false;
+            // Mua nhà (theo logic mới: chỉ cần đủ tiền xây nhà)
+            currentPlayer.money -= currentTile.GetHouseCost();
+            currentTile.owner = currentPlayer;
+            currentPlayer.ownedTiles.Add(currentTile);
+            currentTile.SetOwner(currentPlayer);
+            currentTile.houseCount = 1;
+            currentTile.UpdateVisuals(); // Hiện ngay logo nhà
+            Debug.Log("Đã mua nhà: " + currentTile.data.provinceName);
+            // Hiện lại panel để cập nhật nút bán
+            Show(currentTile, currentPlayer);
         }
         else
         {
-            Debug.Log("Không đủ tiền hoặc lỗi khi mua đất!");
+            Debug.Log("Không đủ tiền hoặc lỗi khi mua nhà!");
         }
     }
 
