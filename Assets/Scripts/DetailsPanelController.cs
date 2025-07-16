@@ -58,8 +58,14 @@ public class DetailsPanelController : MonoBehaviour
 
     public void Hide()
     {
-        panel.SetActive(false);
-        if (gameManager != null) gameManager.isWaitingForPlayerAction = false;
+        if (panel != null && panel.activeSelf)
+        {
+            panel.SetActive(false);
+            if (gameManager != null)
+            {
+                gameManager.isWaitingForPlayerAction = false; // Đặt lại trạng thái
+            }
+        }
     }
 
     /// <summary>
@@ -82,10 +88,13 @@ public class DetailsPanelController : MonoBehaviour
     }
 
     // Thêm hàm xử lý cho QuitButton
-    void QuitPanel()
+    public void QuitPanel()
     {
         Debug.Log("Đã bấm nút Quit");
         Hide();
-        if (gameManager != null) gameManager.isWaitingForPlayerAction = false;
+        if (gameManager != null)
+        {
+            gameManager.isWaitingForPlayerAction = false; // Đặt lại trạng thái
+        }
     }
 }

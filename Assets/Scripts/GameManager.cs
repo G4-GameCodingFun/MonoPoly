@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,8 +54,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI statusText;
     public Button rollButton;
 
-    public GameObject botPrefab;
+    public List<GameObject> botPrefabs;
     public GameObject playerPrefab;
+
+    public TextMeshProUGUI countdownText; // Tham chiếu đến TextMeshProUGUI trong UI
+    private float turnTimeLimit = 15f; // Giới hạn thời gian mỗi lượt (giây), có thể điều chỉnh
+    private float currentTurnTime;
 
     // Thêm tham chiếu DetailsPanelController
     public DetailsPanelController detailsPanelController;
@@ -89,6 +94,11 @@ public class GameManager : MonoBehaviour
             rollButton.interactable = true;
         }
 
+        currentTurnTime = turnTimeLimit;
+        isMoving = false; // Đặt lại rõ ràng
+        isWaitingForPlayerAction = false; // Đặt lại rõ ràng
+        UpdateCountdownText();
+
         ShowStatus($"Bắt đầu game. Tới lượt: {players[0].playerName} {(players[0].isBot ? "(Bot)" : "(Người chơi)")}");
         CheckBotTurn();
     }
@@ -96,67 +106,81 @@ public class GameManager : MonoBehaviour
     void SetupPlayers()
     {
         players.Clear();
+        Vector3 basePosition = mapTiles[0].position;
 
-        // Add main player
-        if (playerPrefab != null)
-        {
-            var playerObj = Instantiate(playerPrefab);
-            if (playerObj != null)
-            {
-                var pc = playerObj.GetComponent<PlayerController>();
-                if (pc != null)
-                {
-                    pc.playerName = PlayerPrefs.GetString("PlayerName", "You");
-                    pc.isBot = false;
-                    players.Add(pc);
-                }
-                else
-                {
-                    Debug.LogError("Player Prefab không có component PlayerController!");
-                }
-            }
-            else
-            {
-                Debug.LogError("Không thể instantiate Player Prefab!");
-            }
-        }
-        else
+        if (playerPrefab == null)
         {
             Debug.LogError("Player Prefab chưa được gán!");
+            return;
         }
 
-        // Add bots
-        if (botPrefab != null)
+        var playerObj = Instantiate(playerPrefab, basePosition, Quaternion.identity);
+        if (playerObj == null)
         {
-            while (players.Count < 4)
-            {
-                var botObj = Instantiate(botPrefab);
-                if (botObj != null)
-                {
-                    var botPc = botObj.GetComponent<PlayerController>();
-                    if (botPc != null)
-                    {
-                        botPc.playerName = "Bot " + players.Count;
-                        botPc.isBot = true;
-                        botPc.money = 2000;
-                        players.Add(botPc);
-                    }
-                    else
-                    {
-                        Debug.LogError("Bot Prefab không có component PlayerController!");
-                        break;
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Không thể instantiate Bot Prefab!");
-                    break;
-                }
-            }
+            Debug.LogError("Không thể instantiate Player Prefab!");
+            return;
         }
-        else
+
+        var pc = playerObj.GetComponent<PlayerController>();
+        if (pc == null)
         {
-            Debug.LogError("Bot Prefab chưa được gán!");
+            Debug.LogError("Player Prefab không có component PlayerController!");
+            Destroy(playerObj);
+            return;
+        }
+
+        pc.playerName = PlayerPrefs.GetString("PlayerName", "You");
+        pc.isBot = false;
+        pc.FaceLeft();
+        playerObj.transform.position = new Vector3(57f, -16f, basePosition.z);
+        pc.currentTileIndex = 0;
+        players.Add(pc);
+
+        // Add bots
+        if (botPrefabs == null || botPrefabs.Count < 3)
+        {
+            Debug.LogError("Danh sách botPrefabs rỗng hoặc không đủ 3 bot!");
+            return;
+        }
+
+        // Tạo 3 bot riêng biệt
+        var botPositions = new Vector3[]
+        {
+        new Vector3(55f, -12f, basePosition.z), // Player3
+        new Vector3(45f, -11f, basePosition.z), // Player4
+        new Vector3(43f, -16f, basePosition.z)  // Player5
+        };
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (botPrefabs[i] == null)
+            {
+                Debug.LogError($"Bot Prefab tại chỉ số {i} chưa được gán!");
+                continue;
+            }
+
+            var botObj = Instantiate(botPrefabs[i], basePosition, Quaternion.identity);
+            if (botObj == null)
+            {
+                Debug.LogError($"Không thể instantiate Bot Prefab tại chỉ số {i}!");
+                continue;
+            }
+
+            var botPc = botObj.GetComponent<PlayerController>();
+            if (botPc == null)
+            {
+                Debug.LogError($"Bot Prefab tại chỉ số {i} không có component PlayerController!");
+                Destroy(botObj);
+                continue;
+            }
+
+            botPc.playerName = $"Player{i + 3}"; // Player3, Player4, Player5
+            botPc.isBot = true;
+            botPc.money = 2000;
+            botPc.FaceLeft();
+            botObj.transform.position = botPositions[i];
+            botPc.currentTileIndex = 0;
+            players.Add(botPc);
         }
 
         if (players.Count == 0)
@@ -175,6 +199,20 @@ public class GameManager : MonoBehaviour
         if (rollButton != null)
         {
             rollButton.interactable = !isMoving && IsCurrentPlayerLocal();
+        }
+
+        if (currentTurnTime > 0 && currentPlayerIndex >= 0 && currentPlayerIndex < players.Count)
+        {
+            currentTurnTime -= Time.deltaTime;
+            UpdateCountdownText();
+
+            // Chuyển lượt nếu hết thời gian
+            if (currentTurnTime <= 0)
+            {
+                ShowStatus($"Hết thời gian cho {players[currentPlayerIndex].playerName}! Chuyển lượt.");
+                NextTurn();
+                currentTurnTime = turnTimeLimit; // Reset thời gian cho lượt mới
+            }
         }
     }
 
@@ -200,7 +238,28 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator HandleRollAndMove(PlayerController player)
     {
+        currentTurnTime = turnTimeLimit;
         isMoving = true;
+
+        if (player.inJail)
+        {
+            player.jailTurns--;
+
+            if (player.jailTurns <= 0)
+            {
+                player.GetOutOfJail();
+                ShowStatus($"{player.playerName} đã hết lượt trong tù và được thả");
+            }
+            else
+            {
+                ShowStatus($"{player.playerName} đang bị tù. Còn {player.jailTurns} lượt");
+                yield return new WaitForSeconds(2f);
+
+                isMoving = false;
+                NextTurn(); // 👉 Chuyển lượt cho người tiếp theo
+                yield break; // ⛔ Dừng coroutine không thực hiện di chuyển
+            }
+        }
 
         diceTotal = 0;
         dieRolls.Clear();
@@ -270,6 +329,8 @@ public class GameManager : MonoBehaviour
         PlayerController player = players[playerIndex];
         string playerType = player.isBot ? "(Bot)" : "(Người chơi)";
 
+        player.SetWalking(true);
+
         for (int i = 0; i < steps; i++)
         {
             currentTileIndexes[playerIndex] = (currentTileIndexes[playerIndex] + 1) % mapTiles.Count;
@@ -277,6 +338,8 @@ public class GameManager : MonoBehaviour
             bool passedGo = currentTileIndexes[playerIndex] == 0 && i < steps - 1;
 
             Vector3 target = mapTiles[currentTileIndexes[playerIndex]].position;
+            if (target.x < player.transform.position.x)
+                player.FaceLeft();
             player.transform.position = target;
 
             yield return new WaitForSeconds(0.3f);
@@ -288,6 +351,8 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
         }
+
+        player.SetWalking(false);
 
         player.currentTileIndex = currentTileIndexes[playerIndex];
 
@@ -303,21 +368,52 @@ public class GameManager : MonoBehaviour
 
             landedTile.OnPlayerLanded(player);
 
-            // Hiện DetailsPanel nếu là người chơi thật và là PropertyTile chưa có chủ
-            if (prop != null && detailsPanelController != null)
+            // Xử lý ô Chance hoặc Community Chest
+            ChanceTile chanceTile = landedTile as ChanceTile;
+            KhiVanTile communityTile = landedTile as KhiVanTile;
+            if (chanceTile != null || communityTile != null)
             {
-                Debug.Log("Gọi Show DetailsPanel từ GameManager cho: " + prop.data.provinceName);
-                isWaitingForPlayerAction = true;
-                detailsPanelController.Show(prop, player);
-                yield return new WaitUntil(() => !isWaitingForPlayerAction);
+                if (cardManager != null)
+                {
+                    isWaitingForPlayerAction = true;
+                    if (chanceTile != null)
+                        cardManager.DrawCoHoiCard(player);
+                    else
+                        cardManager.DrawKhiVanCard(player);
+                    // Chờ đến khi cardPanel được tắt (isFlipping = false)
+                    yield return new WaitUntil(() => !cardManager.isFlipping && !cardManager.cardPanel.activeSelf);
+                    isWaitingForPlayerAction = false;
+                }
             }
 
-            if (player.isBot && prop != null && prop.owner == null && player.CanPay(prop.GetPrice()))
+            // Xử lý ô PropertyTile
+            if (prop != null && prop.data != null && detailsPanelController != null)
             {
-                player.BuyProperty(prop);
-                ShowStatus($"{player.playerName} {playerType} tự động mua {landedTile.tileName}");
-                yield return new WaitForSeconds(1f);
+                if (player.isBot)
+                {
+                    // Nếu là bot, hiển thị DetailsPanel nhưng tự động mua và đóng
+                    isWaitingForPlayerAction = true;
+                    detailsPanelController.Show(prop, player);
+                    if (prop.owner == null && player.CanPay(prop.GetPrice()))
+                    {
+                        player.BuyProperty(prop);
+                        ShowStatus($"{player.playerName} {playerType} tự động mua {landedTile.tileName}");
+                        yield return new WaitForSeconds(1f); // Chờ để người chơi thấy thông báo
+                        
+                    }
+                    detailsPanelController.QuitPanel(); // Tắt DetailsPanel
+                    isWaitingForPlayerAction = false;
+                }
+                else
+                {
+                    // Nếu là người chơi chính, hiển thị và chờ hành động thủ công
+                    Debug.Log("Gọi Show DetailsPanel từ GameManager cho: " + prop.data.provinceName);
+                    isWaitingForPlayerAction = true;
+                    detailsPanelController.Show(prop, player);
+                    yield return new WaitUntil(() => !isWaitingForPlayerAction);
+                }
             }
+
         }
         else
         {
@@ -330,6 +426,7 @@ public class GameManager : MonoBehaviour
 
     private void NextTurn()
     {
+        currentTurnTime = turnTimeLimit;
         currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
         PlayerController nextPlayer = players[currentPlayerIndex];
         string playerType = nextPlayer.isBot ? "(Bot)" : "(Người chơi)";
@@ -388,5 +485,48 @@ public class GameManager : MonoBehaviour
         }
         
         Debug.Log($"{player.playerName} đã di chuyển đến ô {targetTileIndex}");
+    }
+
+    public void HandleChanceTile(PlayerController player)
+    {
+        if (cardManager != null)
+        {
+            isWaitingForPlayerAction = true;
+            cardManager.DrawCoHoiCard(player);
+            // Chờ đến khi cardPanel được tắt
+            StartCoroutine(WaitForCardAction());
+        }
+        else
+        {
+            Debug.LogError("CardManager không được gán!");
+        }
+    }
+
+    public void HandleCommunityChestTile(PlayerController player)
+    {
+        if (cardManager != null)
+        {
+            isWaitingForPlayerAction = true;
+            cardManager.DrawKhiVanCard(player);
+            StartCoroutine(WaitForCardAction());
+        }
+        else
+        {
+            Debug.LogError("CardManager không được gán!");
+        }
+    }
+
+    private IEnumerator WaitForCardAction()
+    {
+        yield return new WaitUntil(() => !cardManager.isFlipping && !cardManager.cardPanel.activeSelf);
+        isWaitingForPlayerAction = false;
+    }
+
+    private void UpdateCountdownText()
+    {
+        if (countdownText != null)
+        {
+            countdownText.text = "Countdown Time: " + Mathf.Ceil(currentTurnTime).ToString() + "s";
+        }
     }
 }

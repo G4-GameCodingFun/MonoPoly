@@ -10,10 +10,18 @@ public class ChanceTile : Tile
     {
         if (player == null) return;
         // Gọi trực tiếp CardManager để rút thẻ cơ hội
-        var cardManager = FindObjectOfType<CardManager>();
-        if (cardManager != null)
+        //var cardManager = FindObjectOfType<CardManager>();
+        //if (cardManager != null)
+        //{
+        //    cardManager.DrawCoHoiCard(player);
+        //}
+        if (GameManager.Instance != null)
         {
-            cardManager.DrawCoHoiCard(player);
+            GameManager.Instance.HandleChanceTile(player);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager không được tìm thấy!");
         }
     }
 }

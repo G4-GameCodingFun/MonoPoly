@@ -16,7 +16,7 @@ public class CardManager : MonoBehaviour
     public Animator cardsBackAnimator;
     public GameObject cardsBackPanel;
 
-    private bool isFlipping = false;
+    public bool isFlipping = false;
     private PlayerController currentCardPlayer;
 
     void Start()
@@ -135,6 +135,8 @@ public class CardManager : MonoBehaviour
         Debug.Log($"🎉 Bạn rút được thẻ {cardType}: {pickedCard.name} - Hiệu ứng: {pickedCard.effect}");
 
         ApplyCardEffect(pickedCard);
+        yield return new WaitForSeconds(2f);
+        CloseCardPanel();
 
         isFlipping = false;
     }

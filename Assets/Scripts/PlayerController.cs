@@ -18,6 +18,13 @@ public class PlayerController : MonoBehaviour
 
     public bool CanPay(int amount) => money >= amount;
 
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     public void TryPay(int amount)
     {
         if (money >= amount)
@@ -113,11 +120,20 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.Instance.jailPosition != null)
         {
-            currentTileIndex = GameManager.Instance.jailPosition.GetSiblingIndex();
-            transform.position = GameManager.Instance.jailPosition.position;
-            inJail = true;
-            jailTurns = 3;
-            Debug.Log($"{playerName} vào tù 3 lượt");
+            int jailIndex = GameManager.Instance.mapTiles.FindIndex(t => t == GameManager.Instance.jailPosition);
+            if (jailIndex != -1)
+            {
+                currentTileIndex = jailIndex;
+                transform.position = GameManager.Instance.jailPosition.position;
+                inJail = true;
+                jailTurns = 3;
+
+                Debug.Log($"{playerName} vào tù 3 lượt");
+            }
+            else
+            {
+                Debug.LogError("❌ Không tìm thấy jailPosition trong mapTiles!");
+            }
         }
         else
         {
@@ -179,5 +195,20 @@ public class PlayerController : MonoBehaviour
             total += tile.GetPrice() / 2;
         }
         return total;
+    }
+
+    public void FaceLeft()
+    {
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * -1;
+        transform.localScale = scale;
+    }
+
+    public void SetWalking(bool walking)
+    {
+        if (animator != null)
+        {
+            animator.SetBool("isRunning", walking);
+        }
     }
 }

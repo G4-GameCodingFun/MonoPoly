@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1351702903955371576}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.881944, y: -1.0561249, z: 0.028687855}
+  m_LocalPosition: {x: 49.898758, y: -13.66148, z: -0.054119688}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88636fd416b2c7b43a0dffb8e5c79972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: 
+  playerName: Bot 5
   money: 2000
   currentTileIndex: 0
   inJail: 0
@@ -132,5 +132,5 @@ MonoBehaviour:
   cannotBuyNextTurn: 0
   canBuyDiscountProperty: 0
   hasGetOutOfJailFreeCard: 0
-  isBot: 0
+  isBot: 1
   ownedTiles: []
