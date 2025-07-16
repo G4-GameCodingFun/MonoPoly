@@ -61,6 +61,9 @@ public class GameManager : MonoBehaviour
     private float turnTimeLimit = 15f; // Giới hạn thời gian mỗi lượt (giây), có thể điều chỉnh
     private float currentTurnTime;
 
+    // Thêm biến HUD phụ
+    public TextMeshProUGUI infoHudText;
+
     // Thêm tham chiếu DetailsPanelController
     public DetailsPanelController detailsPanelController;
 
@@ -92,6 +95,7 @@ public class GameManager : MonoBehaviour
         {
             rollButton.onClick.AddListener(RollDice);
             rollButton.interactable = true;
+            rollButton.gameObject.SetActive(false); // Ẩn nút roll khi bắt đầu
         }
 
         currentTurnTime = turnTimeLimit;
@@ -198,7 +202,10 @@ public class GameManager : MonoBehaviour
     {
         if (rollButton != null)
         {
-            rollButton.interactable = !isMoving && IsCurrentPlayerLocal();
+            // Chỉ hiện nút roll khi tới lượt người chơi, không phải bot, không di chuyển, không chờ hành động
+            bool shouldShow = !isMoving && IsCurrentPlayerLocal() && !isWaitingForPlayerAction;
+            rollButton.gameObject.SetActive(shouldShow);
+            rollButton.interactable = shouldShow;
         }
 
         if (currentTurnTime > 0 && currentPlayerIndex >= 0 && currentPlayerIndex < players.Count)
@@ -538,5 +545,22 @@ public class GameManager : MonoBehaviour
         {
             countdownText.text = "Countdown Time: " + Mathf.Ceil(currentTurnTime).ToString() + "s";
         }
+    }
+
+    // ===== HUD phụ: ShowInfoHud =====
+    public void ShowInfoHud(string message, float duration = 2.5f)
+    {
+        if (infoHudText == null) return;
+        StopCoroutine("ShowInfoHudCoroutine"); // Đảm bảo không bị chồng thông báo
+        StartCoroutine(ShowInfoHudCoroutine(message, duration));
+    }
+
+    private IEnumerator ShowInfoHudCoroutine(string message, float duration)
+    {
+        infoHudText.text = message;
+        infoHudText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        infoHudText.text = "";
+        infoHudText.gameObject.SetActive(false);
     }
 }

@@ -23,8 +23,16 @@ public class PropertyTaxTile : Tile
         }
         else
         {
-            Debug.Log($"{player.playerName} không đủ tiền trả thuế tài sản ({taxAmount}$)");
-            // Có thể thêm logic bán tài sản tự động hoặc phá sản
+            // Trả hết tiền còn lại
+            int remainingMoney = player.money;
+            player.money = 0;
+            Debug.Log($"{player.playerName} không đủ tiền trả thuế tài sản ({taxAmount}$). Đã trả hết {remainingMoney}$");
+            
+            // Kiểm tra phá sản
+            if (BankruptcyManager.Instance != null)
+            {
+                BankruptcyManager.Instance.CheckBankruptcy(player);
+            }
         }
     }
 

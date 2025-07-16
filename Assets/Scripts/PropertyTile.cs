@@ -23,6 +23,10 @@ public class PropertyTile : Tile
         if (data == null || data.rentByHouse == null)
             return 0;
 
+        // Nếu là hotel đặc biệt (nâng cấp qua offer)
+        if (hasHotel && data.groupSize > 0)
+            return data.rentByHouse[0] * 5;
+
         if (hasHotel) return data.rentByHouse[5];
         return data.rentByHouse[Mathf.Clamp(houseCount, 0, 4)];
     }
@@ -30,6 +34,89 @@ public class PropertyTile : Tile
     public int GetHouseCost() => data?.houseCost ?? 0;
     public int GetHotelCost() => data?.hotelCost ?? 0;
     public override int GetMortgageValue() => data?.mortgageValue ?? 0;
+
+    /// <summary>
+    /// Kiểm tra xem có thể xây thêm nhà không (phải sở hữu tất cả nhà cùng type)
+    /// </summary>
+    public bool CanBuildHouse()
+    {
+        if (data == null || owner == null) return false;
+        
+        // Sử dụng groupSize từ data
+        int groupSize = data.groupSize > 0 ? data.groupSize : 1;
+        int ownedSameTypeCount = 0;
+        foreach (var tile in GameManager.Instance.mapTiles)
+        {
+            var propTile = tile.GetComponent<PropertyTile>();
+            if (propTile != null && propTile.data != null && propTile.data.type == data.type)
+            {
+                if (propTile.owner == owner)
+                    ownedSameTypeCount++;
+            }
+        }
+        // Phải sở hữu tất cả nhà cùng type (groupSize) và chưa có hotel
+        return ownedSameTypeCount == groupSize && !hasHotel && houseCount < 4;
+    }
+
+    /// <summary>
+    /// Kiểm tra xem có thể xây hotel không
+    /// </summary>
+    public bool CanBuildHotel()
+    {
+        if (data == null || owner == null) return false;
+        
+        // Sử dụng groupSize từ data
+        int groupSize = data.groupSize > 0 ? data.groupSize : 1;
+        int ownedSameTypeCount = 0;
+        foreach (var tile in GameManager.Instance.mapTiles)
+        {
+            var propTile = tile.GetComponent<PropertyTile>();
+            if (propTile != null && propTile.data != null && propTile.data.type == data.type)
+            {
+                if (propTile.owner == owner)
+                    ownedSameTypeCount++;
+            }
+        }
+        // Phải sở hữu tất cả nhà cùng type (groupSize) và đã có 4 nhà
+        return ownedSameTypeCount == groupSize && houseCount == 4 && !hasHotel;
+    }
+
+    /// <summary>
+    /// Xây thêm 1 nhà
+    /// </summary>
+    public bool BuildHouse()
+    {
+        if (!CanBuildHouse() || !owner.CanPay(GetHouseCost())) return false;
+        
+        owner.money -= GetHouseCost();
+        houseCount++;
+        UpdateVisuals();
+        
+        Debug.Log($"{owner.playerName} đã xây thêm nhà tại {tileName}. Tổng: {houseCount} nhà");
+        if (GameManager.Instance != null)
+            GameManager.Instance.ShowInfoHud($"{owner.playerName} đã xây thêm nhà tại {tileName}. Tổng: {houseCount} nhà");
+        
+        return true;
+    }
+
+    /// <summary>
+    /// Nâng cấp lên hotel
+    /// </summary>
+    public bool BuildHotel()
+    {
+        if (!CanBuildHotel() || !owner.CanPay(GetHotelCost())) return false;
+        
+        owner.money -= GetHotelCost();
+        houseCount = 0;
+        hasHotel = true;
+        UpdateVisuals();
+        
+        Debug.Log($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
+        if (GameManager.Instance != null)
+            GameManager.Instance.ShowInfoHud($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
+        
+        return true;
+    }
 
     /// <summary>
     /// Trả về PropertyData của ô này
@@ -59,21 +146,20 @@ public class PropertyTile : Tile
                     SetOwner(player);
                     houseCount = 1;
                     Debug.Log($"{player.playerName} (Bot) đã mua {tileName} với giá xây 1 nhà: {houseCost}$");
+                    if (GameManager.Instance != null)
+                        GameManager.Instance.ShowInfoHud($"{player.playerName} (Bot) đã mua {tileName} với giá xây 1 nhà: {houseCost}$");
                     shouldUpdateVisuals = true;
                 }
                 else
                 {
                     Debug.Log($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
+                    if (GameManager.Instance != null)
+                        GameManager.Instance.ShowInfoHud($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
                 }
             }
             else
             {
                 // Người chơi thường chỉ hiện panel, không auto mua
-                var detailsPanel = FindObjectOfType<DetailsPanelController>();
-                if (detailsPanel != null)
-                {
-                    detailsPanel.Show(this, player);
-                }
                 Debug.Log($"{player.playerName} (Người chơi) đến ô {tileName}, chỉ hiện panel, không auto mua.");
             }
         }
@@ -85,10 +171,14 @@ public class PropertyTile : Tile
             {
                 player.PayRent(owner, rent);
                 Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
+                if (GameManager.Instance != null)
+                    GameManager.Instance.ShowInfoHud($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
             }
             else
             {
                 Debug.Log($"{player.playerName} không đủ tiền trả {rent}$ tiền thuê cho {owner.playerName}");
+                if (GameManager.Instance != null)
+                    GameManager.Instance.ShowInfoHud($"{player.playerName} không đủ tiền trả {rent}$ tiền thuê cho {owner.playerName}");
                 player.GoBankrupt(owner);
             }
         }
@@ -102,6 +192,26 @@ public class PropertyTile : Tile
         if (shouldUpdateVisuals)
         {
             UpdateVisuals();
+        }
+    }
+
+    // Gọi offer HUD khi đủ điều kiện sở hữu đủ groupSize nhà cùng màu
+    public void CheckAndOfferHotelUpgrade()
+    {
+        if (data == null || owner == null || hasHotel) return;
+        int groupSize = data.groupSize > 0 ? data.groupSize : 1;
+        int owned = 0;
+        foreach (var tile in GameManager.Instance.mapTiles)
+        {
+            var prop = tile.GetComponent<PropertyTile>();
+            if (prop != null && prop.data != null && prop.data.type == data.type && prop.owner == owner)
+                owned++;
+        }
+        if (owned == groupSize)
+        {
+            var hud = GameObject.FindAnyObjectByType<HUDOfferController>();
+            if (hud != null)
+                hud.Show(this, groupSize, data.type);
         }
     }
 
@@ -181,11 +291,20 @@ public class PropertyTile : Tile
     private void OnMouseDown()
     {
         // Chỉ cho phép click nếu không bị che bởi UI
-        var detailsPanel = FindObjectOfType<DetailsPanelController>();
+        var detailsPanel = GameObject.FindAnyObjectByType<DetailsPanelController>();
         if (detailsPanel != null && GameManager.Instance != null && GameManager.Instance.players.Count > 0)
         {
             var player = GameManager.Instance.players[GameManager.Instance.currentPlayerIndex];
             detailsPanel.Show(this, player);
         }
+    }
+
+    public int GetSellPrice()
+    {
+        // Nếu là hotel đặc biệt (nâng cấp qua offer)
+        if (hasHotel && data.groupSize > 0)
+            return 1200 * 3;
+        // Giá bán mặc định (có thể sửa theo ý bạn)
+        return GetPrice() / 2;
     }
 }

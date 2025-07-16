@@ -51,9 +51,21 @@ public class PlayerController : MonoBehaviour
     public void TryPay(int amount)
     {
         if (money >= amount)
+        {
             money -= amount;
+        }
         else
+        {
+            // Trừ tiền và kiểm tra phá sản
+            money -= amount;
             Debug.LogWarning($"{playerName} không đủ tiền để trả {amount}$");
+            
+            // Kiểm tra phá sản sau khi trừ tiền
+            if (BankruptcyManager.Instance != null)
+            {
+                BankruptcyManager.Instance.CheckBankruptcy(this);
+            }
+        }
     }
 
     public void BuyProperty(Tile tile)
@@ -89,6 +101,11 @@ public class PlayerController : MonoBehaviour
             ownedTiles.Remove(tile);
             tile.owner = null;
             Debug.Log($"{playerName} đã bán {tile.tileName} với giá {sellPrice}$");
+            // Reset lại visual khi bán đất
+            tile.houseCount = 0;
+            tile.hasHotel = false;
+            tile.SetOwner(null);
+            tile.UpdateVisuals();
         }
     }
 
@@ -96,6 +113,13 @@ public class PlayerController : MonoBehaviour
     {
         currentTileIndex = 0;
         transform.position = GameManager.Instance.mapTiles[0].position;
+        // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
+        if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
+        {
+            int idx = GameManager.Instance.players.IndexOf(this);
+            if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+                GameManager.Instance.currentTileIndexes[idx] = 0;
+        }
     }
 
     public void MoveSteps(int steps)
@@ -181,7 +205,17 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{playerName} không đủ tiền trả {amount}$ tiền thuê cho {owner.playerName}");
+            // Trả hết tiền còn lại cho chủ sở hữu
+            int remainingMoney = money;
+            money = 0;
+            owner.money += remainingMoney;
+            Debug.LogWarning($"{playerName} không đủ tiền trả {amount}$ tiền thuê cho {owner.playerName}. Đã trả hết {remainingMoney}$");
+            
+            // Kiểm tra phá sản
+            if (BankruptcyManager.Instance != null)
+            {
+                BankruptcyManager.Instance.CheckBankruptcy(this);
+            }
         }
     }
 

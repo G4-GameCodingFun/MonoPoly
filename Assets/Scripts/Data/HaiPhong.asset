@@ -18,3 +18,5 @@ MonoBehaviour:
   houseCost: 75
   hotelCost: 75
   purchasePrice: 100
+  type: 2
+  groupSize: 3

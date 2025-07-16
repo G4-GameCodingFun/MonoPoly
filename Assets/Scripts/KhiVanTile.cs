@@ -10,7 +10,7 @@ public class KhiVanTile : Tile
     {
         if (player == null) return;
         // Gọi trực tiếp CardManager để rút thẻ khi vận
-        var cardManager = FindObjectOfType<CardManager>();
+        var cardManager = GameObject.FindAnyObjectByType<CardManager>();
         if (cardManager != null)
         {
             cardManager.DrawKhiVanCard(player);

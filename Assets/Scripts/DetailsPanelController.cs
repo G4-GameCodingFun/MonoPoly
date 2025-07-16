@@ -23,10 +23,11 @@ public class DetailsPanelController : MonoBehaviour
     /// </summary>
     /// <param name="tile">PropertyTile cần hiển thị</param>
     /// <param name="player">Player hiện tại</param>
-    public void Show(PropertyTile tile, PlayerController player)
+    public void Show(PropertyTile tile, PlayerController player = null)
     {
         currentTile = tile;
-        currentPlayer = player;
+        // Lấy player hiện tại từ GameManager nếu không truyền vào
+        currentPlayer = player ?? (GameManager.Instance != null ? GameManager.Instance.players[GameManager.Instance.currentPlayerIndex] : null);
         panel.SetActive(true);
         Debug.Log("Show DetailsPanel: " + (tile != null ? tile.data.provinceName : "null"));
 
@@ -62,16 +63,13 @@ public class DetailsPanelController : MonoBehaviour
         }
 
         // Điều kiện mở nút Mua/Bán
-        bool isPlayerOnTile = player != null && tile != null && player.currentTileIndex == tile.transform.GetSiblingIndex();
-        bool canBuy = tile != null && tile.owner == null && player != null && player.CanPay(tile.GetPrice()) && isPlayerOnTile;
-        bool canSell = tile != null && tile.owner == player;
+        bool isPlayerOnTile = currentPlayer != null && tile != null && currentPlayer.currentTileIndex == tile.transform.GetSiblingIndex();
+        bool canBuy = tile != null && tile.owner == null && currentPlayer != null && currentPlayer.CanPay(tile.GetPrice()) && isPlayerOnTile;
+        // Nút bán chỉ hiện khi player là chủ sở hữu, còn lại ẩn
+        bool canSell = tile != null && tile.owner != null && currentPlayer != null && tile.owner.playerName == currentPlayer.playerName;
+
         if (buyButton != null) buyButton.gameObject.SetActive(canBuy);
         if (sellButton != null) sellButton.gameObject.SetActive(canSell);
-        if (!canBuy && !canSell)
-        {
-            if (buyButton != null) buyButton.gameObject.SetActive(false);
-            if (sellButton != null) sellButton.gameObject.SetActive(false);
-        }
 
         if (buyButton != null)
         {
@@ -80,11 +78,11 @@ public class DetailsPanelController : MonoBehaviour
         }
 
         // --- Logic tự động mua cho bot (nếu cần giữ lại) ---
-        if (player != null && player.isBot && canBuy)
+        if (currentPlayer != null && currentPlayer.isBot && canBuy)
         {
-            player.BuyProperty(tile);
+            currentPlayer.BuyProperty(tile);
             if (gameManager != null)
-                gameManager.ShowStatus($"{player.playerName} (Bot) tự động mua {tile.tileName}");
+                gameManager.ShowStatus($"{currentPlayer.playerName} (Bot) tự động mua {tile.tileName}");
             Hide();
             if (gameManager != null) gameManager.isWaitingForPlayerAction = false;
             return;

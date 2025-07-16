@@ -58,8 +58,8 @@ public class UtilityTile : Tile
                 }
                 else
                 {
+                    player.PayRent(owner, actualRent);
                     Debug.Log($"{player.playerName} không đủ tiền trả {actualRent}$ tiền thuê cho {owner.playerName}");
-                    player.GoBankrupt(owner);
                 }
             }
         }

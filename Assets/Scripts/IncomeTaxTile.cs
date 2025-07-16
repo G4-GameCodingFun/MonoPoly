@@ -19,13 +19,16 @@ public class IncomeTaxTile : Tile
         }
         else
         {
-            Debug.Log($"{player.playerName} không đủ tiền trả thuế thu nhập ({taxAmount}$)");
-        }
-        
-        if (player.IsBankrupt())
-        {
-            Debug.Log($"{player.playerName} đã phá sản sau khi trả thuế!");
-            // Xử lý logic phá sản nếu cần
+            // Trả hết tiền còn lại
+            int remainingMoney = player.money;
+            player.money = 0;
+            Debug.Log($"{player.playerName} không đủ tiền trả thuế thu nhập ({taxAmount}$). Đã trả hết {remainingMoney}$");
+            
+            // Kiểm tra phá sản
+            if (BankruptcyManager.Instance != null)
+            {
+                BankruptcyManager.Instance.CheckBankruptcy(player);
+            }
         }
     }
 }
