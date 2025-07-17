@@ -43,7 +43,7 @@ public class SettingsMenu : MonoBehaviour
     void ExitGame()
     {
         Time.timeScale = 1; // Đảm bảo unpause nếu đang pause
-        SceneManager.LoadScene("CreateAccountScene"); // Load scene theo tên
+        SceneManager.LoadScene("MainMenu"); // Load scene theo tên
     }
 
     void ContinueGame()

@@ -1,0 +1,949 @@
+fileFormatVersion: 2
+guid: 330258aa5fcc6b345a384ae866b8f842
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2168890528462702954
+    second: Logo_FPT_Education_0
+  - first:
+      213: -383787570570144767
+    second: Logo_FPT_Education_1
+  - first:
+      213: 8253392886990833397
+    second: Logo_FPT_Education_2
+  - first:
+      213: -1364450685858171167
+    second: Logo_FPT_Education_3
+  - first:
+      213: 6727548414661990327
+    second: Logo_FPT_Education_4
+  - first:
+      213: 1243148278511193382
+    second: Logo_FPT_Education_5
+  - first:
+      213: 6576265501919161674
+    second: Logo_FPT_Education_6
+  - first:
+      213: 7005131980235163119
+    second: Logo_FPT_Education_7
+  - first:
+      213: -4349014105118526327
+    second: Logo_FPT_Education_8
+  - first:
+      213: -5017216058911974742
+    second: Logo_FPT_Education_9
+  - first:
+      213: -360020669107499180
+    second: Logo_FPT_Education_10
+  - first:
+      213: -7943377882567931303
+    second: Logo_FPT_Education_11
+  - first:
+      213: -2251676803495414910
+    second: Logo_FPT_Education_12
+  - first:
+      213: 3296682677193629611
+    second: Logo_FPT_Education_13
+  - first:
+      213: 6796070111130955621
+    second: Logo_FPT_Education_14
+  - first:
+      213: -3138370858467206366
+    second: Logo_FPT_Education_15
+  - first:
+      213: 8211388022992007777
+    second: Logo_FPT_Education_16
+  - first:
+      213: 6421142778962620873
+    second: Logo_FPT_Education_17
+  - first:
+      213: 8896941737683362257
+    second: Logo_FPT_Education_18
+  - first:
+      213: 7404410483400503876
+    second: Logo_FPT_Education_19
+  - first:
+      213: -4187665750371621415
+    second: Logo_FPT_Education_20
+  - first:
+      213: 6454052616994414886
+    second: Logo_FPT_Education_21
+  - first:
+      213: -3697349445548344953
+    second: Logo_FPT_Education_22
+  - first:
+      213: 1299603375411320559
+    second: Logo_FPT_Education_23
+  - first:
+      213: -6358616312493796367
+    second: Logo_FPT_Education_24
+  - first:
+      213: 3469997852600285204
+    second: Logo_FPT_Education_25
+  - first:
+      213: 7602373367543269098
+    second: Logo_FPT_Education_26
+  - first:
+      213: -7250863245043160312
+    second: Logo_FPT_Education_27
+  - first:
+      213: -6151681112367397936
+    second: Logo_FPT_Education_28
+  - first:
+      213: -315181440344032709
+    second: Logo_FPT_Education_29
+  - first:
+      213: -4671904668422969685
+    second: Logo_FPT_Education_30
+  - first:
+      213: 8822344427597256820
+    second: Logo_FPT_Education_31
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Logo_FPT_Education_0
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 64
+        width: 1464
+        height: 469
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 696754e3e8d86e1e0800000000000000
+      internalID: -2168890528462702954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_1
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 274
+        width: 166
+        height: 243
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 104d4faec338caaf0800000000000000
+      internalID: -383787570570144767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_2
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 311
+        width: 148
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f603d43a11f98270800000000000000
+      internalID: 8253392886990833397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_3
+      rect:
+        serializedVersion: 2
+        x: 811
+        y: 353
+        width: 37
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e6b2e3945f701de0800000000000000
+      internalID: -1364450685858171167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_4
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 352
+        width: 42
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b79b2993ad0d5d50800000000000000
+      internalID: 6727548414661990327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_5
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 352
+        width: 29
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62d4cc7d5cc804110800000000000000
+      internalID: 1243148278511193382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_6
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 409
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4d2c86a1a6934b50800000000000000
+      internalID: 6576265501919161674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_7
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 352
+        width: 40
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe545a6db6a373160800000000000000
+      internalID: 7005131980235163119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_8
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 352
+        width: 36
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9843f35a6b235a3c0800000000000000
+      internalID: -4349014105118526327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_9
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 352
+        width: 41
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaa9a27a3944f5ab0800000000000000
+      internalID: -5017216058911974742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_10
+      rect:
+        serializedVersion: 2
+        x: 1053
+        y: 353
+        width: 12
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45f8c02eb13f00bf0800000000000000
+      internalID: -360020669107499180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_11
+      rect:
+        serializedVersion: 2
+        x: 1069
+        y: 352
+        width: 45
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95a08d0d6e373c190800000000000000
+      internalID: -7943377882567931303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_12
+      rect:
+        serializedVersion: 2
+        x: 1118
+        y: 353
+        width: 41
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2833baa80ef60c0e0800000000000000
+      internalID: -2251676803495414910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_13
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 311
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baf5f47ad6b20cd20800000000000000
+      internalID: 3296682677193629611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_14
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 194
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56f2c9a42cd705e50800000000000000
+      internalID: 6796070111130955621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_15
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 95
+        width: 78
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22bdf9ff4544274d0800000000000000
+      internalID: -3138370858467206366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_16
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 95
+        width: 86
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 162f55fa6e5b4f170800000000000000
+      internalID: 8211388022992007777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_17
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 93
+        width: 101
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c1b128365b7c1950800000000000000
+      internalID: 6421142778962620873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_18
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 93
+        width: 101
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d1a6f55f59487b70800000000000000
+      internalID: 8896941737683362257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_19
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 95
+        width: 96
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 442f34aba10c1c660800000000000000
+      internalID: 7404410483400503876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_20
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 93
+        width: 104
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d5a70fef2c62e5c0800000000000000
+      internalID: -4187665750371621415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_21
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 95
+        width: 97
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 621e1adf8a6619950800000000000000
+      internalID: 6454052616994414886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_22
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 95
+        width: 97
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7897a97c44060bcc0800000000000000
+      internalID: -3697349445548344953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_23
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 95
+        width: 45
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe65a44626e190210800000000000000
+      internalID: 1299603375411320559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_24
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 95
+        width: 94
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f39dc63728a1c7a0800000000000000
+      internalID: -6358616312493796367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_25
+      rect:
+        serializedVersion: 2
+        x: 1018
+        y: 93
+        width: 99
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 418bb9f79a8e72030800000000000000
+      internalID: 3469997852600285204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_26
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 93
+        width: 97
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae68e467c4e018960800000000000000
+      internalID: 7602373367543269098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_27
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 95
+        width: 82
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80b244c9b42cf5b90800000000000000
+      internalID: -7250863245043160312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_28
+      rect:
+        serializedVersion: 2
+        x: 1337
+        y: 95
+        width: 79
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d38cdd0f96d0aaa0800000000000000
+      internalID: -6151681112367397936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_29
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 95
+        width: 79
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3a7f70662040abf0800000000000000
+      internalID: -315181440344032709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_30
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 76
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba6e826f47f0a2fb0800000000000000
+      internalID: -4671904668422969685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_FPT_Education_31
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 74
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 478d41d93834f6a70800000000000000
+      internalID: 8822344427597256820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 634586299eb0c9a45bda6f7aeb336060
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Logo_FPT_Education_0: -2168890528462702954
+      Logo_FPT_Education_1: -383787570570144767
+      Logo_FPT_Education_10: -360020669107499180
+      Logo_FPT_Education_11: -7943377882567931303
+      Logo_FPT_Education_12: -2251676803495414910
+      Logo_FPT_Education_13: 3296682677193629611
+      Logo_FPT_Education_14: 6796070111130955621
+      Logo_FPT_Education_15: -3138370858467206366
+      Logo_FPT_Education_16: 8211388022992007777
+      Logo_FPT_Education_17: 6421142778962620873
+      Logo_FPT_Education_18: 8896941737683362257
+      Logo_FPT_Education_19: 7404410483400503876
+      Logo_FPT_Education_2: 8253392886990833397
+      Logo_FPT_Education_20: -4187665750371621415
+      Logo_FPT_Education_21: 6454052616994414886
+      Logo_FPT_Education_22: -3697349445548344953
+      Logo_FPT_Education_23: 1299603375411320559
+      Logo_FPT_Education_24: -6358616312493796367
+      Logo_FPT_Education_25: 3469997852600285204
+      Logo_FPT_Education_26: 7602373367543269098
+      Logo_FPT_Education_27: -7250863245043160312
+      Logo_FPT_Education_28: -6151681112367397936
+      Logo_FPT_Education_29: -315181440344032709
+      Logo_FPT_Education_3: -1364450685858171167
+      Logo_FPT_Education_30: -4671904668422969685
+      Logo_FPT_Education_31: 8822344427597256820
+      Logo_FPT_Education_4: 6727548414661990327
+      Logo_FPT_Education_5: 1243148278511193382
+      Logo_FPT_Education_6: 6576265501919161674
+      Logo_FPT_Education_7: 7005131980235163119
+      Logo_FPT_Education_8: -4349014105118526327
+      Logo_FPT_Education_9: -5017216058911974742
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
