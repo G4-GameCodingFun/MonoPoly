@@ -226,7 +226,7 @@ public class DetailsPanelController : MonoBehaviour
         }
         
         string discountMessage = isDiscounted ? $" (Giảm 50%: {actualPrice}$ thay vì {originalPrice}$)" : "";
-        Debug.Log($"✅ {currentPlayer.playerName} đã mua {currentTile.tileName} thành công!{discountMessage}");
+        Debug.Log($"✓ {currentPlayer.playerName} đã mua {currentTile.tileName} thành công!{discountMessage}");
         
         if (gameManager != null)
             gameManager.ShowInfoHud($"{currentPlayer.playerName} đã mua {currentTile.tileName}{discountMessage}");
@@ -270,7 +270,7 @@ public class DetailsPanelController : MonoBehaviour
         
         // Thực hiện bán tài sản
         currentPlayer.SellProperty(currentTile);
-        Debug.Log($"✅ {currentPlayer.playerName} đã bán {currentTile.tileName} thành công!");
+        Debug.Log($"✓ {currentPlayer.playerName} đã bán {currentTile.tileName} thành công!");
         
         if (gameManager != null)
             gameManager.ShowStatus($"{currentPlayer.playerName} đã bán {currentTile.tileName}");

@@ -124,6 +124,12 @@
 - Sử dụng GameManager.ShowInfoHud() để hiển thị thông báo
 - Thông báo khi player thoát khỏi tình trạng phá sản
 
+### 7.4 Xử lý Icon Emoji
+- Hệ thống đã được tích hợp `IconReplacer` để thay thế emoji bằng text thông thường
+- Các emoji ⚠️, 💀, ✅, 🤖 sẽ được thay thế bằng [CẢNH BÁO], [PHÁ SẢN], [THÀNH CÔNG], [BOT]
+- Các emoji countdown (⏸️, 🎲, ⏳, ⏰, 🎮) sẽ bị xóa hoàn toàn
+- Để thay đổi phương thức thay thế, sử dụng `IconReplacerManager` component
+
 ## 8. Lưu Ý Quan Trọng
 
 1. **Thứ tự khởi tạo**: BankruptcyManager phải được khởi tạo trước GameManager

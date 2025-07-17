@@ -185,7 +185,8 @@ public class BankruptcyManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.isWaitingForPlayerAction = true;
-            GameManager.Instance.ShowStatus($"⚠️ {player.playerName} đang ở tình trạng phá sản! Hãy bán tài sản để trả nợ.");
+            string statusMessage = IconReplacer.ReplaceEmojis($"⚠️ {player.playerName} đang ở tình trạng phá sản! Hãy bán tài sản để trả nợ.");
+            GameManager.Instance.ShowStatus(statusMessage);
         }
         
         if (bankruptcyPanel != null && !isPanelVisible)
@@ -193,7 +194,7 @@ public class BankruptcyManager : MonoBehaviour
             StartCoroutine(ShowPanelAnimation());
             
             if (titleText != null)
-                titleText.text = $"⚠️ PHÁ SẢN - {player.playerName}";
+                titleText.text = IconReplacer.ReplaceEmojis($"⚠️ PHÁ SẢN - {player.playerName}");
                 
             if (messageText != null)
                 messageText.text = $"Bạn đang thiếu {Mathf.Abs(player.money)}$!\nHãy chọn tài sản để bán.";
@@ -217,7 +218,7 @@ public class BankruptcyManager : MonoBehaviour
         
         if (sellableProperties.Count == 0)
         {
-            options.Add("💀 Không còn tài sản để bán! Tự động cưỡng chế phá sản...");
+            options.Add(IconReplacer.ReplaceEmojis("💀 Không còn tài sản để bán! Tự động cưỡng chế phá sản..."));
         }
         else
         {
@@ -294,11 +295,12 @@ public class BankruptcyManager : MonoBehaviour
             {
                 // Hết tài sản để bán - TỰ ĐỘNG cưỡng chế phá sản
                 if (messageText != null)
-                    messageText.text = $"💀 Đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(currentPlayer.money)}$!\nHệ thống sẽ tự động cưỡng chế phá sản sau 3 giây...";
+                    messageText.text = IconReplacer.ReplaceEmojis($"💀 Đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(currentPlayer.money)}$!\nHệ thống sẽ tự động cưỡng chế phá sản sau 3 giây...");
                 
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.ShowInfoHud($"💀 {currentPlayer.playerName} đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(currentPlayer.money)}$! Tự động cưỡng chế phá sản.", 3f);
+                    string infoMessage = IconReplacer.ReplaceEmojis($"💀 {currentPlayer.playerName} đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(currentPlayer.money)}$! Tự động cưỡng chế phá sản.");
+                    GameManager.Instance.ShowInfoHud(infoMessage, 3f);
                 }
                 
                 // Tự động cưỡng chế phá sản sau 3 giây
@@ -310,7 +312,7 @@ public class BankruptcyManager : MonoBehaviour
                 string warningMessage = "";
                 if (sellableProperties.Count <= 2)
                 {
-                    warningMessage = $"\n⚠️ CẢNH BÁO: Chỉ còn {sellableProperties.Count} tài sản!";
+                    warningMessage = IconReplacer.ReplaceEmojis($"\n⚠️ CẢNH BÁO: Chỉ còn {sellableProperties.Count} tài sản!");
                 }
                 
                 if (messageText != null)
@@ -322,7 +324,7 @@ public class BankruptcyManager : MonoBehaviour
                 // Thông báo cho GameManager rằng vẫn đang ở chế độ phá sản
                 if (GameManager.Instance != null)
                 {
-                    string statusMessage = $"⚠️ {currentPlayer.playerName} vẫn còn thiếu {Mathf.Abs(currentPlayer.money)}$!";
+                    string statusMessage = IconReplacer.ReplaceEmojis($"⚠️ {currentPlayer.playerName} vẫn còn thiếu {Mathf.Abs(currentPlayer.money)}$!");
                     if (sellableProperties.Count <= 2)
                     {
                         statusMessage += $" Chỉ còn {sellableProperties.Count} tài sản!";
@@ -348,7 +350,8 @@ public class BankruptcyManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.isWaitingForPlayerAction = false;
-            GameManager.Instance.ShowStatus($"✅ {currentPlayer?.playerName} đã thoát khỏi tình trạng phá sản!");
+            string successMessage = IconReplacer.ReplaceEmojis($"✅ {currentPlayer?.playerName} đã thoát khỏi tình trạng phá sản!");
+            GameManager.Instance.ShowStatus(successMessage);
         }
     }
     
@@ -364,7 +367,8 @@ public class BankruptcyManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.isWaitingForPlayerAction = true;
-            GameManager.Instance.ShowStatus($"🤖 {player.playerName} (Bot) đang xử lý phá sản...");
+            string botStatus = IconReplacer.ReplaceEmojis($"🤖 {player.playerName} (Bot) đang xử lý phá sản...");
+            GameManager.Instance.ShowStatus(botStatus);
         }
         
         // Tính lại danh sách tài sản có thể bán
@@ -393,7 +397,10 @@ public class BankruptcyManager : MonoBehaviour
                 sellableProperties.Remove(mostExpensive);
                 
                 if (GameManager.Instance != null)
-                    GameManager.Instance.ShowInfoHud($"🤖 {player.playerName} đã bán {mostExpensive.tileName} để trả nợ");
+                {
+                    string sellMessage = IconReplacer.ReplaceEmojis($"🤖 {player.playerName} đã bán {mostExpensive.tileName} để trả nợ");
+                    GameManager.Instance.ShowInfoHud(sellMessage);
+                }
                 
                 // Chờ một chút để người chơi thấy thông báo
                 StartCoroutine(DelayForBotAction());
@@ -412,7 +419,8 @@ public class BankruptcyManager : MonoBehaviour
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.isWaitingForPlayerAction = false;
-                GameManager.Instance.ShowInfoHud($"🤖 {player.playerName} đã thoát khỏi tình trạng phá sản!");
+                string botSuccessMessage = IconReplacer.ReplaceEmojis($"🤖 {player.playerName} đã thoát khỏi tình trạng phá sản!");
+                GameManager.Instance.ShowInfoHud(botSuccessMessage);
             }
         }
         else
@@ -420,7 +428,8 @@ public class BankruptcyManager : MonoBehaviour
             // Vẫn còn thiếu tiền sau khi bán hết tài sản - cưỡng chế phá sản
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.ShowInfoHud($"💀 {player.playerName} (Bot) đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(player.money)}$! Bị cưỡng chế phá sản.", 3f);
+                string botBankruptcyMessage = IconReplacer.ReplaceEmojis($"💀 {player.playerName} (Bot) đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(player.money)}$! Bị cưỡng chế phá sản.");
+                GameManager.Instance.ShowInfoHud(botBankruptcyMessage, 3f);
             }
             
             // Chờ một chút để người chơi thấy thông báo
@@ -561,12 +570,13 @@ public class BankruptcyManager : MonoBehaviour
 
         if (currentPlayer != null)
         {
-            Debug.Log($"💀 {currentPlayer.playerName} đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(currentPlayer.money)}$! Tự động cưỡng chế phá sản.");
-            
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.ShowInfoHud($"💀 {currentPlayer.playerName} bị cưỡng chế phá sản!", 3f);
-            }
+                    Debug.Log($"💀 {currentPlayer.playerName} đã bán hết tài sản nhưng vẫn thiếu {Mathf.Abs(currentPlayer.money)}$! Tự động cưỡng chế phá sản.");
+        
+        if (GameManager.Instance != null)
+        {
+            string forceBankruptcyMessage = IconReplacer.ReplaceEmojis($"💀 {currentPlayer.playerName} bị cưỡng chế phá sản!");
+            GameManager.Instance.ShowInfoHud(forceBankruptcyMessage, 3f);
+        }
             
             // Xử lý game over
             HandleGameOver(currentPlayer);

@@ -69,7 +69,7 @@ public class CardManager : MonoBehaviour
         AddKhiVanCard("XH-GD2", CardEffectType.DONG_TIEN_TU_THIEN, -150);
         AddKhiVanCard("XH-GD3", CardEffectType.DI_DAM_CUOI, -200);
 
-        Debug.Log($"✅ Loaded {coHoiCards.Count} Cơ Hội cards & {khiVanCards.Count} Khí Vận cards");
+        Debug.Log($"✓ Loaded {coHoiCards.Count} Cơ Hội cards & {khiVanCards.Count} Khí Vận cards");
     }
 
     void AddCoHoiCard(string spriteName, CardEffectType effect, int money)

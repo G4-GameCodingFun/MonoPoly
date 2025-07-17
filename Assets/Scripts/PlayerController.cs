@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public string playerName;
-    public int money = 200;
+    public int money = 500;
     public int currentTileIndex = 0;
     public bool inJail = false;
     public int jailTurns = 0;
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"⚠️ BankruptcyManager.Instance là null! {playerName} có thể bị phá sản mà không được xử lý.");
+                Debug.LogWarning($"⚠ BankruptcyManager.Instance là null! {playerName} có thể bị phá sản mà không được xử lý.");
             }
         }
     }
@@ -201,11 +201,14 @@ public class PlayerController : MonoBehaviour
 
     public void GoToJail()
     {
+        Debug.Log($"🚨 {playerName} bị đưa vào tù!");
+        
         if (GameManager.Instance.jailPosition != null)
         {
             int jailIndex = GameManager.Instance.mapTiles.FindIndex(t => t == GameManager.Instance.jailPosition);
             if (jailIndex != -1)
             {
+                Debug.Log($"📍 {playerName} di chuyển đến ô tù: {jailIndex}");
                 currentTileIndex = jailIndex;
                 transform.position = GameManager.Instance.jailPosition.position;
                 inJail = true;
@@ -216,10 +219,13 @@ public class PlayerController : MonoBehaviour
                 {
                     int idx = GameManager.Instance.players.IndexOf(this);
                     if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+                    {
                         GameManager.Instance.currentTileIndexes[idx] = jailIndex;
+                        Debug.Log($"📍 Đồng bộ vị trí {playerName} trong GameManager: {jailIndex}");
+                    }
                 }
 
-                Debug.Log($"{playerName} vào tù 3 lượt");
+                Debug.Log($"🔒 {playerName} vào tù 3 lượt. Vị trí: {currentTileIndex}, JailTurns: {jailTurns}");
             }
             else
             {
@@ -234,9 +240,10 @@ public class PlayerController : MonoBehaviour
 
     public void GetOutOfJail()
     {
+        Debug.Log($"🔓 {playerName} được thả ra tù. Vị trí hiện tại: {currentTileIndex}");
         inJail = false;
         jailTurns = 0;
-        Debug.Log($"✅ {playerName} đã ra tù");
+        Debug.Log($"✓ {playerName} đã ra tù. InJail: {inJail}, JailTurns: {jailTurns}");
     }
 
     public void PayRent(PlayerController owner, int amount)
@@ -262,7 +269,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"⚠️ BankruptcyManager.Instance là null! {playerName} có thể bị phá sản mà không được xử lý.");
+                Debug.LogWarning($"⚠ BankruptcyManager.Instance là null! {playerName} có thể bị phá sản mà không được xử lý.");
             }
         }
     }

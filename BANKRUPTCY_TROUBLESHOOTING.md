@@ -6,7 +6,7 @@
 1. Trong Unity, tạo GameObject mới tên "BankruptcyManager"
 2. Thêm component `BankruptcyManager` vào GameObject
 3. Đảm bảo GameObject này **KHÔNG** bị destroy khi chuyển scene
-4. Kiểm tra Console để thấy thông báo: "✅ BankruptcyManager đã được khởi tạo thành công!"
+4. Kiểm tra Console để thấy thông báo: "✓ BankruptcyManager đã được khởi tạo thành công!"
 
 ### **2. Kiểm tra Instance:**
 - Nếu thấy warning: "⚠️ BankruptcyManager.Instance là null!"
@@ -14,7 +14,7 @@
 
 ## 🎮 **Test Hệ Thống Phá Sản**
 
-### **Test cho User chính:**
+### **Test cho User:**
 1. Chạy game với tiền 200$
 2. Mua một số tài sản
 3. Đi vào ô thuế hoặc trả tiền thuê để bị trừ tiền
@@ -82,7 +82,7 @@ if (GameManager.Instance != null)
 - [ ] BankruptcyManager GameObject được tạo
 - [ ] Component BankruptcyManager được thêm
 - [ ] GameObject không bị destroy khi chuyển scene
-- [ ] Console hiển thị "✅ BankruptcyManager đã được khởi tạo thành công!"
+- [ ] Console hiển thị "✓ BankruptcyManager đã được khởi tạo thành công!"
 - [ ] UI Panel được thiết lập đúng
 - [ ] Tất cả references được gán trong Inspector
 - [ ] Tiền mặc định được set = 200$

@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
 
         pc.playerName = PlayerPrefs.GetString("PlayerName", "You");
         pc.isBot = false;
-        pc.money = 200; // Set tiền cho player gốc
+        pc.money = 500; // Set tiền cho player gốc
         pc.FaceLeft();
         playerObj.transform.position = new Vector3(57f, -16f, basePosition.z);
         pc.currentTileIndex = 0;
@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour
 
             botPc.playerName = $"Player{i + 3}"; // Player3, Player4, Player5
             botPc.isBot = true;
-            botPc.money = 200;
+            botPc.money = 500; // Set tiền cho bot
             botPc.FaceLeft();
             botObj.transform.position = botPositions[i];
             botPc.currentTileIndex = 0;
@@ -221,13 +221,15 @@ public class GameManager : MonoBehaviour
             rollButton.interactable = shouldShow;
         }
 
-        // Chỉ đếm thời gian cho user chính, không đếm cho bot, và không đếm khi đang ở chế độ phá sản
-        if (currentTurnTime > 0 && currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && !players[currentPlayerIndex].isBot && !isInBankruptcy)
+        // Cập nhật countdown text luôn luôn
+        UpdateCountdownText();
+
+        // Chỉ đếm thời gian cho user, không đếm cho bot, và không đếm khi đang ở chế độ phá sản
+        if (currentTurnTime > 0 && currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && !players[currentPlayerIndex].isBot && !isInBankruptcy && !isMoving && !isWaitingForPlayerAction)
         {
             currentTurnTime -= Time.deltaTime;
-            UpdateCountdownText();
 
-            // Chuyển lượt nếu hết thời gian (chỉ cho user chính)
+            // Chuyển lượt nếu hết thời gian (chỉ cho user)
             if (currentTurnTime <= 0)
             {
                 ShowStatus($"Hết thời gian cho {players[currentPlayerIndex].playerName}! Chuyển lượt.");
@@ -254,7 +256,8 @@ public class GameManager : MonoBehaviour
         bool isCurrentlyInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
         if (isCurrentlyInBankruptcy)
         {
-            ShowStatus("⚠️ Không thể roll dice khi đang ở chế độ phá sản! Hãy bán tài sản trước.");
+            string warningMessage = IconReplacer.ReplaceEmojis("⚠️ Không thể roll dice khi đang ở chế độ phá sản! Hãy bán tài sản trước.");
+        ShowStatus(warningMessage);
             return;
         }
         
@@ -271,15 +274,26 @@ public class GameManager : MonoBehaviour
 
         if (player.inJail)
         {
+            Debug.Log($"🔒 {player.playerName} đang ở tù. JailTurns: {player.jailTurns}");
             player.jailTurns--;
 
             if (player.jailTurns <= 0)
             {
+                Debug.Log($"🔓 {player.playerName} hết lượt tù, được thả ra");
                 player.GetOutOfJail();
+                
+                // Đồng bộ lại vị trí trong GameManager sau khi ra tù
+                if (currentTileIndexes != null && currentPlayerIndex >= 0 && currentPlayerIndex < currentTileIndexes.Length)
+                {
+                    currentTileIndexes[currentPlayerIndex] = player.currentTileIndex;
+                    Debug.Log($"📍 Đồng bộ vị trí {player.playerName}: {currentTileIndexes[currentPlayerIndex]}");
+                }
+                
                 ShowStatus($"{player.playerName} đã hết lượt trong tù và được thả");
             }
             else
             {
+                Debug.Log($"🔒 {player.playerName} vẫn ở tù. Còn {player.jailTurns} lượt");
                 ShowStatus($"{player.playerName} đang bị tù. Còn {player.jailTurns} lượt");
                 yield return new WaitForSeconds(2f);
 
@@ -287,6 +301,18 @@ public class GameManager : MonoBehaviour
                 NextTurn(); // 👉 Chuyển lượt cho người tiếp theo
                 yield break; // ⛔ Dừng coroutine không thực hiện di chuyển
             }
+        }
+        
+        // Kiểm tra và sửa lỗi nếu player bị stuck trong tù
+        if (player.inJail && player.jailTurns <= 0)
+        {
+            Debug.LogWarning($"⚠️ {player.playerName} bị stuck trong tù! Tự động thả ra...");
+            player.GetOutOfJail();
+            if (currentTileIndexes != null && currentPlayerIndex >= 0 && currentPlayerIndex < currentTileIndexes.Length)
+            {
+                currentTileIndexes[currentPlayerIndex] = player.currentTileIndex;
+            }
+            ShowStatus($"{player.playerName} được tự động thả ra tù do lỗi hệ thống");
         }
 
         diceTotal = 0;
@@ -454,8 +480,6 @@ public class GameManager : MonoBehaviour
 
     private void NextTurn()
     {
-        currentTurnTime = turnTimeLimit;
-
         // Reset trạng thái đặc biệt của người chơi hiện tại
         PlayerController currentPlayer = players[currentPlayerIndex];
         if (currentPlayer != null)
@@ -489,15 +513,17 @@ public class GameManager : MonoBehaviour
 
         ShowStatus($"Tới lượt: {nextPlayer.playerName} {playerType}");
 
-        // Chỉ tự động roll cho bot, không roll cho user chính
-        if (nextPlayer.isBot)
+        // Reset countdown cho user
+        if (!nextPlayer.isBot)
         {
-            StartCoroutine(AutoRollForBot());
+            currentTurnTime = turnTimeLimit;
+            ShowStatus($"{nextPlayer.playerName} - Hãy bấm nút Roll để chơi!");
         }
         else
         {
-            // User chính cần bấm nút roll thủ công
-            ShowStatus($"{nextPlayer.playerName} - Hãy bấm nút Roll để chơi!");
+            // Bot không cần countdown
+            currentTurnTime = 0;
+            StartCoroutine(AutoRollForBot());
         }
     }
 
@@ -600,12 +626,33 @@ public class GameManager : MonoBehaviour
             
             if (isCountdownInBankruptcy)
             {
-                countdownText.text = "⏸️ GAME TẠM DỪNG - Đang xử lý phá sản";
+                countdownText.text = IconReplacer.ReplaceEmojis("⏸️ GAME TẠM DỪNG - Đang xử lý phá sản");
                 countdownText.color = Color.red;
+            }
+            else if (isMoving)
+            {
+                countdownText.text = IconReplacer.ReplaceEmojis("🎲 Đang di chuyển...");
+                countdownText.color = Color.yellow;
+            }
+            else if (isWaitingForPlayerAction)
+            {
+                countdownText.text = IconReplacer.ReplaceEmojis("⏳ Đang chờ hành động...");
+                countdownText.color = Color.cyan;
+            }
+            else if (currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && players[currentPlayerIndex].isBot)
+            {
+                countdownText.text = IconReplacer.ReplaceEmojis("🤖 Lượt của Bot");
+                countdownText.color = Color.green;
+            }
+            else if (currentTurnTime > 0)
+            {
+                int timeLeft = Mathf.CeilToInt(currentTurnTime);
+                countdownText.text = IconReplacer.ReplaceEmojis($"⏰ Thời gian: {timeLeft}s");
+                countdownText.color = timeLeft <= 10 ? Color.red : Color.white;
             }
             else
             {
-                countdownText.text = "Countdown Time: " + Mathf.Ceil(currentTurnTime).ToString() + "s";
+                countdownText.text = IconReplacer.ReplaceEmojis("🎮 Sẵn sàng chơi!");
                 countdownText.color = Color.white;
             }
         }
