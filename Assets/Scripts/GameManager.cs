@@ -263,6 +263,8 @@ public class GameManager : MonoBehaviour
         
         if (!isMoving && IsCurrentPlayerLocal())
         {
+            AudioManager.Instance.PlayDiceRoll();
+
             StartCoroutine(HandleRollAndMove(players[currentPlayerIndex]));
         }
     }
@@ -387,6 +389,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < steps; i++)
         {
+            AudioManager.Instance.PlayStepTile();
             currentTileIndexes[playerIndex] = (currentTileIndexes[playerIndex] + 1) % mapTiles.Count;
 
             bool passedGo = currentTileIndexes[playerIndex] == 0 && i < steps - 1;
@@ -400,6 +403,7 @@ public class GameManager : MonoBehaviour
 
             if (passedGo)
             {
+                AudioManager.Instance.PlayReceiveMoney();
                 player.money += 200;
                 ShowStatus($"{player.playerName} {playerType} đi qua Xuất Phát và nhận 200$");
                 yield return new WaitForSeconds(1f);
@@ -429,6 +433,7 @@ public class GameManager : MonoBehaviour
             {
                 if (cardManager != null)
                 {
+                    AudioManager.Instance.PlayCardDraw();
                     isWaitingForPlayerAction = true;
                     if (chanceTile != null)
                         cardManager.DrawCoHoiCard(player);
@@ -510,7 +515,7 @@ public class GameManager : MonoBehaviour
         }
 
         nextPlayer.SetArrowVisible(true);
-
+        AudioManager.Instance.PlayTurnStart();
         ShowStatus($"Tới lượt: {nextPlayer.playerName} {playerType}");
 
         // Reset countdown cho user
