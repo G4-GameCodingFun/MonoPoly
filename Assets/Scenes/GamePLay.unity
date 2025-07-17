@@ -830,7 +830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -889,8 +889,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5, y: -0.5}
-  m_SizeDelta: {x: -35, y: -13}
+  m_AnchoredPosition: {x: 1, y: 1}
+  m_SizeDelta: {x: -35, y: -164.498}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &122902332
 MonoBehaviour:
@@ -939,8 +939,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5608,8 +5608,7 @@ Transform:
   m_LocalPosition: {x: 467, y: 203.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2115159240}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &675776310
@@ -9225,8 +9224,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 139.16, y: 0.0000033379}
-  m_SizeDelta: {x: 1000, y: 200}
+  m_AnchoredPosition: {x: 139.16, y: 71.884}
+  m_SizeDelta: {x: 1000, y: 56.231}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1177724988
 MonoBehaviour:
@@ -9495,7 +9494,8 @@ Transform:
   m_LocalPosition: {x: -22.95849, y: 15.596838, z: -0.018842611}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2115159240}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1224538229
@@ -13987,6 +13987,23 @@ MonoBehaviour:
   bgmSource: {fileID: 2027630764}
   sfxSource: {fileID: 2027630763}
   buttonClick: {fileID: 8300000, guid: 67ff01cedd498494fad1e572d67968f6, type: 3}
+  diceRoll: {fileID: 0}
+  stepTile: {fileID: 0}
+  tileLand: {fileID: 0}
+  buyProperty: {fileID: 0}
+  buildHouse: {fileID: 0}
+  buildHotel: {fileID: 0}
+  payRent: {fileID: 0}
+  receiveMoney: {fileID: 0}
+  errorMoney: {fileID: 0}
+  mortgage: {fileID: 0}
+  goToJail: {fileID: 0}
+  getOutOfJail: {fileID: 0}
+  cardDraw: {fileID: 0}
+  turnStart: {fileID: 0}
+  bankrupt: {fileID: 0}
+  winGame: {fileID: 0}
+  loseGame: {fileID: 0}
 --- !u!4 &2027630766
 Transform:
   m_ObjectHideFlags: 0
@@ -14689,7 +14706,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 675776309}
+  m_Father: {fileID: 1224538228}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
