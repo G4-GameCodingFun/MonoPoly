@@ -53,11 +53,13 @@ public class PlayerController : MonoBehaviour
         if (money >= amount)
         {
             money -= amount;
+            AudioManager.Instance.PlayPayRent();
         }
         else
         {
             // Trừ tiền và kiểm tra phá sản
             money -= amount;
+            AudioManager.Instance.PlayErrorMoney();
             Debug.LogWarning($"{playerName} không đủ tiền để trả {amount}$");
             
             // Kiểm tra phá sản sau khi trừ tiền
@@ -83,10 +85,12 @@ public class PlayerController : MonoBehaviour
             tile.owner = this;
             ownedTiles.Add(tile);
             tile.SetOwner(this);
+            AudioManager.Instance.PlayBuyProperty();
             Debug.Log($"{playerName} đã mua {tile.tileName} với giá {price}$");
         }
         else
         {
+            AudioManager.Instance.PlayErrorMoney();
             Debug.LogWarning($"{playerName} không đủ tiền mua {tile.tileName} (giá {price}$)");
         }
     }
@@ -104,6 +108,7 @@ public class PlayerController : MonoBehaviour
             money += sellPrice;
             ownedTiles.Remove(tile);
             tile.owner = null;
+            AudioManager.Instance.PlayMortgage();
             Debug.Log($"{playerName} đã bán {tile.tileName} với giá {sellPrice}$");
             // Reset lại visual khi bán đất
             tile.houseCount = 0;
@@ -210,7 +215,7 @@ public class PlayerController : MonoBehaviour
                 transform.position = GameManager.Instance.jailPosition.position;
                 inJail = true;
                 jailTurns = 3;
-
+                AudioManager.Instance.PlayGoToJail();
                 // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
                 if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
                 {
@@ -236,6 +241,7 @@ public class PlayerController : MonoBehaviour
     {
         inJail = false;
         jailTurns = 0;
+        AudioManager.Instance.PlayGetOutOfJail();
         Debug.Log($"✅ {playerName} đã ra tù");
     }
 
@@ -245,6 +251,7 @@ public class PlayerController : MonoBehaviour
         {
             money -= amount;
             owner.money += amount;
+            AudioManager.Instance.PlayPayRent();
             Debug.Log($"{playerName} đã trả {amount}$ tiền thuê cho {owner.playerName}");
         }
         else
@@ -253,6 +260,7 @@ public class PlayerController : MonoBehaviour
             int remainingMoney = money;
             money = 0;
             owner.money += remainingMoney;
+            AudioManager.Instance.PlayErrorMoney();
             Debug.LogWarning($"{playerName} không đủ tiền trả {amount}$ tiền thuê cho {owner.playerName}. Đã trả hết {remainingMoney}$");
             
             // Kiểm tra phá sản
@@ -283,7 +291,7 @@ public class PlayerController : MonoBehaviour
             creditor.money += money;
             money = 0;
         }
-        
+        AudioManager.Instance.PlayBankrupt();
         Debug.Log($"{playerName} đã phá sản! Tất cả tài sản chuyển cho {creditor.playerName}");
     }
 

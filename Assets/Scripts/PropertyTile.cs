@@ -110,7 +110,7 @@ public class PropertyTile : Tile
         houseCount = 0;
         hasHotel = true;
         UpdateVisuals();
-        
+        AudioManager.Instance?.PlayBuildHotel();
         Debug.Log($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
         if (GameManager.Instance != null)
             GameManager.Instance.ShowInfoHud($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
@@ -155,6 +155,7 @@ public class PropertyTile : Tile
                     Debug.Log($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
                     if (GameManager.Instance != null)
                         GameManager.Instance.ShowInfoHud($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
+                    AudioManager.Instance?.PlayErrorMoney();
                 }
             }
             else
@@ -169,6 +170,8 @@ public class PropertyTile : Tile
             int rent = GetRent();
             // Luôn gọi PayRent, nó sẽ tự động xử lý phá sản nếu cần
             player.PayRent(owner, rent);
+            AudioManager.Instance?.PlayPayRent();
+            AudioManager.Instance?.PlayReceiveMoney();
             Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
             if (GameManager.Instance != null)
                 GameManager.Instance.ShowInfoHud($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");

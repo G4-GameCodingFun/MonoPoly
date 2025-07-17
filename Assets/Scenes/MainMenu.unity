@@ -2609,6 +2609,23 @@ MonoBehaviour:
   bgmSource: {fileID: 1391581471}
   sfxSource: {fileID: 1391581474}
   buttonClick: {fileID: 8300000, guid: 67ff01cedd498494fad1e572d67968f6, type: 3}
+  diceRoll: {fileID: 8300000, guid: 3cbd9627688e8f944a661ac68b5e51e1, type: 3}
+  stepTile: {fileID: 8300000, guid: 01671440c052e794d85670bde9c37f8c, type: 3}
+  tileLand: {fileID: 8300000, guid: 8a2685a0563d2a2429071736a9317580, type: 3}
+  buyProperty: {fileID: 8300000, guid: 220299736858a804ba63395e5e4df603, type: 3}
+  buildHouse: {fileID: 8300000, guid: bc9607692eb12b04ca0c98a071aa368d, type: 3}
+  buildHotel: {fileID: 8300000, guid: bc9607692eb12b04ca0c98a071aa368d, type: 3}
+  payRent: {fileID: 8300000, guid: 8294c73010654e046b56669e23df1e5e, type: 3}
+  receiveMoney: {fileID: 8300000, guid: a8a68d3f6fa483745b04abd1dce7391a, type: 3}
+  errorMoney: {fileID: 8300000, guid: 8a09512a118027e4996cc4bd8a099ecf, type: 3}
+  mortgage: {fileID: 8300000, guid: 1dddc60fe387813459eade77157d3f64, type: 3}
+  goToJail: {fileID: 8300000, guid: 4182d034dab56304bac0100bbe2a2f5c, type: 3}
+  getOutOfJail: {fileID: 8300000, guid: 77ec49c4566908043b1c84edf81383e1, type: 3}
+  cardDraw: {fileID: 8300000, guid: 29900889701f93f488a69712c3739d6d, type: 3}
+  turnStart: {fileID: 8300000, guid: 5ae8a6d575227644682d90fdbd7826f1, type: 3}
+  bankrupt: {fileID: 8300000, guid: 4182d034dab56304bac0100bbe2a2f5c, type: 3}
+  winGame: {fileID: 8300000, guid: a8d09320a29a16743a27e9755ae6bb3e, type: 3}
+  loseGame: {fileID: 8300000, guid: 98bfd46d7c384d2479b03603d02c5a97, type: 3}
 --- !u!4 &1391581473
 Transform:
   m_ObjectHideFlags: 0

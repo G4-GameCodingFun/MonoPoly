@@ -437,7 +437,7 @@ public class BankruptcyManager : MonoBehaviour
     private void HandleGameOver(PlayerController player)
     {
         Debug.Log($"🎮 GAME OVER - {player.playerName} đã phá sản hoàn toàn!");
-        
+        AudioManager.Instance.PlayLoseGame();
         // Reset trạng thái phá sản
         isInBankruptcyMode = false;
         
@@ -582,6 +582,7 @@ public class BankruptcyManager : MonoBehaviour
         
         if (GameManager.Instance.players.Count == 1)
         {
+            AudioManager.Instance.PlayWinGame();
             PlayerController winner = GameManager.Instance.players[0];
             GameManager.Instance.ShowInfoHud($"🏆 CHIẾN THẮNG! {winner.playerName} là người chiến thắng!", 10f);
         }
