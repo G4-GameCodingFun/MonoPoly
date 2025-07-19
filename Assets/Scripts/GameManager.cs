@@ -705,26 +705,18 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AutoRollForBot()
     {
-        yield return new WaitForSeconds(4f); // Tăng thời gian chờ bot lên 4 giây
-        
-        // Kiểm tra bot có còn sống không
+        yield return new WaitForSeconds(4f);
         if (currentPlayerIndex >= 0 && currentPlayerIndex < players.Count)
         {
             PlayerController currentBot = players[currentPlayerIndex];
-            
-            // Kiểm tra bot có bị phá sản hoặc bị ẩn không
             if (currentBot.isBankrupt || !currentBot.gameObject.activeSelf)
             {
                 Debug.Log($"💀 {currentBot.playerName} (Bot) đã phá sản, bỏ qua lượt");
                 NextTurn();
                 yield break;
             }
-            
-            // Kiểm tra xem có đang chờ user action, đang ở chế độ phá sản, hoặc bot đang ở tù không
             bool isBotInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
             bool isBotInJail = currentBot.inJail;
-            
-            // Kiểm tra game over trước khi bot roll
             int activePlayers = 0;
             foreach (var player in players)
             {
@@ -733,24 +725,31 @@ public class GameManager : MonoBehaviour
                     activePlayers++;
                 }
             }
-            
             if (activePlayers <= 1)
             {
                 Debug.LogError($"❌ Game Over! Chỉ còn {activePlayers} player còn sống!");
                 HandleGameOver();
                 yield break;
             }
-            
-            if (!isWaitingForPlayerAction && !isMoving && !isBotInBankruptcy && !isBotInJail)
-            {
-                StartCoroutine(HandleRollAndMove(currentBot));
-            }
-            else if (isBotInJail)
+            // Nếu bot đang ở tù thì chỉ giảm jailTurns và chuyển lượt
+            if (isBotInJail)
             {
                 Debug.Log($"🤖 {currentBot.playerName} (Bot) đang ở tù, không thể roll dice");
-                // Bot ở tù, chuyển lượt sau một khoảng thời gian
+                ShowStatus($"{currentBot.playerName} (Bot) đang ở tù - Còn {currentBot.jailTurns} lượt");
                 yield return new WaitForSeconds(2f);
+                currentBot.jailTurns--;
+                if (currentBot.jailTurns <= 0)
+                {
+                    currentBot.GetOutOfJail();
+                    ShowStatus($"{currentBot.playerName} (Bot) đã hết lượt tù và được thả");
+                    yield return new WaitForSeconds(1f);
+                }
                 NextTurn();
+                yield break;
+            }
+            if (!isWaitingForPlayerAction && !isMoving && !isBotInBankruptcy)
+            {
+                StartCoroutine(HandleRollAndMove(currentBot));
             }
         }
     }
@@ -1041,8 +1040,6 @@ public class GameManager : MonoBehaviour
     private void CheatKillRandomBot()
     {
         Debug.Log("💀 Cheat key được kích hoạt: Ctrl + Alt + Space");
-        
-        // Tìm tất cả bot còn sống
         List<PlayerController> aliveBots = new List<PlayerController>();
         foreach (var player in players)
         {
@@ -1051,40 +1048,48 @@ public class GameManager : MonoBehaviour
                 aliveBots.Add(player);
             }
         }
-        
         if (aliveBots.Count == 0)
         {
             ShowStatus("💀 Cheat: Không có bot nào còn sống để giết!");
             return;
         }
-        
-        // Chọn ngẫu nhiên 1 bot để giết
         int randomIndex = Random.Range(0, aliveBots.Count);
         PlayerController botToKill = aliveBots[randomIndex];
+        bool isCurrentTurn = (players[currentPlayerIndex] == botToKill);
         
-        // Giết bot
-        botToKill.money = -9999; // Set tiền âm rất lớn
-        botToKill.isBankrupt = true;
-        
-        // Xóa tất cả tài sản
+        // Xóa tất cả tài sản và nhà/hotel của bot
         foreach (var tile in botToKill.ownedTiles.ToList())
         {
+            var propertyTile = tile as PropertyTile;
+            if (propertyTile != null)
+            {
+                // Xóa nhà và hotel
+                propertyTile.houseCount = 0;
+                propertyTile.hasHotel = false;
+                propertyTile.UpdateVisuals();
+                Debug.Log($"🏠 Xóa nhà/hotel trên {propertyTile.tileName}");
+            }
             tile.owner = null;
             tile.SetOwner(null);
         }
         botToKill.ownedTiles.Clear();
         
-        // Ẩn bot khỏi game
+        // Kill bot
+        botToKill.money = -9999;
+        botToKill.isBankrupt = true;
         botToKill.gameObject.SetActive(false);
         
-        string message = $"💀 Cheat: Đã giết {botToKill.playerName}!";
+        string message = $"💀 Cheat: Đã giết {botToKill.playerName} và xóa tất cả nhà/hotel!";
         ShowStatus(message);
         ShowInfoHud(message, 3f);
-        
         Debug.Log($"💀 Cheat: Đã giết {botToKill.playerName} (Bot #{randomIndex + 1}/{aliveBots.Count})");
-        
-        // Refresh bảng player info
         RefreshPlayerInfoDisplay();
+        
+        // Nếu bot bị kill đang tới lượt hoặc đang ở tù, phải chuyển lượt để tránh treo game
+        if (isCurrentTurn)
+        {
+            NextTurn();
+        }
     }
 
     /// <summary>
