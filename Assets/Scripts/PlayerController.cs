@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public bool canBuyDiscountProperty = false;
     public bool hasGetOutOfJailFreeCard = false;
     public bool isBot;
+    public bool isBankrupt = false; // Thêm thuộc tính để theo dõi trạng thái phá sản
 
     public GameObject arrowPrefab;
     private GameObject arrowInstance;
@@ -245,10 +246,34 @@ public class PlayerController : MonoBehaviour
 
     public void GetOutOfJail()
     {
-        Debug.Log($"🔓 {playerName} được thả ra tù. Vị trí hiện tại: {currentTileIndex}");
+        Debug.Log($"🔓 {playerName} được thả ra tù");
         inJail = false;
         jailTurns = 0;
-        Debug.Log($"✓ {playerName} đã ra tù. InJail: {inJail}, JailTurns: {jailTurns}");
+        AudioManager.Instance.PlayGetOutOfJail();
+        
+        // Đồng bộ lại vị trí trong GameManager
+        if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
+        {
+            int idx = GameManager.Instance.players.IndexOf(this);
+            if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
+            {
+                GameManager.Instance.currentTileIndexes[idx] = currentTileIndex;
+            }
+        }
+    }
+
+    public void UseGetOutOfJailFreeCard()
+    {
+        if (hasGetOutOfJailFreeCard && inJail)
+        {
+            Debug.Log($"🎫 {playerName} sử dụng thẻ 'Get Out of Jail Free'");
+            hasGetOutOfJailFreeCard = false;
+            GetOutOfJail();
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ {playerName} không thể sử dụng thẻ 'Get Out of Jail Free' (không có thẻ hoặc không ở tù)");
+        }
     }
 
     public void PayRent(PlayerController owner, int amount)
@@ -297,6 +322,10 @@ public class PlayerController : MonoBehaviour
             creditor.money += money;
             money = 0;
         }
+        
+        // Set trạng thái phá sản
+        isBankrupt = true;
+        
         AudioManager.Instance.PlayBankrupt();
         Debug.Log($"{playerName} đã phá sản! Tất cả tài sản chuyển cho {creditor.playerName}");
     }

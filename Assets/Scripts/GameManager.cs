@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class GameState
@@ -67,6 +68,9 @@ public class GameManager : MonoBehaviour
     // Thêm tham chiếu DetailsPanelController
     public DetailsPanelController detailsPanelController;
 
+    // Thêm tham chiếu PlayerInfo để refresh bảng player
+    public PlayerInfo playerInfo;
+
     private string savePath;
 
     private void Awake()
@@ -79,6 +83,23 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Kiểm tra và gán detailsPanelController nếu cần
+        if (detailsPanelController == null)
+        {
+            detailsPanelController = FindObjectOfType<DetailsPanelController>();
+            if (detailsPanelController == null)
+            {
+                Debug.LogWarning("⚠️ Không tìm thấy DetailsPanelController trong scene!");
+            }
+            else
+            {
+                Debug.Log("✅ Đã tự động gán DetailsPanelController");
+            }
+        }
+        
+        // Reset tất cả tài sản về trạng thái ban đầu
+        ResetAllProperties();
+        
         SetupPlayers();
         
         // Kiểm tra xem có player nào được tạo không trước khi tiếp tục
@@ -142,7 +163,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        pc.playerName = PlayerPrefs.GetString("PlayerName", "You");
+        pc.playerName = "You";
         pc.isBot = false;
         pc.money = 500; // Set tiền cho player gốc
         pc.FaceLeft();
@@ -213,10 +234,29 @@ public class GameManager : MonoBehaviour
         // Kiểm tra trạng thái phá sản một lần cho toàn bộ hàm Update
         bool isInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
         
+        // === CHEAT KEY: Alt + Space + F ===
+        if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.Space) && Input.GetKeyDown(KeyCode.F))
+        {
+            CheatBankruptBots();
+        }
+        
+        // === CHEAT KEY: Alt + Space + G ===
+        if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.Space) && Input.GetKeyDown(KeyCode.G))
+        {
+            CheatBankruptBotsWithProperties();
+        }
+        
+        // === CHEAT KEY: Ctrl + Alt + Space ===
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.Space))
+        {
+            CheatKillRandomBot();
+        }
+        
         if (rollButton != null)
         {
-            // Chỉ hiện nút roll khi tới lượt người chơi, không phải bot, không di chuyển, không chờ hành động, và không đang ở chế độ phá sản
-            bool shouldShow = !isMoving && IsCurrentPlayerLocal() && !isWaitingForPlayerAction && !isInBankruptcy;
+            // Chỉ hiện nút roll khi tới lượt người chơi, không phải bot, không di chuyển, không chờ hành động, không đang ở chế độ phá sản, và KHÔNG đang ở tù
+            bool isCurrentPlayerInJail = currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && players[currentPlayerIndex].inJail;
+            bool shouldShow = !isMoving && IsCurrentPlayerLocal() && !isWaitingForPlayerAction && !isInBankruptcy && !isCurrentPlayerInJail;
             rollButton.gameObject.SetActive(shouldShow);
             rollButton.interactable = shouldShow;
         }
@@ -224,8 +264,9 @@ public class GameManager : MonoBehaviour
         // Cập nhật countdown text luôn luôn
         UpdateCountdownText();
 
-        // Chỉ đếm thời gian cho user, không đếm cho bot, và không đếm khi đang ở chế độ phá sản
-        if (currentTurnTime > 0 && currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && !players[currentPlayerIndex].isBot && !isInBankruptcy && !isMoving && !isWaitingForPlayerAction)
+        // Chỉ đếm thời gian cho user, không đếm cho bot, và không đếm khi đang ở chế độ phá sản hoặc đang ở tù
+        bool isPlayerInJailForTimer = currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && players[currentPlayerIndex].inJail;
+        if (currentTurnTime > 0 && currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && !players[currentPlayerIndex].isBot && !isInBankruptcy && !isMoving && !isWaitingForPlayerAction && !isPlayerInJailForTimer)
         {
             currentTurnTime -= Time.deltaTime;
 
@@ -257,7 +298,16 @@ public class GameManager : MonoBehaviour
         if (isCurrentlyInBankruptcy)
         {
             string warningMessage = IconReplacer.ReplaceEmojis("⚠️ Không thể roll dice khi đang ở chế độ phá sản! Hãy bán tài sản trước.");
-        ShowStatus(warningMessage);
+            ShowStatus(warningMessage);
+            return;
+        }
+        
+        // Kiểm tra xem player có đang ở tù không
+        bool isCurrentPlayerInJail = currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && players[currentPlayerIndex].inJail;
+        if (isCurrentPlayerInJail)
+        {
+            string jailMessage = IconReplacer.ReplaceEmojis($"🔒 {players[currentPlayerIndex].playerName} đang ở tù, không thể roll dice!");
+            ShowStatus(jailMessage);
             return;
         }
         
@@ -277,6 +327,31 @@ public class GameManager : MonoBehaviour
         if (player.inJail)
         {
             Debug.Log($"🔒 {player.playerName} đang ở tù. JailTurns: {player.jailTurns}");
+            
+            // Kiểm tra xem có thẻ "Get Out of Jail Free" không
+            if (player.hasGetOutOfJailFreeCard)
+            {
+                Debug.Log($"🎫 {player.playerName} sử dụng thẻ 'Get Out of Jail Free'");
+                player.hasGetOutOfJailFreeCard = false;
+                player.GetOutOfJail();
+                
+                // Đồng bộ lại vị trí trong GameManager sau khi ra tù
+                if (currentTileIndexes != null && currentPlayerIndex >= 0 && currentPlayerIndex < currentTileIndexes.Length)
+                {
+                    currentTileIndexes[currentPlayerIndex] = player.currentTileIndex;
+                    Debug.Log($"📍 Đồng bộ vị trí {player.playerName}: {currentTileIndexes[currentPlayerIndex]}");
+                }
+                
+                ShowStatus($"{player.playerName} sử dụng thẻ 'Get Out of Jail Free' và được thả");
+                yield return new WaitForSeconds(2f);
+                
+                // Chỉ thả ra tù, không roll dice và di chuyển
+                isMoving = false;
+                NextTurn();
+                yield break;
+            }
+            
+            // Nếu không có thẻ, giảm số lượt tù
             player.jailTurns--;
 
             if (player.jailTurns <= 0)
@@ -292,6 +367,12 @@ public class GameManager : MonoBehaviour
                 }
                 
                 ShowStatus($"{player.playerName} đã hết lượt trong tù và được thả");
+                yield return new WaitForSeconds(2f);
+                
+                // Chỉ thả ra tù, không roll dice và di chuyển
+                isMoving = false;
+                NextTurn();
+                yield break;
             }
             else
             {
@@ -452,7 +533,14 @@ public class GameManager : MonoBehaviour
                 {
                     // Nếu là bot, hiển thị DetailsPanel nhưng tự động mua và đóng
                     isWaitingForPlayerAction = true;
-                    detailsPanelController.Show(prop, player);
+                    if (detailsPanelController != null)
+                    {
+                        detailsPanelController.Show(prop, player);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("⚠️ detailsPanelController là null! Không thể hiển thị DetailsPanel cho bot");
+                    }
                     if (prop.owner == null && player.CanPay(prop.GetPrice()))
                     {
                         player.BuyProperty(prop);
@@ -460,7 +548,7 @@ public class GameManager : MonoBehaviour
                         yield return new WaitForSeconds(1f); // Chờ để người chơi thấy thông báo
                         
                     }
-                    detailsPanelController.QuitPanel(); // Tắt DetailsPanel
+                    detailsPanelController.QuitPanel(); 
                     isWaitingForPlayerAction = false;
                 }
                 else
@@ -468,7 +556,14 @@ public class GameManager : MonoBehaviour
                     // Nếu là người chơi chính, hiển thị và chờ hành động thủ công
                     Debug.Log("Gọi Show DetailsPanel từ GameManager cho: " + prop.data.provinceName);
                     isWaitingForPlayerAction = true;
-                    detailsPanelController.Show(prop, player);
+                    if (detailsPanelController != null)
+                    {
+                        detailsPanelController.Show(prop, player);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("⚠️ detailsPanelController là null! Không thể hiển thị DetailsPanel cho người chơi");
+                    }
                     yield return new WaitUntil(() => !isWaitingForPlayerAction);
                 }
             }
@@ -493,7 +588,36 @@ public class GameManager : MonoBehaviour
             currentPlayer.skipNextTurn = false;
             currentPlayer.cannotBuyNextTurn = false;
             currentPlayer.canBuyDiscountProperty = false;
+            
+            // Kiểm tra và xử lý trạng thái tù
+            if (currentPlayer.inJail && currentPlayer.jailTurns <= 0)
+            {
+                Debug.LogWarning($"⚠️ {currentPlayer.playerName} bị stuck trong tù! Tự động thả ra...");
+                currentPlayer.GetOutOfJail();
+                ShowStatus($"{currentPlayer.playerName} được tự động thả ra tù do lỗi hệ thống");
+            }
         }
+
+        foreach (var player in players)
+        {
+            player.SetArrowVisible(false);
+        }
+
+        // Tìm người chơi tiếp theo (bỏ qua những người đã phá sản)
+        int attempts = 0;
+        do
+        {
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+            attempts++;
+            
+            // Nếu đã kiểm tra hết tất cả players mà không tìm được ai còn sống
+            if (attempts >= players.Count)
+            {
+                Debug.LogError("❌ Tất cả players đều đã phá sản! Game Over!");
+                HandleGameOver();
+                return;
+            }
+        } while (players[currentPlayerIndex].isBankrupt || !players[currentPlayerIndex].gameObject.activeSelf);
 
         foreach (var player in players)
         {
@@ -516,19 +640,49 @@ public class GameManager : MonoBehaviour
 
         nextPlayer.SetArrowVisible(true);
         AudioManager.Instance.PlayTurnStart();
-        ShowStatus($"Tới lượt: {nextPlayer.playerName} {playerType}");
+        
+        // Hiển thị thông báo phù hợp với trạng thái tù
+        if (nextPlayer.inJail)
+        {
+            ShowStatus($"Tới lượt: {nextPlayer.playerName} {playerType} (Đang ở tù - Còn {nextPlayer.jailTurns} lượt)");
+        }
+        else
+        {
+            ShowStatus($"Tới lượt: {nextPlayer.playerName} {playerType}");
+        }
 
         // Reset countdown cho user
         if (!nextPlayer.isBot)
         {
             currentTurnTime = turnTimeLimit;
-            ShowStatus($"{nextPlayer.playerName} - Hãy bấm nút Roll để chơi!");
+            if (!nextPlayer.inJail)
+            {
+                ShowStatus($"{nextPlayer.playerName} - Hãy bấm nút Roll để chơi!");
+            }
+            else
+            {
+                ShowStatus($"{nextPlayer.playerName} - Đang ở tù, không thể roll dice!");
+            }
         }
         else
         {
             // Bot không cần countdown
             currentTurnTime = 0;
-            StartCoroutine(AutoRollForBot());
+            
+            // Kiểm tra xem bot có đang ở tù không
+            if (nextPlayer.inJail)
+            {
+                Debug.Log($"🤖 {nextPlayer.playerName} (Bot) đang ở tù, không thể roll dice");
+                ShowStatus($"{nextPlayer.playerName} (Bot) đang ở tù - Còn {nextPlayer.jailTurns} lượt");
+                
+                // Bot ở tù, chuyển lượt sau một khoảng thời gian
+                StartCoroutine(DelayAndNextTurnForJailedBot());
+            }
+            else
+            {
+                // Bot bình thường, có thể roll dice
+                StartCoroutine(AutoRollForBot());
+            }
         }
     }
 
@@ -536,12 +690,47 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(4f); // Tăng thời gian chờ bot lên 4 giây
         
-        // Kiểm tra xem có đang chờ user action hoặc đang ở chế độ phá sản không
-        bool isBotInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
-        if (!isWaitingForPlayerAction && !isMoving && !isBotInBankruptcy)
+        // Kiểm tra bot có còn sống không
+        if (currentPlayerIndex >= 0 && currentPlayerIndex < players.Count)
         {
-            StartCoroutine(HandleRollAndMove(players[currentPlayerIndex]));
+            PlayerController currentBot = players[currentPlayerIndex];
+            
+            // Kiểm tra bot có bị phá sản hoặc bị ẩn không
+            if (currentBot.isBankrupt || !currentBot.gameObject.activeSelf)
+            {
+                Debug.Log($"💀 {currentBot.playerName} (Bot) đã phá sản, bỏ qua lượt");
+                NextTurn();
+                yield break;
+            }
+            
+            // Kiểm tra xem có đang chờ user action, đang ở chế độ phá sản, hoặc bot đang ở tù không
+            bool isBotInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
+            bool isBotInJail = currentBot.inJail;
+            
+            if (!isWaitingForPlayerAction && !isMoving && !isBotInBankruptcy && !isBotInJail)
+            {
+                StartCoroutine(HandleRollAndMove(currentBot));
+            }
+            else if (isBotInJail)
+            {
+                Debug.Log($"🤖 {currentBot.playerName} (Bot) đang ở tù, không thể roll dice");
+                // Bot ở tù, chuyển lượt sau một khoảng thời gian
+                yield return new WaitForSeconds(2f);
+                NextTurn();
+            }
         }
+    }
+
+    /// <summary>
+    /// Delay và chuyển lượt cho bot đang ở tù
+    /// </summary>
+    private IEnumerator DelayAndNextTurnForJailedBot()
+    {
+        // Chờ một khoảng thời gian để người chơi thấy thông báo
+        yield return new WaitForSeconds(3f);
+        
+        // Chuyển lượt cho người tiếp theo
+        NextTurn();
     }
 
     public void ShowStatus(string message)
@@ -565,7 +754,28 @@ public class GameManager : MonoBehaviour
         PlayerController currentPlayer = players[currentPlayerIndex];
         if (currentPlayer != null && currentPlayer.isBot)
         {
-            StartCoroutine(AutoRollForBot());
+            // Kiểm tra bot có còn sống không
+            if (currentPlayer.isBankrupt || !currentPlayer.gameObject.activeSelf)
+            {
+                Debug.Log($"💀 {currentPlayer.playerName} (Bot) đã phá sản, bỏ qua lượt");
+                NextTurn();
+                return;
+            }
+            
+            // Kiểm tra xem bot có đang ở tù không
+            if (currentPlayer.inJail)
+            {
+                Debug.Log($"🤖 {currentPlayer.playerName} (Bot) đang ở tù, không thể roll dice");
+                ShowStatus($"{currentPlayer.playerName} (Bot) đang ở tù - Còn {currentPlayer.jailTurns} lượt");
+                
+                // Bot ở tù, chuyển lượt sau một khoảng thời gian
+                StartCoroutine(DelayAndNextTurnForJailedBot());
+            }
+            else
+            {
+                // Bot bình thường, có thể roll dice
+                StartCoroutine(AutoRollForBot());
+            }
         }
     }
 
@@ -629,6 +839,9 @@ public class GameManager : MonoBehaviour
             // Kiểm tra xem có đang ở chế độ phá sản không
             bool isCountdownInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
             
+            // Kiểm tra xem player hiện tại có đang ở tù không
+            bool isCurrentPlayerInJail = currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && players[currentPlayerIndex].inJail;
+            
             if (isCountdownInBankruptcy)
             {
                 countdownText.text = IconReplacer.ReplaceEmojis("⏸️ GAME TẠM DỪNG - Đang xử lý phá sản");
@@ -646,8 +859,21 @@ public class GameManager : MonoBehaviour
             }
             else if (currentPlayerIndex >= 0 && currentPlayerIndex < players.Count && players[currentPlayerIndex].isBot)
             {
-                countdownText.text = IconReplacer.ReplaceEmojis("🤖 Lượt của Bot");
-                countdownText.color = Color.green;
+                if (isCurrentPlayerInJail)
+                {
+                    countdownText.text = IconReplacer.ReplaceEmojis($"🤖 Bot đang ở tù (Còn {players[currentPlayerIndex].jailTurns} lượt)");
+                    countdownText.color = new Color(1f, 0.5f, 0f); // Màu cam tùy chỉnh
+                }
+                else
+                {
+                    countdownText.text = IconReplacer.ReplaceEmojis("🤖 Lượt của Bot");
+                    countdownText.color = Color.green;
+                }
+            }
+            else if (isCurrentPlayerInJail)
+            {
+                countdownText.text = IconReplacer.ReplaceEmojis($"🔒 Đang ở tù (Còn {players[currentPlayerIndex].jailTurns} lượt)");
+                countdownText.color = new Color(1f, 0.5f, 0f); // Màu cam tùy chỉnh
             }
             else if (currentTurnTime > 0)
             {
@@ -678,5 +904,231 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(duration);
         infoHudText.text = "";
         infoHudText.gameObject.SetActive(false);
+    }
+
+    // === CHEAT FUNCTIONS ===
+    private void CheatBankruptBots()
+    {
+        Debug.Log("💸 Cheat key được kích hoạt: Alt + Space + F");
+        
+        int botCount = 0;
+        foreach (var player in players)
+        {
+            if (player.isBot)
+            {
+                int oldMoney = player.money;
+                // Set tiền âm để tạo ra tình trạng phá sản thực sự
+                player.money = -1000; // Thiếu 1000$ để tạo phá sản
+                player.isBankrupt = true; // Set trạng thái phá sản
+                botCount++;
+                
+                Debug.Log($"💸 Cheat: Đã set {player.playerName} vào tình trạng phá sản! (Từ {oldMoney}$ xuống -1000$)");
+                
+                // Kiểm tra phá sản cho bot
+                if (BankruptcyManager.Instance != null)
+                {
+                    BankruptcyManager.Instance.CheckBankruptcy(player);
+                }
+            }
+        }
+        
+        if (botCount > 0)
+        {
+            string message = $"💸 Cheat: Đã set {botCount} bot vào tình trạng phá sản!";
+            ShowStatus(message);
+            ShowInfoHud(message, 3f);
+            
+            // Refresh bảng player info
+            RefreshPlayerInfoDisplay();
+        }
+        else
+        {
+            ShowStatus("💸 Cheat: Không có bot nào để set phá sản!");
+        }
+    }
+
+    private void CheatBankruptBotsWithProperties()
+    {
+        Debug.Log("💸 Cheat key được kích hoạt: Alt + Space + G");
+        
+        int botCount = 0;
+        foreach (var player in players)
+        {
+            if (player.isBot)
+            {
+                int oldMoney = player.money;
+                // Set tiền âm để tạo ra tình trạng phá sản thực sự
+                player.money = -1000; // Thiếu 1000$ để tạo phá sản
+                player.isBankrupt = true; // Set trạng thái phá sản
+                botCount++;
+                
+                Debug.Log($"💸 Cheat: Đã set {player.playerName} vào tình trạng phá sản với tài sản! (Từ {oldMoney}$ xuống -1000$)");
+                
+                // Kiểm tra phá sản cho bot
+                if (BankruptcyManager.Instance != null)
+                {
+                    BankruptcyManager.Instance.CheckBankruptcy(player);
+                }
+            }
+        }
+        
+        if (botCount > 0)
+        {
+            string message = $"💸 Cheat: Đã set {botCount} bot vào tình trạng phá sản với tài sản!";
+            ShowStatus(message);
+            ShowInfoHud(message, 3f);
+            
+            // Refresh bảng player info
+            RefreshPlayerInfoDisplay();
+        }
+        else
+        {
+            ShowStatus("💸 Cheat: Không có bot nào để set phá sản!");
+        }
+    }
+
+    private void CheatKillRandomBot()
+    {
+        Debug.Log("💀 Cheat key được kích hoạt: Ctrl + Alt + Space");
+        
+        // Tìm tất cả bot còn sống
+        List<PlayerController> aliveBots = new List<PlayerController>();
+        foreach (var player in players)
+        {
+            if (player.isBot && !player.isBankrupt)
+            {
+                aliveBots.Add(player);
+            }
+        }
+        
+        if (aliveBots.Count == 0)
+        {
+            ShowStatus("💀 Cheat: Không có bot nào còn sống để giết!");
+            return;
+        }
+        
+        // Chọn ngẫu nhiên 1 bot để giết
+        int randomIndex = Random.Range(0, aliveBots.Count);
+        PlayerController botToKill = aliveBots[randomIndex];
+        
+        // Giết bot
+        botToKill.money = -9999; // Set tiền âm rất lớn
+        botToKill.isBankrupt = true;
+        
+        // Xóa tất cả tài sản
+        foreach (var tile in botToKill.ownedTiles.ToList())
+        {
+            tile.owner = null;
+            tile.SetOwner(null);
+        }
+        botToKill.ownedTiles.Clear();
+        
+        // Ẩn bot khỏi game
+        botToKill.gameObject.SetActive(false);
+        
+        string message = $"💀 Cheat: Đã giết {botToKill.playerName}!";
+        ShowStatus(message);
+        ShowInfoHud(message, 3f);
+        
+        Debug.Log($"💀 Cheat: Đã giết {botToKill.playerName} (Bot #{randomIndex + 1}/{aliveBots.Count})");
+        
+        // Refresh bảng player info
+        RefreshPlayerInfoDisplay();
+    }
+
+    /// <summary>
+    /// Xử lý khi game kết thúc
+    /// </summary>
+    private void HandleGameOver()
+    {
+        Debug.Log("GAME OVER - Tất cả players đều đã phá sản!");
+        
+        // Tìm người thắng cuộc (nếu có)
+        PlayerController winner = null;
+        foreach (var player in players)
+        {
+            if (!player.isBankrupt && player.gameObject.activeSelf)
+            {
+                winner = player;
+                break;
+            }
+        }
+        
+        string message;
+        if (winner != null)
+        {
+            message = $"{winner.playerName} đã thắng cuộc! Game sẽ trở về menu chính sau 10 giây...";
+        }
+        else
+        {
+            message = "Tất cả players đều đã phá sản! Game sẽ trở về menu chính sau 10 giây...";
+        }
+        ShowStatus(message);
+        ShowInfoHud(message, 10f);
+        isMoving = false;
+        isWaitingForPlayerAction = false;
+        if (rollButton != null)
+        {
+            rollButton.gameObject.SetActive(false);
+        }
+        StartCoroutine(GameOverCountdownAndGoToMenu(10, message));
+    }
+
+    private IEnumerator GameOverCountdownAndGoToMenu(int seconds, string message)
+    {
+        for (int i = seconds; i > 0; i--)
+        {
+            ShowStatus(message + $" ({i}s)");
+            ShowInfoHud(message + $" ({i}s)", 1f);
+            yield return new WaitForSeconds(1f);
+        }
+        ShowStatus("Đang chuyển về menu chính...");
+        ShowInfoHud("Đang chuyển về menu chính...", 2f);
+        yield return new WaitForSeconds(1f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    /// <summary>
+    /// Reset tất cả tài sản về trạng thái ban đầu
+    /// </summary>
+    private void ResetAllProperties()
+    {
+        Debug.Log("🔄 Reset tất cả tài sản về trạng thái ban đầu...");
+        
+        foreach (var tileTransform in mapTiles)
+        {
+            if (tileTransform != null)
+            {
+                var propertyTile = tileTransform.GetComponent<PropertyTile>();
+                if (propertyTile != null)
+                {
+                    // Reset owner
+                    propertyTile.owner = null;
+                    propertyTile.SetOwner(null);
+                    
+                    // Reset house count và hotel
+                    propertyTile.houseCount = 0;
+                    propertyTile.hasHotel = false;
+                    
+                    // Update visuals
+                    propertyTile.UpdateVisuals();
+                    
+                    Debug.Log($"🔄 Reset {propertyTile.tileName}: owner=null, houseCount=0, hasHotel=false");
+                }
+            }
+        }
+        
+        Debug.Log("✅ Đã reset tất cả tài sản!");
+    }
+
+    /// <summary>
+    /// Refresh bảng thông tin player khi có thay đổi (phá sản, thay đổi tiền, etc.)
+    /// </summary>
+    public void RefreshPlayerInfoDisplay()
+    {
+        if (playerInfo != null)
+        {
+            playerInfo.RefreshPlayerInfo();
+        }
     }
 }

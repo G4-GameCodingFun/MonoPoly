@@ -92,7 +92,7 @@ public class PropertyTile : Tile
         houseCount++;
         UpdateVisuals();
         
-        Debug.Log($"{owner.playerName} đã xây thêm nhà tại {tileName}. Tổng: {houseCount} nhà");
+        Debug.LogWarning($"{owner.playerName} đã xây thêm nhà tại {tileName}. Tổng: {houseCount} nhà");
         if (GameManager.Instance != null)
             GameManager.Instance.ShowInfoHud($"{owner.playerName} đã xây thêm nhà tại {tileName}. Tổng: {houseCount} nhà");
         
@@ -111,7 +111,7 @@ public class PropertyTile : Tile
         hasHotel = true;
         UpdateVisuals();
         AudioManager.Instance?.PlayBuildHotel();
-        Debug.Log($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
+        Debug.LogWarning($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
         if (GameManager.Instance != null)
             GameManager.Instance.ShowInfoHud($"{owner.playerName} đã nâng cấp lên hotel tại {tileName}");
         
@@ -137,6 +137,13 @@ public class PropertyTile : Tile
             int houseCost = GetHouseCost();
             if (player.isBot)
             {
+                // Kiểm tra bot có bị phá sản không
+                if (player.isBankrupt || !player.gameObject.activeSelf)
+                {
+                    Debug.LogWarning($"{player.playerName} (Bot) đã phá sản, không thể mua {tileName}");
+                    return;
+                }
+                
                 // Bot tự động mua nhà nếu đủ tiền
                 if (player.CanPay(houseCost))
                 {
@@ -145,14 +152,14 @@ public class PropertyTile : Tile
                     player.ownedTiles.Add(this);
                     SetOwner(player);
                     houseCount = 1;
-                    Debug.Log($"{player.playerName} (Bot) đã mua {tileName} với giá xây 1 nhà: {houseCost}$");
+                    Debug.LogWarning($"{player.playerName} (Bot) đã mua {tileName} với giá xây 1 nhà: {houseCost}$");
                     if (GameManager.Instance != null)
                         GameManager.Instance.ShowInfoHud($"{player.playerName} (Bot) đã mua {tileName} với giá xây 1 nhà: {houseCost}$");
                     shouldUpdateVisuals = true;
                 }
                 else
                 {
-                    Debug.Log($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
+                    Debug.LogWarning($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
                     if (GameManager.Instance != null)
                         GameManager.Instance.ShowInfoHud($"{player.playerName} (Bot) không đủ tiền xây nhà tại {tileName} (giá {houseCost}$)");
                     AudioManager.Instance?.PlayErrorMoney();
@@ -161,7 +168,7 @@ public class PropertyTile : Tile
             else
             {
                 // Người chơi thường chỉ hiện panel, không auto mua
-                Debug.Log($"{player.playerName} (Người chơi) đến ô {tileName}, chỉ hiện panel, không auto mua.");
+                Debug.LogWarning($"{player.playerName} (Người chơi) đến ô {tileName}, chỉ hiện panel, không auto mua.");
             }
         }
         // Nếu đã có chủ khác
@@ -172,14 +179,14 @@ public class PropertyTile : Tile
             player.PayRent(owner, rent);
             AudioManager.Instance?.PlayPayRent();
             AudioManager.Instance?.PlayReceiveMoney();
-            Debug.Log($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
+            Debug.LogWarning($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
             if (GameManager.Instance != null)
                 GameManager.Instance.ShowInfoHud($"{player.playerName} trả {rent}$ tiền thuê cho {owner.playerName}");
         }
         // Nếu là chủ sở hữu
         else
         {
-            Debug.Log($"{player.playerName} đang đứng trên đất của mình: {tileName}");
+            Debug.LogWarning($"{player.playerName} đang đứng trên đất của mình: {tileName}");
             // Không tự động xây thêm nhà nữa khi đã sở hữu
         }
 

@@ -277,10 +277,17 @@ public class BankruptcyManager : MonoBehaviour
         // Bán tài sản
         currentPlayer.SellProperty(selectedProperty);
         
+        // Refresh bảng player info để cập nhật tiền mới
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RefreshPlayerInfoDisplay();
+        }
+        
         // Kiểm tra lại xem còn thiếu tiền không
         if (currentPlayer.money >= 0)
         {
             // Đã đủ tiền, đóng panel
+            currentPlayer.isBankrupt = false; // Reset trạng thái phá sản
             CloseBankruptcyPanel();
             if (GameManager.Instance != null)
                 GameManager.Instance.ShowInfoHud($"{currentPlayer.playerName} đã bán tài sản và thoát khỏi tình trạng phá sản!");
@@ -416,11 +423,15 @@ public class BankruptcyManager : MonoBehaviour
         {
             // Reset trạng thái phá sản
             isInBankruptcyMode = false;
+            player.isBankrupt = false; // Reset trạng thái phá sản
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.isWaitingForPlayerAction = false;
                 string botSuccessMessage = IconReplacer.ReplaceEmojis($"🤖 {player.playerName} đã thoát khỏi tình trạng phá sản!");
                 GameManager.Instance.ShowInfoHud(botSuccessMessage);
+                
+                // Refresh bảng player info để cập nhật tiền mới
+                GameManager.Instance.RefreshPlayerInfoDisplay();
             }
         }
         else
@@ -447,6 +458,11 @@ public class BankruptcyManager : MonoBehaviour
     {
         Debug.Log($"🎮 GAME OVER - {player.playerName} đã phá sản hoàn toàn!");
         AudioManager.Instance.PlayLoseGame();
+        
+        // Set trạng thái phá sản cho player trước khi xóa
+        player.isBankrupt = true;
+        player.money = 0;
+        
         // Reset trạng thái phá sản
         isInBankruptcyMode = false;
         
@@ -454,6 +470,9 @@ public class BankruptcyManager : MonoBehaviour
         {
             GameManager.Instance.isWaitingForPlayerAction = false;
             GameManager.Instance.ShowInfoHud($"🎮 GAME OVER - {player.playerName} đã phá sản!", 5f);
+            
+            // Refresh bảng player info để hiển thị trạng thái phá sản
+            GameManager.Instance.RefreshPlayerInfoDisplay();
             
             // Tìm index của player trước khi xóa
             int playerIndex = GameManager.Instance.players.IndexOf(player);

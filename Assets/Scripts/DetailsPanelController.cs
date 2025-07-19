@@ -89,29 +89,47 @@ public class DetailsPanelController : MonoBehaviour
         bool cannotBuyDueToCard = currentPlayer != null && currentPlayer.cannotBuyNextTurn;
         bool canBuyWithDiscount = currentPlayer != null && currentPlayer.canBuyDiscountProperty;
         
-        bool canBuy = canBuyNormally && !cannotBuyDueToCard;
+        // QUAN TRỌNG: Chỉ cho phép mua khi nhà chưa có chủ
+        bool canBuy = canBuyNormally && !cannotBuyDueToCard && tile.owner == null;
         
-        // Nút bán chỉ hiện khi player là chủ sở hữu (so sánh object thay vì string)
-        bool canSell = tile != null && tile.owner != null && currentPlayer != null && tile.owner == currentPlayer;
+        // Nút bán chỉ hiện khi player là chủ sở hữu VÀ đang trong lượt của mình
+        bool canSell = tile != null && tile.owner != null && currentPlayer != null && 
+                      tile.owner == currentPlayer && 
+                      !currentPlayer.isBot && // Chỉ người chơi mới được bán (không phải bot)
+                      GameManager.Instance != null && 
+                      GameManager.Instance.currentPlayerIndex >= 0 && 
+                      GameManager.Instance.currentPlayerIndex < GameManager.Instance.players.Count &&
+                      GameManager.Instance.players[GameManager.Instance.currentPlayerIndex] == currentPlayer; // Đang trong lượt của mình
 
         if (buyButton != null) 
         {
             buyButton.gameObject.SetActive(canBuy);
-            // Hiển thị thông báo nếu không thể mua do thẻ
-            if (cannotBuyDueToCard)
+            
+            if (canBuy)
             {
-                buyButton.GetComponentInChildren<TMP_Text>().text = "Không thể mua (thẻ)";
-            }
-            else if (canBuyWithDiscount)
-            {
-                buyButton.GetComponentInChildren<TMP_Text>().text = "Mua (Giảm 50%)";
-            }
-            else
-            {
-                buyButton.GetComponentInChildren<TMP_Text>().text = "Mua";
+                if (canBuyWithDiscount)
+                {
+                    buyButton.GetComponentInChildren<TMP_Text>().text = "Mua (Giảm 50%)";
+                }
+                else
+                {
+                    buyButton.GetComponentInChildren<TMP_Text>().text = "Mua";
+                }
+                buyButton.interactable = true;
             }
         }
-        if (sellButton != null) sellButton.gameObject.SetActive(canSell);
+        
+        if (sellButton != null) 
+        {
+            // Sử dụng biến canSell đã khai báo ở trên
+            sellButton.gameObject.SetActive(canSell);
+            
+            if (canSell)
+            {
+                sellButton.GetComponentInChildren<TMP_Text>().text = "Bán tài sản";
+                sellButton.interactable = true;
+            }
+        }
 
         if (buyButton != null)
         {
@@ -164,12 +182,12 @@ public class DetailsPanelController : MonoBehaviour
             return;
         }
         
-        // Kiểm tra xem đất đã có chủ chưa
+        // KIỂM TRA QUAN TRỌNG: Đất đã có chủ chưa
         if (currentTile.owner != null)
         {
             Debug.LogError($"❌ Lỗi: {currentTile.tileName} đã có chủ sở hữu: {currentTile.owner.playerName}!");
             if (gameManager != null)
-                gameManager.ShowStatus($"❌ {currentTile.tileName} đã có chủ sở hữu!");
+                gameManager.ShowStatus($"❌ {currentTile.tileName} đã có chủ sở hữu: {currentTile.owner.playerName}!");
             return;
         }
         
@@ -209,6 +227,15 @@ public class DetailsPanelController : MonoBehaviour
             Debug.LogError($"❌ Lỗi: {currentPlayer.playerName} không đủ tiền mua {currentTile.tileName}!");
             if (gameManager != null)
                 gameManager.ShowStatus($"{currentPlayer.playerName} không đủ tiền mua {currentTile.tileName}!");
+            return;
+        }
+        
+        // KIỂM TRA CUỐI CÙNG: Đảm bảo đất vẫn chưa có chủ (tránh race condition)
+        if (currentTile.owner != null)
+        {
+            Debug.LogError($"❌ Lỗi: {currentTile.tileName} đã được mua bởi {currentTile.owner.playerName} trong lúc xử lý!");
+            if (gameManager != null)
+                gameManager.ShowStatus($"❌ {currentTile.tileName} đã được mua bởi người khác!");
             return;
         }
         
@@ -265,6 +292,27 @@ public class DetailsPanelController : MonoBehaviour
             Debug.LogError($"❌ Lỗi bảo mật: {currentPlayer.playerName} không phải chủ sở hữu của {currentTile.tileName}!");
             if (gameManager != null)
                 gameManager.ShowStatus($"❌ Bạn không phải chủ sở hữu của {currentTile.tileName}!");
+            return;
+        }
+        
+        // KIỂM TRA BẢO MẬT: Chỉ cho phép bán trong lượt của mình và không phải bot
+        if (currentPlayer.isBot)
+        {
+            Debug.LogError($"❌ Lỗi bảo mật: Bot không thể bán tài sản thông qua UI!");
+            if (gameManager != null)
+                gameManager.ShowStatus($"❌ Bot không thể bán tài sản thông qua UI!");
+            return;
+        }
+        
+        // Kiểm tra xem có đang trong lượt của mình không
+        if (GameManager.Instance == null || 
+            GameManager.Instance.currentPlayerIndex < 0 || 
+            GameManager.Instance.currentPlayerIndex >= GameManager.Instance.players.Count ||
+            GameManager.Instance.players[GameManager.Instance.currentPlayerIndex] != currentPlayer)
+        {
+            Debug.LogError($"❌ Lỗi bảo mật: {currentPlayer.playerName} không đang trong lượt của mình!");
+            if (gameManager != null)
+                gameManager.ShowStatus($"❌ Bạn chỉ có thể bán tài sản trong lượt của mình!");
             return;
         }
         
