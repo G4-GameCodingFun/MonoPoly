@@ -220,6 +220,7 @@ public class PlayerController : MonoBehaviour
                 inJail = true;
                 jailTurns = 3;
                 AudioManager.Instance.PlayGoToJail();
+                
                 // Đồng bộ lại vị trí trong GameManager để tránh bug cộng dồn bước
                 if (GameManager.Instance != null && GameManager.Instance.currentTileIndexes != null)
                 {
@@ -232,6 +233,12 @@ public class PlayerController : MonoBehaviour
                 }
 
                 Debug.Log($"🔒 {playerName} vào tù 3 lượt. Vị trí: {currentTileIndex}, JailTurns: {jailTurns}");
+                
+                // Thông báo cho GameManager biết player đã vào tù
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.ShowStatus($"{playerName} bị đưa vào tù! Còn {jailTurns} lượt.");
+                }
             }
             else
             {
@@ -258,7 +265,14 @@ public class PlayerController : MonoBehaviour
             if (idx >= 0 && idx < GameManager.Instance.currentTileIndexes.Length)
             {
                 GameManager.Instance.currentTileIndexes[idx] = currentTileIndex;
+                Debug.Log($"📍 Đồng bộ vị trí {playerName} sau khi ra tù: {currentTileIndex}");
             }
+        }
+        
+        // Thông báo cho GameManager biết player đã ra tù
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowStatus($"{playerName} đã được thả ra tù!");
         }
     }
 

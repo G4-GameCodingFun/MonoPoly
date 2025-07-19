@@ -171,7 +171,7 @@ public class GameManager : MonoBehaviour
         pc.currentTileIndex = 0;
         players.Add(pc);
 
-        // Add bots
+        // Add 3 bots
         if (botPrefabs == null || botPrefabs.Count < 3)
         {
             Debug.LogError("Danh sách botPrefabs rỗng hoặc không đủ 3 bot!");
@@ -181,9 +181,9 @@ public class GameManager : MonoBehaviour
         // Tạo 3 bot riêng biệt
         var botPositions = new Vector3[]
         {
-        new Vector3(55f, -12f, basePosition.z), // Player3
-        new Vector3(45f, -11f, basePosition.z), // Player4
-        new Vector3(43f, -16f, basePosition.z)  // Player5
+            new Vector3(55f, -12f, basePosition.z), // Bot 1
+            new Vector3(45f, -11f, basePosition.z), // Bot 2
+            new Vector3(43f, -16f, basePosition.z)  // Bot 3
         };
 
         for (int i = 0; i < 3; i++)
@@ -209,7 +209,7 @@ public class GameManager : MonoBehaviour
                 continue;
             }
 
-            botPc.playerName = $"Player{i + 3}"; // Player3, Player4, Player5
+            botPc.playerName = $"Bot{i + 1}";
             botPc.isBot = true;
             botPc.money = 500; // Set tiền cho bot
             botPc.FaceLeft();
@@ -598,33 +598,50 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        foreach (var player in players)
-        {
-            player.SetArrowVisible(false);
-        }
-
         // Tìm người chơi tiếp theo (bỏ qua những người đã phá sản)
         int attempts = 0;
+        int nextPlayerIndex = currentPlayerIndex;
+        int activePlayers = 0;
+        
+        // Đếm số player còn sống trước
+        foreach (var player in players)
+        {
+            if (!player.isBankrupt && player.gameObject.activeSelf)
+            {
+                activePlayers++;
+            }
+        }
+        
+        // Kiểm tra game over ngay từ đầu
+        if (activePlayers <= 1)
+        {
+            Debug.LogError($"❌ Game Over! Chỉ còn {activePlayers} player còn sống!");
+            HandleGameOver();
+            return;
+        }
+        
         do
         {
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
+            nextPlayerIndex = (nextPlayerIndex + 1) % players.Count;
             attempts++;
             
             // Nếu đã kiểm tra hết tất cả players mà không tìm được ai còn sống
             if (attempts >= players.Count)
             {
-                Debug.LogError("❌ Tất cả players đều đã phá sản! Game Over!");
+                Debug.LogError("❌ Không tìm thấy player nào còn sống! Game Over!");
                 HandleGameOver();
                 return;
             }
-        } while (players[currentPlayerIndex].isBankrupt || !players[currentPlayerIndex].gameObject.activeSelf);
+        } while (players[nextPlayerIndex].isBankrupt || !players[nextPlayerIndex].gameObject.activeSelf);
 
+        // Cập nhật currentPlayerIndex
+        currentPlayerIndex = nextPlayerIndex;
+
+        // Ẩn tất cả arrows trước
         foreach (var player in players)
         {
             player.SetArrowVisible(false);
         }
-
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.Count;
 
         PlayerController nextPlayer = players[currentPlayerIndex];
         string playerType = nextPlayer.isBot ? "(Bot)" : "(Người chơi)";
@@ -707,6 +724,23 @@ public class GameManager : MonoBehaviour
             bool isBotInBankruptcy = BankruptcyManager.Instance != null && BankruptcyManager.Instance.isInBankruptcyMode;
             bool isBotInJail = currentBot.inJail;
             
+            // Kiểm tra game over trước khi bot roll
+            int activePlayers = 0;
+            foreach (var player in players)
+            {
+                if (!player.isBankrupt && player.gameObject.activeSelf)
+                {
+                    activePlayers++;
+                }
+            }
+            
+            if (activePlayers <= 1)
+            {
+                Debug.LogError($"❌ Game Over! Chỉ còn {activePlayers} player còn sống!");
+                HandleGameOver();
+                yield break;
+            }
+            
             if (!isWaitingForPlayerAction && !isMoving && !isBotInBankruptcy && !isBotInJail)
             {
                 StartCoroutine(HandleRollAndMove(currentBot));
@@ -759,6 +793,23 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log($"💀 {currentPlayer.playerName} (Bot) đã phá sản, bỏ qua lượt");
                 NextTurn();
+                return;
+            }
+            
+            // Kiểm tra game over trước
+            int activePlayers = 0;
+            foreach (var player in players)
+            {
+                if (!player.isBankrupt && player.gameObject.activeSelf)
+                {
+                    activePlayers++;
+                }
+            }
+            
+            if (activePlayers <= 1)
+            {
+                Debug.LogError($"❌ Game Over! Chỉ còn {activePlayers} player còn sống!");
+                HandleGameOver();
                 return;
             }
             
@@ -1041,28 +1092,41 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void HandleGameOver()
     {
-        Debug.Log("GAME OVER - Tất cả players đều đã phá sản!");
-        
-        // Tìm người thắng cuộc (nếu có)
+        // Đếm số player còn sống
+        int activePlayers = 0;
         PlayerController winner = null;
+        
         foreach (var player in players)
         {
             if (!player.isBankrupt && player.gameObject.activeSelf)
             {
+                activePlayers++;
                 winner = player;
-                break;
             }
         }
         
         string message;
-        if (winner != null)
+        if (activePlayers == 1 && winner != null)
         {
+            // Chỉ còn 1 player - người thắng
             message = $"{winner.playerName} đã thắng cuộc! Game sẽ trở về menu chính sau 10 giây...";
+        }
+        else if (activePlayers == 0)
+        {
+            // Không còn ai - tất cả đều phá sản
+            message = "Tất cả players đều đã phá sản! Game sẽ trở về menu chính sau 10 giây...";
+        }
+        else if (activePlayers == 2)
+        {
+            // Còn 2 người - có thể tiếp tục chơi
+            message = $"Còn {activePlayers} người chơi. Game sẽ trở về menu chính sau 10 giây...";
         }
         else
         {
-            message = "Tất cả players đều đã phá sản! Game sẽ trở về menu chính sau 10 giây...";
+            // Trường hợp khác (có thể có lỗi logic)
+            message = $"Game kết thúc! Còn {activePlayers} người chơi. Game sẽ trở về menu chính sau 10 giây...";
         }
+        
         ShowStatus(message);
         ShowInfoHud(message, 10f);
         isMoving = false;
